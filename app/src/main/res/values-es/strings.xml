@@ -53,11 +53,12 @@
     <string name="no_folders">Sin Carpetas</string>
     <string name="remove">Quitar</string>
     <string name="theme_title">Temas</string>
+    <string name="default_theme">Automático</string>
     <string name="light_theme">Claro</string>
     <string name="dark_theme">Obscuro</string>
+    <string name="black_theme">Negro</string>
     <string name="appearance">Apariencia</string>
     <string name="theme_description">Elige uno de estos temas para tu BeatPlayer.</string>
-    <string name="default_theme">Automático</string>
     <string name="no_lyrics">Lo sentimos, no pudimos obtener la letra de esta canción.</string>
     <string name="deleted_ok">Canción eliminada exitosamente.</string>
     <string name="deleted_err">No se puede eliminar la canción ahora.</string>
@@ -87,7 +88,7 @@
     <string name="artist_no_fav_ok">Artista removido de tu música favorita.</string>
     <string name="artist_fav_ok">Artista agregado a tu música favorita.</string>
     <string name="playlist_name_error">El nombre de la lista de reproducción ya existe.</string>
-    <string name="settings_theme_description">Automático, Claro, Obscuro</string>
+    <string name="settings_theme_description">Automático, Claro, Obscuro y Negro</string>
     <string name="cancel">Cancelar</string>
     <string name="accept">Aceptar</string>
     <string name="search_tip">Escribe el nombre de un álbum, un artista o una canción y verás los resultados aquí.</string>

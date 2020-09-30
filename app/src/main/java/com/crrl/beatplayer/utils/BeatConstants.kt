@@ -61,6 +61,7 @@ object BeatConstants {
     const val SONG_DETAIL = "song_detail_fragment"
     const val ALBUM_DETAIL = "album_detail_fragment"
     const val LIGHT_THEME = "light_theme"
+    const val BLACK_THEME = "black_theme"
     const val DARK_THEME = "dark_theme"
     const val AUTO_THEME = "auto_theme"
     const val FAVORITE_ID = -7440L

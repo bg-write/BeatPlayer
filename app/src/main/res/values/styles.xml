@@ -19,6 +19,24 @@
 
     <style name="AppThemeParent.Dark" parent="Theme.AppCompat.Light.NoActionBar" />
 
+    <style name="AppTheme.Black" parent="AppThemeParent.Dark">
+        <item name="colorPrimary">@color/colorPrimaryBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlack</item>
+        <item name="colorPrimarySecondary">@color/colorPrimaryBlackSecondary</item>
+        <item name="colorPrimarySecondary2">@color/colorPrimaryBlackSecondary2</item>
+        <item name="colorPrimaryOpacity">@color/colorPrimaryBlackOpacity</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorAccent">@color/colorAccentBlack</item>
+        <item name="colorAccentOpacity">@color/colorAccentBlackOpacity</item>
+        <item name="android:fontFamily">@font/product_sans_regular</item>
+        <item name="android:windowBackground">@color/colorPrimaryBlack</item>
+        <item name="titleTextColor">@color/colorTitleTextBlack</item>
+        <item name="subTitleTextColor">@color/colorSubTitleTextBlack</item>
+        <item name="bodyTextColor">@color/colorBodyTextBlack</item>
+        <item name="btnTintColor">@color/colorTitleTextBlack</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
     <style name="AppTheme.Dark" parent="AppThemeParent.Dark">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

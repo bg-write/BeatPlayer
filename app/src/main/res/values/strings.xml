@@ -66,11 +66,12 @@
     <string name="no_folders">No Folders</string>
     <string name="remove">Remove</string>
     <string name="theme_title">Themes</string>
-    <string name="light_theme">Light Theme</string>
-    <string name="dark_theme">Dark Theme</string>
+    <string name="default_theme">System Default</string>
+    <string name="light_theme">Light</string>
+    <string name="dark_theme">Dark</string>
+    <string name="black_theme">Black</string>
     <string name="appearance">Appearance</string>
     <string name="theme_description">Choose one of these BeatPlayer themes.</string>
-    <string name="default_theme">System Default</string>
     <string name="no_lyrics">Sorry, We can\'t get lyrics for this song.</string>
     <string name="deleted_ok">Track deleted successfully.</string>
     <string name="deleted_err">We can\'t delete the song now.</string>
@@ -100,7 +101,7 @@
     <string name="artist_no_fav_ok">Artist removed from favorites.</string>
     <string name="artist_fav_ok">Artist added to your favorites.</string>
     <string name="playlist_name_error">Playlist name already exists.</string>
-    <string name="settings_theme_description">Auto, Light, Dark</string>
+    <string name="settings_theme_description">Auto, Light, Dark \u0026 Black</string>
     <string name="cancel">Cancel</string>
     <string name="accept">OK</string>
     <string name="search_tip">Type the name of an album, an artist or a song and you\'ll see the results here.</string>

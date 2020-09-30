@@ -145,6 +145,7 @@ open class BaseActivity : RequestPermissionActivity() {
 
     private fun setAppTheme(current_theme: String) {
         when (current_theme) {
+            BeatConstants.BLACK_THEME -> setTheme(R.style.AppTheme_Black)
             BeatConstants.DARK_THEME -> setTheme(R.style.AppTheme_Dark)
             BeatConstants.LIGHT_THEME -> setTheme(R.style.AppTheme_Light)
             else -> setTheme(R.style.AppTheme_Auto)

@@ -17,14 +17,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.crrl.beatplayer.R
+import com.crrl.beatplayer.alertdialog.AlertDialog
+import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
+import com.crrl.beatplayer.alertdialog.enums.AlertItemTheme
+import com.crrl.beatplayer.alertdialog.enums.AlertType
+import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
 import com.crrl.beatplayer.databinding.ActivitySettingsBinding
 import com.crrl.beatplayer.extensions.getColorByTheme
 import com.crrl.beatplayer.ui.activities.base.BaseActivity
-import com.crrl.beatplayer.alertdialog.AlertDialog
-import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
-import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
-import com.crrl.beatplayer.alertdialog.enums.AlertItemTheme
-import com.crrl.beatplayer.alertdialog.enums.AlertType
 import com.crrl.beatplayer.utils.BeatConstants
 import com.crrl.beatplayer.utils.SettingsUtility
 import org.koin.android.ext.android.inject
@@ -70,8 +70,7 @@ class SettingsActivity : BaseActivity() {
                 AlertItemTheme.DEFAULT
             ) {
                 it.selected = true
-                settingsUtility.currentTheme =
-                    BeatConstants.AUTO_THEME
+                settingsUtility.currentTheme = BeatConstants.AUTO_THEME
                 recreateActivity()
             })
             addItem(AlertItemAction(
@@ -90,8 +89,16 @@ class SettingsActivity : BaseActivity() {
                 AlertItemTheme.DEFAULT
             ) {
                 it.selected = true
-                settingsUtility.currentTheme =
-                    BeatConstants.DARK_THEME
+                settingsUtility.currentTheme = BeatConstants.DARK_THEME
+                recreateActivity()
+            })
+            addItem(AlertItemAction(
+                getString(R.string.black_theme),
+                settingsUtility.currentTheme == BeatConstants.BLACK_THEME,
+                AlertItemTheme.DEFAULT
+            ) {
+                it.selected = true
+                settingsUtility.currentTheme = BeatConstants.BLACK_THEME
                 recreateActivity()
             })
         }

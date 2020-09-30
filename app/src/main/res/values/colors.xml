@@ -12,16 +12,27 @@
   -->
 <!-- Accent Color #DB5151 E34A4C 7874D1-->
 <resources>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryBlack">#000000</color>
+    <color name="colorPrimaryDarkBlack">#000000</color>
+    <color name="colorAccentBlack">@color/colorAccent</color>
+    <color name="colorAccentBlackOpacity">#800788F1</color>
+    <color name="colorPrimaryBlackSecondary">#000000</color>
+    <color name="colorPrimaryBlackSecondary2">#262626</color>
+    <color name="colorPrimaryBlackOpacity">#4D000000</color>
+    <color name="colorTitleTextBlack">#FCFAFD</color>
+    <color name="colorSubTitleTextBlack">#CECECE</color>
+    <color name="colorBodyTextBlack">#8E8E8E</color>
+
+    <color name="colorPrimary">#19191A</color>
+    <color name="colorPrimaryDark">#19191A</color>
     <color name="colorAccentDark">@color/colorAccent</color>
     <color name="colorAccentDarkOpacity">#800788F1</color>
-    <color name="colorPrimaryDarkSecondary">#000000</color>
-    <color name="colorPrimaryDarkSecondary2">#262626</color>
-    <color name="colorPrimaryDarkOpacity">#4D000000</color>
-    <color name="colorTitleTextDark">#FCFAFD</color>
+    <color name="colorPrimaryDarkSecondary">#19191A</color>
+    <color name="colorPrimaryDarkSecondary2">#2C2D2E</color>
+    <color name="colorPrimaryDarkOpacity">#4D19191A</color>
+    <color name="colorTitleTextDark">#E1E3E6</color>
     <color name="colorSubTitleTextDark">#CECECE</color>
-    <color name="colorBodyTextDark">#8E8E8E</color>
+    <color name="colorBodyTextDark">#76787A</color>
 
     <color name="colorPrimaryLight">#F2F2F2</color>
     <color name="colorPrimaryDarkLight">#F2F2F2</color>
