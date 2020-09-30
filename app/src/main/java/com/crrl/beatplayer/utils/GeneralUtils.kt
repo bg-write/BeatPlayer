@@ -161,7 +161,7 @@ object GeneralUtils {
                 )
             }
         } catch (e: FileNotFoundException) {
-            BitmapFactory.decodeResource(context.resources, R.drawable.ic_empty_cover)
+            BitmapFactory.decodeResource(context.resources, R.drawable.app_icon)
         }
     }
 
