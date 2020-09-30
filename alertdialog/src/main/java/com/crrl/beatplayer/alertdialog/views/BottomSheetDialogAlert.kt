@@ -71,6 +71,16 @@ class BottomSheetDialogAlert : DialogFragmentBase() {
                 setTextColor(style.textColor)
             }
 
+            scroller.apply {
+                background = drawRoundRectShape(
+                    layoutParams.width,
+                    layoutParams.height,
+                    style.textColor,
+                    style.cornerRadius
+                )
+                visibility = View.VISIBLE
+            }
+
             val background = drawRoundRectShape(
                 container.layoutParams.width,
                 container.layoutParams.height,
