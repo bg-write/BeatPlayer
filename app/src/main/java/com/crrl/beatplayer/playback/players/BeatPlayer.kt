@@ -35,6 +35,7 @@ import com.crrl.beatplayer.utils.BeatConstants.REPEAT_ALL
 import com.crrl.beatplayer.utils.BeatConstants.REPEAT_MODE
 import com.crrl.beatplayer.utils.BeatConstants.REPEAT_ONE
 import com.crrl.beatplayer.utils.BeatConstants.SHUFFLE_MODE
+import com.crrl.beatplayer.utils.BeatConstants.SONG_ID_DEFAULT
 import com.crrl.beatplayer.utils.GeneralUtils.getAlbumArtBitmap
 import com.crrl.beatplayer.utils.GeneralUtils.getSongUri
 import com.crrl.beatplayer.utils.QueueUtils
@@ -151,7 +152,9 @@ class BeatPlayerImplementation(
         }
         musicPlayer.reset()
 
-        val path = getSongUri(queueUtils.currentSongId).toString()
+        val path = if (queueUtils.currentSongId != SONG_ID_DEFAULT)
+            getSongUri(queueUtils.currentSongId).toString()
+        else queueUtils.currentSong.path
         val isSourceSet = if (path.startsWith("content://")) {
             musicPlayer.setSource(path.toUri())
         } else {
@@ -164,7 +167,7 @@ class BeatPlayerImplementation(
     }
 
     override fun playSong(id: Long) {
-        if (audioFocusHelper.requestPlayback()){
+        if (audioFocusHelper.requestPlayback()) {
             val song = songsRepository.getSongForId(id)
             playSong(song)
         }
@@ -172,7 +175,9 @@ class BeatPlayerImplementation(
 
     override fun playSong(song: Song) {
         queueUtils.currentSongId = song.id
+        queueUtils.currentSong = song
         isInitialized = false
+
         updatePlaybackState {
             setState(mediaSession.controller.playbackState.state, 0, 1F)
         }
@@ -343,7 +348,7 @@ class BeatPlayerImplementation(
 
         stop()
 
-        if(queueUtils.queue.isEmpty()) return
+        if (queueUtils.queue.isEmpty()) return
 
         queueUtils.currentSongId = queueUtils.queue.first()
 

@@ -16,7 +16,6 @@ import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.repository.SongsRepository
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.audio.exceptions.CannotReadException
-import org.jaudiotagger.audio.exceptions.CannotWriteException
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 import org.jaudiotagger.tag.FieldKey
@@ -66,29 +65,7 @@ object LyricsHelper {
         lyrics: String,
         isSync: Boolean = false
     ): Boolean {
-        val file = File(Objects.requireNonNull(songsRepository.getPath(id)))
-        try {
-            val audioFile = AudioFileIO.read(file)
-            val tag = if (isSync) FieldKey.CUSTOM1 else FieldKey.LYRICS
-
-            audioFile.tag.setField(tag, lyrics)
-            audioFile.commit()
-            return true
-        } catch (ex: CannotReadException) {
-            Timber.e(ex)
-        } catch (ex: IOException) {
-            Timber.e(ex)
-        } catch (ex: TagException) {
-            Timber.e(ex)
-        } catch (ex: ReadOnlyFileException) {
-            Timber.e(ex)
-        } catch (ex: InvalidAudioFrameException) {
-            Timber.e(ex)
-        } catch (ex: IllegalArgumentException) {
-            Timber.e(ex)
-        } catch (ex: CannotWriteException) {
-            Timber.e(ex)
-        }
-        return false
+        val key = if (isSync) FieldKey.CUSTOM1 else FieldKey.LYRICS
+        return TagUtils.writeTag(songsRepository.getPath(id), key, lyrics)
     }
 }

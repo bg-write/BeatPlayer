@@ -45,7 +45,6 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.lang.IllegalStateException
 
 
 object GeneralUtils {
@@ -90,7 +89,19 @@ object GeneralUtils {
             fis.readBytes().optimize()
         } catch (ex: Exception) {
             Timber.e(ex)
-            if(didTry) byteArrayOf() else audio2Raw(context, uri, didTry = true)
+            if (didTry) byteArrayOf() else audio2Raw(context, uri, didTry = true)
+        }
+        fis.close()
+        return data
+    }
+
+    fun audio2Raw(context: Context, path: String, didTry: Boolean = false): ByteArray? {
+        val fis = FileInputStream(File(path))
+        val data = try {
+            fis.readBytes().optimize()
+        } catch (ex: Exception) {
+            Timber.e(ex)
+            if (didTry) byteArrayOf() else audio2Raw(context, path, didTry = true)
         }
         fis.close()
         return data
@@ -146,8 +157,8 @@ object GeneralUtils {
 
     @Suppress("DEPRECATION")
     fun getAlbumArtBitmap(context: Context, albumId: Long): Bitmap {
-        return try {
-            when {
+        try {
+            return when {
                 SDK_INT >= P -> {
                     val source = ImageDecoder.createSource(
                         context.contentResolver,
@@ -161,8 +172,11 @@ object GeneralUtils {
                 )
             }
         } catch (e: FileNotFoundException) {
-            BitmapFactory.decodeResource(context.resources, R.drawable.app_icon)
+            Timber.e(e)
+        } catch (e: UnsupportedOperationException) {
+            Timber.e(e)
         }
+        return BitmapFactory.decodeResource(context.resources, R.drawable.app_icon)
     }
 
     fun getExtraBundle(queue: LongArray, title: String): Bundle? {

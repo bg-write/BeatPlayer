@@ -108,6 +108,8 @@
     <string name="sync_lyrics">Sincronizar Letra</string>
     <string name="lyrics_type">¿Que quieres hacer?</string>
     <string name="lyrics_tip">Por favor, selecciona la opcion que deseas utilizar.</string>
+    <string name="others">Otras</string>
+    <string name="cannot_read_file">No se pudo leer el archivo %s.</string>
 
     <plurals name="number_of_songs" tools:ignore="UnusedQuantity">
         <item quantity="zero">%d Pistas</item>

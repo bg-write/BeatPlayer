@@ -79,6 +79,12 @@ class SettingsUtility(context: Context) {
             setPreference(DID_STOP_KEY, value)
         }
 
+    var intentPath: String
+        get() = sPreferences.getString(INTENT_PATH_KEY, null) ?: ""
+        set(value) {
+            setPreference(INTENT_PATH_KEY, value)
+        }
+
     private fun setPreference(key: String, value: String) {
         val editor = sPreferences.edit()
         editor.putString(key, value)
@@ -106,6 +112,7 @@ class SettingsUtility(context: Context) {
         private const val LAST_OPTION_SELECTED_KEY = "last_option_selected"
         private const val CURRENT_THEME_KEY = "current_theme"
         private const val DID_STOP_KEY = "did_stop_key"
+        private const val INTENT_PATH_KEY = "intent_path_key"
 
         const val QUEUE_INFO_KEY = "queue_info_key"
         const val QUEUE_LIST_KEY = "queue_list_key"

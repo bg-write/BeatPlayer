@@ -30,7 +30,7 @@ interface QueueUtils {
     var queue: LongArray
     var queueTitle: String
 
-    val currentSong: Song
+    var currentSong: Song
     val previousSongId: Long?
     val nextSongIndex: Int?
     val nextSongId: Long?
@@ -72,12 +72,12 @@ class QueueUtilsImplementation(
             mediaSession.setQueueTitle(value)
         }
 
-    override val currentSong: Song
-        get() = songsRepository.getSongForId(currentSongId)
+    override var currentSong: Song = Song()
+        get() = if (field.id != currentSongId) songsRepository.getSongForId(currentSongId) else field
 
     override val previousSongId: Long?
         get() {
-            if(mediaSession.position() >= 5000) return null
+            if (mediaSession.position() >= 5000) return null
             val previousIndex = currentSongIndex - 1
             return if (previousIndex >= 0) {
                 queue[previousIndex]

@@ -25,6 +25,7 @@ import com.crrl.beatplayer.ui.fragments.base.BaseSongDetailFragment
 import com.crrl.beatplayer.ui.viewmodels.SongViewModel
 import com.crrl.beatplayer.utils.AutoClearBinding
 import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_BOUND
+import com.crrl.beatplayer.utils.BeatConstants.SONG_ID_DEFAULT
 import com.crrl.beatplayer.utils.GeneralUtils
 import com.crrl.beatplayer.utils.GeneralUtils.getSongUri
 import kotlinx.android.synthetic.main.fragment_song_detail.*
@@ -40,7 +41,7 @@ class SongDetailFragment : BaseSongDetailFragment() {
     private val songViewModel by sharedViewModel<SongViewModel>()
     private lateinit var gestureDetector: GestureDetector
     private val minFlingVelocity = 800
-    
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,7 +63,10 @@ class SongDetailFragment : BaseSongDetailFragment() {
             initNeeded(songViewModel.getSongById(it.id), emptyList(), 0L)
             launch {
                 val raw = withContext(IO) {
-                    GeneralUtils.audio2Raw(context!!, getSongUri(it.id)) ?: byteArrayOf()
+                    if (it.id == SONG_ID_DEFAULT) {
+                        GeneralUtils.audio2Raw(context!!, settingsUtility.intentPath)
+                            ?: byteArrayOf()
+                    } else GeneralUtils.audio2Raw(context!!, getSongUri(it.id)) ?: byteArrayOf()
                 }
                 songDetailViewModel.update(raw)
             }
@@ -78,7 +82,7 @@ class SongDetailFragment : BaseSongDetailFragment() {
             }
         }
 
-        binding.apply{
+        binding.apply {
             sharedSong.setOnClickListener { shareItem() }
             songTitle.isSelected = true
         }
@@ -129,19 +133,20 @@ class SongDetailFragment : BaseSongDetailFragment() {
             }
         }
     }
-    
-    private var touchListener: View.OnTouchListener = View.OnTouchListener {
-            v: View, motionEvent: MotionEvent -> gestureDetector.onTouchEvent(motionEvent)
-        when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> {
+
+    private var touchListener: View.OnTouchListener =
+        View.OnTouchListener { v: View, motionEvent: MotionEvent ->
+            gestureDetector.onTouchEvent(motionEvent)
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                }
+                MotionEvent.ACTION_UP -> v.performClick()
+                else -> {
+                }
             }
-            MotionEvent.ACTION_UP -> v.performClick()
-            else -> {
-            }
+            true
         }
-        true
-    }
-    
+
     private fun initSwipeGestures() {
         gestureDetector =
             GestureDetector(activity, object : GestureDetector.OnGestureListener {
@@ -177,7 +182,12 @@ class SongDetailFragment : BaseSongDetailFragment() {
                     Timber.e("onLongPress detected")
                 }
 
-                override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+                override fun onScroll(
+                    e1: MotionEvent?,
+                    e2: MotionEvent?,
+                    distanceX: Float,
+                    distanceY: Float
+                ): Boolean {
                     return true
                 }
             })

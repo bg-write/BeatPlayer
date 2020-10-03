@@ -19,6 +19,7 @@ import com.crrl.beatplayer.R
 
 object BeatConstants {
 
+    const val SONG_ID_DEFAULT = -7173L
     const val CHANNEL_ID = "beatplayer_channel_id"
     const val NOTIFICATION_ID = 8341
 
@@ -33,6 +34,7 @@ object BeatConstants {
     const val SET_MEDIA_STATE = "action_set_media_state"
     const val PLAY_ACTION = "action_play"
     const val PAUSE_ACTION = "action_pause"
+    const val PLAY_SONG_FROM_INTENT = "action_play_song_from_intent"
 
     const val REPEAT_MODE = "repeat_mode"
     const val SHUFFLE_MODE = "shuffle_mode"

@@ -37,6 +37,7 @@ interface SongsRepository {
     fun deleteTracks(ids: LongArray): Int
     fun getSongsForIds(ids: LongArray): List<Song>
     fun getPath(id: Long): String
+    fun getAlbumIdArtistId(album: String, artist: String): LongArray
 }
 
 class SongsRepositoryImplementation(context: Context) : SongsRepository {
@@ -113,7 +114,7 @@ class SongsRepositoryImplementation(context: Context) : SongsRepository {
         } catch (e: OperationApplicationException) {
             Timber.e(e)
             -1
-        } catch (e: SecurityException){
+        } catch (e: SecurityException) {
             Timber.e(e)
             -1
         }
@@ -140,6 +141,17 @@ class SongsRepositoryImplementation(context: Context) : SongsRepository {
                 cursor.getString(8)
             } else {
                 ""
+            }
+        }
+    }
+
+    override fun getAlbumIdArtistId(album: String, artist: String): LongArray {
+        val cursor = makeSongCursor("album=? AND artist=?", arrayOf(album, artist))!!
+        cursor.use {
+            return if (it.moveToFirst()) {
+                longArrayOf(it.getLong(6), it.getLong(7))
+            } else {
+                longArrayOf(-1, -1)
             }
         }
     }

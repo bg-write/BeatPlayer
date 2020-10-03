@@ -13,7 +13,6 @@
 
 package com.crrl.beatplayer.models
 
-import android.content.ContentUris
 import android.database.Cursor
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -28,19 +27,21 @@ import com.crrl.beatplayer.repository.PlaylistRepositoryImplementation.Companion
 import com.crrl.beatplayer.repository.PlaylistRepositoryImplementation.Companion.COLUMN_PLAYLIST
 import com.crrl.beatplayer.repository.PlaylistRepositoryImplementation.Companion.COLUMN_TITLE
 import com.crrl.beatplayer.repository.PlaylistRepositoryImplementation.Companion.COLUMN_TRACK
-import com.crrl.beatplayer.utils.BeatConstants
 import com.crrl.beatplayer.utils.BeatConstants.FAVORITE_TYPE
-import com.crrl.beatplayer.utils.BeatConstants.FOLDER_TYPE
+import com.crrl.beatplayer.utils.BeatConstants.SONG_ID_DEFAULT
 import com.crrl.beatplayer.utils.BeatConstants.SONG_TYPE
 import com.crrl.beatplayer.utils.GeneralUtils.getAlbumArtUri
 import com.crrl.beatplayer.utils.GeneralUtils.getSongUri
+import com.google.gson.Gson
+import org.jaudiotagger.audio.AudioFile
+import org.jaudiotagger.tag.FieldKey
 import java.io.File
 
 data class Song(
     val id: Long = -1,
-    val albumId: Long = 0,
-    val artistId: Long = 0,
-    val title: String = "Title",
+    var albumId: Long = 0,
+    var artistId: Long = 0,
+    var title: String = "Title",
     val artist: String = "Artist",
     val album: String = "Album",
     val duration: Int = 0,
@@ -93,6 +94,24 @@ data class Song(
                 path = File(cursor.getString(8)).parent!!
             )
         }
+
+        fun createFromAudioFile(audioFile: AudioFile): Song {
+            return Song(
+                id = SONG_ID_DEFAULT,
+                title = audioFile.tag.getFirst(FieldKey.TITLE),
+                artist = audioFile.tag.getFirst(FieldKey.ARTIST),
+                album = audioFile.tag.getFirst(FieldKey.ALBUM),
+                duration = audioFile.audioHeader.trackLength * 1000,
+                trackNumber = try {
+                    audioFile.tag.getFirst(FieldKey.TRACK).toInt()
+                } catch (ex: NumberFormatException) {
+                    -1
+                },
+                artistId = -1,
+                albumId = -1,
+                path = audioFile.file.path
+            )
+        }
     }
 
     override fun compare(other: MediaItem): Boolean {
@@ -143,5 +162,9 @@ data class Song(
                 .setSubtitle(artist)
                 .build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
         )
+    }
+
+    override fun toString(): String {
+        return Gson().toJson(this)
     }
 }

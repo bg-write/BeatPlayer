@@ -39,6 +39,7 @@ import com.crrl.beatplayer.utils.BeatConstants.PAUSE_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_PAUSE
 import com.crrl.beatplayer.utils.BeatConstants.PREVIOUS
+import com.crrl.beatplayer.utils.BeatConstants.SONG_ID_DEFAULT
 import com.crrl.beatplayer.utils.SettingsUtility
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers.IO
@@ -160,8 +161,11 @@ class BeatPlayerService : CoroutineService(Main), KoinComponent {
                 return@launch
             }
 
+            val id = controller.metadata?.getString(METADATA_KEY_MEDIA_ID)?.toLong() ?: 0
+            if (id == SONG_ID_DEFAULT) return@launch
+
             val queueData = QueueInfo(
-                id = controller.metadata?.getString(METADATA_KEY_MEDIA_ID)?.toLong() ?: 0,
+                id = id,
                 seekPos = controller.playbackState?.position ?: 0,
                 repeatMode = controller.repeatMode,
                 shuffleMode = controller.shuffleMode,

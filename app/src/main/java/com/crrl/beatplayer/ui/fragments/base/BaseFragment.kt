@@ -125,7 +125,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
                 AlertItemTheme.ACCEPT
             ) { action ->
                 val exists = playlistViewModel.exists(action.input)
-                println(exists)
+
                 if (exists) mainViewModel.binding.mainContainer.snackbar(
                     ERROR,
                     getString(R.string.playlist_name_error),
@@ -134,8 +134,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
                     clickListener = View.OnClickListener {
                         createPlaylistDialog(song, action.input)
                     }
-                )
-                else addSongs(action.input, song)
+                ) else addSongs(action.input, song)
             }
         )
         createInputDialog(
@@ -168,7 +167,11 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
                 })
     }
 
-    protected fun buildDialog(titleText: String, subTitleText: String, actions: List<AlertItemAction>): AlertDialog {
+    protected fun buildDialog(
+        titleText: String,
+        subTitleText: String,
+        actions: List<AlertItemAction>
+    ): AlertDialog {
         val style = AlertItemStyle()
         style.apply {
             textColor = requireActivity().getColorByTheme(R.attr.titleTextColor)

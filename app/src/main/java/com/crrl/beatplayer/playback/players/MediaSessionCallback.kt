@@ -21,12 +21,15 @@ import androidx.core.os.bundleOf
 import com.crrl.beatplayer.extensions.isPlaying
 import com.crrl.beatplayer.extensions.toIdList
 import com.crrl.beatplayer.extensions.toMediaId
+import com.crrl.beatplayer.extensions.toSong
+import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.AudioFocusHelper
 import com.crrl.beatplayer.repository.SongsRepository
 import com.crrl.beatplayer.utils.BeatConstants.BY_UI_KEY
 import com.crrl.beatplayer.utils.BeatConstants.PAUSE_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_ALL_SHUFFLED
+import com.crrl.beatplayer.utils.BeatConstants.PLAY_SONG_FROM_INTENT
 import com.crrl.beatplayer.utils.BeatConstants.QUEUE_LIST_TYPE_KEY
 import com.crrl.beatplayer.utils.BeatConstants.REMOVE_SONG
 import com.crrl.beatplayer.utils.BeatConstants.REPEAT_ALL
@@ -167,6 +170,16 @@ class MediaSessionCallback(
             REMOVE_SONG -> musicPlayer.removeFromQueue(extras?.getLong(SONG_KEY)!!)
             PAUSE_ACTION -> musicPlayer.pause(extras ?: bundleOf(BY_UI_KEY to true))
             PLAY_ACTION -> playOnFocus(extras ?: bundleOf(BY_UI_KEY to true))
+            PLAY_SONG_FROM_INTENT -> {
+                extras?.let {
+                    val song = it.getString(SONG_KEY)?.toSong() ?: Song()
+                    val title = it.getString(QUEUE_INFO_KEY) ?: ""
+
+                    musicPlayer.setData(longArrayOf(song.id), title)
+
+                    musicPlayer.playSong(song)
+                }
+            }
 
             UPDATE_QUEUE -> {
                 extras ?: return

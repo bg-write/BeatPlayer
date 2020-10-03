@@ -27,7 +27,8 @@ class SongViewModel(
 ) : CoroutineViewModel(Main) {
 
     private val songsData = MutableLiveData<List<Song>>().apply { value = mutableListOf() }
-    private val songsSelected = MutableLiveData<MutableList<Song>>().apply { value = mutableListOf() }
+    private val songsSelected =
+        MutableLiveData<MutableList<Song>>().apply { value = mutableListOf() }
 
     fun update() {
         launch {
@@ -57,9 +58,5 @@ class SongViewModel(
 
     fun getSongById(id: Long): Song {
         return songsRepository.getSongForId(id)
-    }
-
-    fun getSongFromPath(path: String): Song {
-        return songsRepository.getSongForPath(path)
     }
 }

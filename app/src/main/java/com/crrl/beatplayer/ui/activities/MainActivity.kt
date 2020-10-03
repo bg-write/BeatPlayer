@@ -32,13 +32,14 @@ import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_BOUND
 import com.crrl.beatplayer.utils.BeatConstants.FAVORITE_ID
 import com.crrl.beatplayer.utils.BeatConstants.NOW_PLAYING
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_LIST_DETAIL
-import com.crrl.beatplayer.utils.GeneralUtils.getStoragePaths
 import com.crrl.beatplayer.utils.SettingsUtility
+import com.crrl.beatplayer.utils.TagUtils
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class MainActivity : BaseActivity() {
@@ -74,7 +75,7 @@ class MainActivity : BaseActivity() {
         if (didPermissionsGrant()) finishCreatingView()
     }
 
-    private fun finishCreatingView(){
+    private fun finishCreatingView() {
         songDetailViewModel.time.observe(this) {
             val total = songDetailViewModel.currentData.value?.duration ?: 0
             viewModel.binding.progressCircular.apply {
@@ -133,7 +134,7 @@ class MainActivity : BaseActivity() {
 
     override fun onPermissionsGrantResult(result: Boolean) {
         super.onPermissionsGrantResult(result)
-        if(result){
+        if (result) {
             replaceFragment(
                 R.id.nav_host_fragment,
                 LibraryFragment(),
@@ -255,19 +256,25 @@ class MainActivity : BaseActivity() {
         when (intent.action!!) {
             Intent.ACTION_VIEW -> {
                 val path = intent.data?.path ?: return
-                Timber.d("path: $path")
                 // Some file managers still send a file path instead of media uri,
                 // so data needs to be verified.
-                val storagePaths = getStoragePaths(this)
-                val song = if (path.contains(storagePaths[0])) {
-                    // Get song from a path
-                    songViewModel.getSongFromPath(path)
-                } else {
-                    // Get song by id if it is a media uri
-                    // The last part of a URI is the id, so just need to get it
-                    songViewModel.getSongById(path.split("/").last().toLong())
-                }
-                viewModel.mediaItemClicked(song.toMediaItem(), null)
+                settingsUtility.intentPath = path
+                val song =
+                    if (path.contains(Regex("(\\.[mM][pP]3)|(\\.[mM]4[aA])|(\\.[oO][gG][gG])"))) {
+                        // Get song from a path
+                        TagUtils.readTagsAsSong(this, path)
+                    } else {
+                        // Get song by id if it is a media uri
+                        // The last part of an URI is the id, so just need to get it
+                        songViewModel.getSongById(path.split("/").last().toLong())
+                    }
+                if (song.id == -1L) {
+                    main_container.snackbar(
+                        ERROR,
+                        getString(R.string.cannot_read_file, song.path),
+                        LENGTH_LONG
+                    )
+                } else viewModel.mediaItemClickFromIntent(this, song)
             }
         }
     }

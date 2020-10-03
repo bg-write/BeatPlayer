@@ -13,20 +13,25 @@
 
 package com.crrl.beatplayer.ui.viewmodels
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.view.animation.AccelerateInterpolator
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.ActivityMainBinding
-import com.crrl.beatplayer.extensions.*
+import com.crrl.beatplayer.extensions.filter
+import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.PlaybackConnection
 import com.crrl.beatplayer.repository.FavoritesRepository
 import com.crrl.beatplayer.ui.viewmodels.base.CoroutineViewModel
+import com.crrl.beatplayer.utils.BeatConstants.PLAY_SONG_FROM_INTENT
 import com.crrl.beatplayer.utils.BeatConstants.QUEUE_LIST_TYPE_KEY
+import com.crrl.beatplayer.utils.BeatConstants.SONG_KEY
 import com.crrl.beatplayer.utils.BeatConstants.UPDATE_QUEUE
-import com.crrl.beatplayer.utils.SettingsUtility
+import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_INFO_KEY
 import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_LIST_KEY
 import com.github.florent37.kotlin.pleaseanimate.please
 import kotlinx.coroutines.Dispatchers.IO
@@ -35,7 +40,7 @@ import kotlinx.coroutines.withContext
 
 class MainViewModel(
     private val favoritesRepository: FavoritesRepository,
-    private val PlaybackConnection: PlaybackConnection
+    private val playbackConnection: PlaybackConnection
 ) : CoroutineViewModel(Main) {
 
     private val isFavLiveData = MutableLiveData<Boolean>()
@@ -48,7 +53,19 @@ class MainViewModel(
         transportControls()?.playFromMediaId(mediaItem.mediaId, extras)
     }
 
-    fun transportControls() = PlaybackConnection.transportControls
+    fun mediaItemClickFromIntent(context: Context, song: Song) {
+        transportControls() ?: playbackConnection.isConnected.filter { it }.observeForever {
+            transportControls()?.sendCustomAction(
+                PLAY_SONG_FROM_INTENT,
+                bundleOf(
+                    SONG_KEY to song.toString(),
+                    QUEUE_INFO_KEY to context.getString(R.string.others)
+                )
+            )
+        }
+    }
+
+    fun transportControls() = playbackConnection.transportControls
 
     fun reloadQueueIds(ids: LongArray, type: String) {
         transportControls()?.sendCustomAction(
