@@ -48,11 +48,11 @@ import timber.log.Timber
 class MediaSessionCallback(
     private val mediaSession: MediaSessionCompat,
     private val musicPlayer: BeatPlayer,
-	private val audioFocusHelper: AudioFocusHelper,
+    private val audioFocusHelper: AudioFocusHelper,
     private val songsRepository: SongsRepository
 ) : MediaSessionCompat.Callback() {
 
-	init {
+    init {
         audioFocusHelper.onAudioFocusGain {
             Timber.d("GAIN")
             if (isAudioFocusGranted && !musicPlayer.getSession().isPlaying()) {
@@ -160,6 +160,9 @@ class MediaSessionCallback(
                     putInt(SHUFFLE_MODE, shuffleMode)
                 }).build()
         )
+        if (shuffleMode == SHUFFLE_MODE_NONE) {
+            musicPlayer.clearRandomSongPlayed()
+        }
     }
 
     override fun onCustomAction(action: String?, extras: Bundle?) {
@@ -225,7 +228,7 @@ class MediaSessionCallback(
         )
     }
 
-	private fun playOnFocus(extras: Bundle = bundleOf(BY_UI_KEY to true)) {
+    private fun playOnFocus(extras: Bundle = bundleOf(BY_UI_KEY to true)) {
         if (audioFocusHelper.requestPlayback())
             musicPlayer.playSong(extras)
     }

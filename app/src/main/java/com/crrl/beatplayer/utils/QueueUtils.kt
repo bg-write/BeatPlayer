@@ -23,6 +23,7 @@ import com.crrl.beatplayer.extensions.position
 import com.crrl.beatplayer.extensions.toQueue
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.repository.SongsRepository
+import com.crrl.beatplayer.utils.BeatConstants.MAX_RANDOM_BUFFER_SIZE
 import kotlin.random.Random
 
 interface QueueUtils {
@@ -41,6 +42,7 @@ interface QueueUtils {
     fun swap(from: Int, to: Int)
     fun queue(): String
     fun clear()
+    fun clearPreviousRandomIndexes()
 }
 
 class QueueUtilsImplementation(
@@ -49,6 +51,7 @@ class QueueUtilsImplementation(
 ) : QueueUtils {
 
     private lateinit var mediaSession: MediaSessionCompat
+    private val previousRandomIndexes = mutableListOf<Int>()
 
     private val currentSongIndex
         get() = queue.indexOf(currentSongId)
@@ -77,11 +80,19 @@ class QueueUtilsImplementation(
 
     override val previousSongId: Long?
         get() {
-            if (mediaSession.position() >= 5000) return null
+            if (mediaSession.position() >= 5000) return currentSongId
             val previousIndex = currentSongIndex - 1
-            return if (previousIndex >= 0) {
-                queue[previousIndex]
-            } else null
+            val controller = mediaSession.controller
+
+            return when {
+                controller.shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
+                    getPreviousRandomIndex()
+                }
+                previousIndex >= 0 -> {
+                    queue[previousIndex]
+                }
+                else -> null
+            }
         }
 
     override val nextSongIndex: Int?
@@ -91,7 +102,7 @@ class QueueUtilsImplementation(
             return when {
                 controller.shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL -> {
                     val index = getRandomIndex()
-                    if(index >= 0) index else null
+                    if (index >= 0) index else null
                 }
                 nextIndex < queue.size -> nextIndex
                 else -> null
@@ -99,7 +110,10 @@ class QueueUtilsImplementation(
         }
 
     override val nextSongId: Long?
-        get() = if (nextSongIndex != null) queue[nextSongIndex!!] else null
+        get() {
+            val nxtIdx = nextSongIndex
+            return if (nxtIdx != null) queue[nxtIdx] else null
+        }
 
     override fun setMediaSession(session: MediaSessionCompat) {
         mediaSession = session
@@ -122,17 +136,40 @@ class QueueUtilsImplementation(
         return "${currentSongIndex + 1}/${queue.size}"
     }
 
-    private fun getRandomIndex(): Int {
-        if(queue.isEmpty()) return -1
-        if (queue.size == 1) return 0
-        val randomSong = Random.nextInt(0, queue.size - 1)
-        if (randomSong == currentSongIndex) return getRandomIndex()
-        return randomSong
-    }
-
     override fun clear() {
         queue = longArrayOf()
         queueTitle = ""
         currentSongId = 0
+    }
+
+    override fun clearPreviousRandomIndexes() {
+        previousRandomIndexes.clear()
+    }
+
+    private fun getPreviousRandomIndex(): Long {
+        return if (previousRandomIndexes.size > 1) {
+            previousRandomIndexes.removeLast()
+            queue[previousRandomIndexes.last()]
+        } else currentSongId
+    }
+
+    private fun getRandomIndex(): Int {
+        if (queue.isEmpty()) return -1
+        if (queue.size == 1) return 0
+
+        val randomIndex = Random.nextInt(0, queue.size - 1)
+
+        if (previousRandomIndexes.contains(randomIndex)) {
+            return getRandomIndex()
+        }
+
+        if (previousRandomIndexes.isEmpty()) previousRandomIndexes.add(currentSongIndex)
+        previousRandomIndexes.add(randomIndex)
+
+        if (previousRandomIndexes.size > MAX_RANDOM_BUFFER_SIZE) {
+            previousRandomIndexes.removeAt(0)
+        }
+
+        return randomIndex
     }
 }

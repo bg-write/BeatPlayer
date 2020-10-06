@@ -76,6 +76,8 @@ object BeatConstants {
     const val FOLDER_TYPE = "Folder"
     const val PLAY_LIST_TYPE = "Playlist"
 
+    const val MAX_RANDOM_BUFFER_SIZE = 20
+
     const val READ_ONLY_MODE = "r"
 
     val ARTWORK_URI: Uri = Uri.parse("content://media/external/audio/albumart")

@@ -14,6 +14,7 @@
 package com.crrl.beatplayer.ui.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat.*
@@ -38,6 +39,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -59,6 +61,7 @@ class MainActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
+        val context = get<Context>()
         settingsUtility.didStop = true
     }
 

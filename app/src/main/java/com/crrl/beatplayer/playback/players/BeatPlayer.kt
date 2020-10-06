@@ -17,6 +17,7 @@ import android.app.Application
 import android.app.PendingIntent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.support.v4.media.session.MediaSessionCompat
@@ -49,7 +50,7 @@ interface BeatPlayer {
     fun playSong(song: Song)
     fun seekTo(position: Int)
     fun pause(extras: Bundle = bundleOf(BY_UI_KEY to true))
-    fun nextSong()
+    fun nextSong(): Long?
     fun repeatSong()
     fun repeatQueue()
     fun previousSong()
@@ -68,6 +69,7 @@ interface BeatPlayer {
     fun updateData(list: LongArray = longArrayOf(), title: String = "")
     fun setData(list: LongArray = longArrayOf(), title: String = "")
     fun restoreQueueData()
+    fun clearRandomSongPlayed()
 }
 
 class BeatPlayerImplementation(
@@ -129,7 +131,7 @@ class BeatPlayerImplementation(
                 REPEAT_MODE_ALL -> {
                     controller.transportControls.sendCustomAction(REPEAT_ALL, null)
                 }
-                else -> if (queueUtils.nextSongId == null) goToStart() else nextSong()
+                else -> if (nextSong() == null) goToStart()
             }
         }
     }
@@ -219,8 +221,10 @@ class BeatPlayerImplementation(
         }
     }
 
-    override fun nextSong() {
-        queueUtils.nextSongId?.let { playSong(it) }
+    override fun nextSong(): Long? {
+        val id = queueUtils.nextSongId
+        id?.let { playSong(it) }
+        return id
     }
 
     override fun repeatSong() {
@@ -343,6 +347,10 @@ class BeatPlayerImplementation(
         }
     }
 
+    override fun clearRandomSongPlayed() {
+        queueUtils.clearPreviousRandomIndexes()
+    }
+
     private fun goToStart() {
         isInitialized = false
 
@@ -353,7 +361,7 @@ class BeatPlayerImplementation(
         queueUtils.currentSongId = queueUtils.queue.first()
 
         val song = songsRepository.getSongForId(queueUtils.currentSongId)
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             setMetaData(song)
         }, 250)
     }
