@@ -55,14 +55,15 @@ class MainViewModel(
 
     fun mediaItemClickFromIntent(context: Context, song: Song) {
         transportControls() ?: playbackConnection.isConnected.filter { it }.observeForever {
-            transportControls()?.sendCustomAction(
-                PLAY_SONG_FROM_INTENT,
-                bundleOf(
-                    SONG_KEY to song.toString(),
-                    QUEUE_INFO_KEY to context.getString(R.string.others)
-                )
-            )
+            mediaItemClickFromIntent(context, song)
         }
+        transportControls()?.sendCustomAction(
+            PLAY_SONG_FROM_INTENT,
+            bundleOf(
+                SONG_KEY to song.toString(),
+                QUEUE_INFO_KEY to context.getString(R.string.others)
+            )
+        )
     }
 
     fun transportControls() = playbackConnection.transportControls
