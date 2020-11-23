@@ -83,9 +83,12 @@ class SelectSongActivity : BaseActivity(), ItemClickListener<Song> {
     }
 
     fun doneClick(view: View) {
-        val name = intent.extras!!.getString(PLAY_LIST_DETAIL)
         val songs = songViewModel.selectedSongs().value!!
-        returnResult(name, songs, Activity.RESULT_OK)
+        val name = intent.extras?.getString(PLAY_LIST_DETAIL)
+        val id = intent.extras?.getLong(PLAY_LIST_DETAIL)
+        if(name == null){
+            returnResult(id, songs, Activity.RESULT_OK)
+        } else returnResult(name, songs, Activity.RESULT_OK)
         finish()
     }
 
@@ -102,6 +105,14 @@ class SelectSongActivity : BaseActivity(), ItemClickListener<Song> {
         setResult(result, returnIntent)
     }
 
+    private fun returnResult(name: Long?, songs: List<Song>, result: Int) {
+        val returnIntent = Intent().apply {
+            putExtra(PLAY_LIST_DETAIL, name)
+            putExtra("SONGS", Gson().toJson(songs))
+        }
+        setResult(result, returnIntent)
+    }
+
     private fun songListSelected(select: Boolean): MutableList<Song> {
         return songAdapter.songList.mapIndexed { index, item ->
             toggleSelect(index, item, select)
@@ -110,8 +121,11 @@ class SelectSongActivity : BaseActivity(), ItemClickListener<Song> {
     }
 
     override fun onBackPressed() {
-        val name = intent.extras!!.getString(PLAY_LIST_DETAIL)
-        returnResult(name, emptyList(), Activity.RESULT_CANCELED)
+        val name = intent.extras?.getString(PLAY_LIST_DETAIL)
+        val id = intent.extras?.getLong(PLAY_LIST_DETAIL)
+        if(name == null){
+            returnResult(id, emptyList(), Activity.RESULT_CANCELED)
+        } else returnResult(name, emptyList(), Activity.RESULT_CANCELED)
         super.onBackPressed()
     }
 

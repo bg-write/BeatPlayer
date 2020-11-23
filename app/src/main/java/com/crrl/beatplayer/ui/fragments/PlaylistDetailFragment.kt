@@ -14,6 +14,7 @@
 package com.crrl.beatplayer.ui.fragments
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentPlaylistDetailBinding
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.Song
+import com.crrl.beatplayer.ui.activities.SelectSongActivity
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
@@ -42,8 +44,8 @@ class PlaylistDetailFragment : BaseFragment<Song>() {
     private val playlistViewModel by inject<PlaylistViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         binding = inflater.inflateWithBinding(R.layout.fragment_playlist_detail, container)
         return binding.root
@@ -74,17 +76,29 @@ class PlaylistDetailFragment : BaseFragment<Song>() {
         }
 
         playlistViewModel.getSongs(binding.playlist!!.id)
-            .filter { !songAdapter.songList.deepEquals(it) }
-            .observe(viewLifecycleOwner) {
-                songAdapter.updateDataSet(it)
-                mainViewModel.reloadQueueIds(it.toIDList(), binding.playlist!!.name)
-            }
+                .filter { !songAdapter.songList.deepEquals(it) }
+                .observe(viewLifecycleOwner) {
+                    songAdapter.updateDataSet(it)
+                    mainViewModel.reloadQueueIds(it.toIDList(), binding.playlist!!.name)
+                }
 
         binding.let {
             it.viewModel = playlistViewModel
             it.lifecycleOwner = this
             it.executePendingBindings()
         }
+    }
+
+    override fun onResume() {
+        mainViewModel.binding.createPlayList.setOnClickListener { addSongsToPlaylist(binding.playlist?.id) }
+        super.onResume()
+    }
+
+    private fun addSongsToPlaylist(id: Long?){
+        val intent = Intent(requireActivity(), SelectSongActivity::class.java).apply {
+            putExtra(PLAY_LIST_DETAIL, id)
+        }
+        requireActivity().startActivityForResult(intent, 1)
     }
 
     override fun removeFromList(playListId: Long, item: Song?) {

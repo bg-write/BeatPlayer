@@ -161,13 +161,18 @@ class MainActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         data ?: return
         data.extras ?: return
-        val name = data.extras!!.getString(PLAY_LIST_DETAIL)
+        val name = data.extras?.getString(PLAY_LIST_DETAIL)
+        val id = data.extras?.getLong(PLAY_LIST_DETAIL)
         val songs = Gson().fromJson<List<Song>>(data.extras?.getString("SONGS")!!)
         if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_CANCELED) {
-                createPlayList(name, songs)
+            if(name != null){
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    createPlayList(name, songs)
+                } else {
+                    createPlayList(name, songs, true)
+                }
             } else {
-                createPlayList(name, songs, true)
+                playListViewModel.addToPlaylist(id!!, songs)
             }
         }
     }

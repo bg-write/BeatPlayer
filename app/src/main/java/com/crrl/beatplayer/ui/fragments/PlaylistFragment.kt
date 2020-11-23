@@ -25,6 +25,7 @@ import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentPlaylistBinding
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.Playlist
+import com.crrl.beatplayer.ui.activities.MainActivity
 import com.crrl.beatplayer.ui.adapters.PlaylistAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
@@ -65,14 +66,12 @@ class PlaylistFragment : BaseFragment<Playlist>() {
             adapter = playlistAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy > 0 || dy < 0 && binding.createPlayList.isShown)
-                        binding.createPlayList.hide()
-                }
-
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                        binding.createPlayList.show()
-                    super.onScrollStateChanged(recyclerView, newState)
+                    if (dy > 0) {
+                        mainViewModel.hideCreatePlaylistButton()
+                    }
+                    if(dy < 0){
+                        mainViewModel.showCreatePlaylistButton()
+                    }
                 }
             })
         }
@@ -85,11 +84,13 @@ class PlaylistFragment : BaseFragment<Playlist>() {
             it.viewModel = playlistViewModel
             it.lifecycleOwner = this
             it.executePendingBindings()
-
-            it.createPlayList.setOnClickListener { createPlaylistDialog() }
         }
     }
 
+    override fun onResume() {
+        mainViewModel.binding.createPlayList.setOnClickListener { createPlaylistDialog() }
+        super.onResume()
+    }
 
     override fun onItemClick(view: View, position: Int, item: Playlist) {
         activity!!.addFragment(

@@ -39,8 +39,8 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
 
 class MainViewModel(
-    private val favoritesRepository: FavoritesRepository,
-    private val playbackConnection: PlaybackConnection
+        private val favoritesRepository: FavoritesRepository,
+        private val playbackConnection: PlaybackConnection
 ) : CoroutineViewModel(Main) {
 
     private val isFavLiveData = MutableLiveData<Boolean>()
@@ -58,11 +58,11 @@ class MainViewModel(
             mediaItemClickFromIntent(context, song)
         }
         transportControls()?.sendCustomAction(
-            PLAY_SONG_FROM_INTENT,
-            bundleOf(
-                SONG_KEY to song.toString(),
-                QUEUE_INFO_KEY to context.getString(R.string.others)
-            )
+                PLAY_SONG_FROM_INTENT,
+                bundleOf(
+                        SONG_KEY to song.toString(),
+                        QUEUE_INFO_KEY to context.getString(R.string.others)
+                )
         )
     }
 
@@ -70,8 +70,8 @@ class MainViewModel(
 
     fun reloadQueueIds(ids: LongArray, type: String) {
         transportControls()?.sendCustomAction(
-            UPDATE_QUEUE,
-            bundleOf(QUEUE_LIST_KEY to ids, QUEUE_LIST_TYPE_KEY to type)
+                UPDATE_QUEUE,
+                bundleOf(QUEUE_LIST_KEY to ids, QUEUE_LIST_TYPE_KEY to type)
         )
     }
 
@@ -112,7 +112,34 @@ class MainViewModel(
                 animate(bottomControls) {
                     belowOf(mainContainer)
                 }
+                animate(createPlayList) {
+                    belowOf(mainContainer)
+                }
             }.start()
+        }
+    }
+
+    fun showCreatePlaylistButton() {
+        binding.apply {
+            please(190, AccelerateInterpolator()) {
+                animate(createPlayList) {
+                    scale(1f, 1f)
+                }
+            }.start()
+            createPlayList.isClickable = true
+            createPlayList.isFocusable = true
+        }
+    }
+
+    fun hideCreatePlaylistButton() {
+        binding.apply {
+            please(190, AccelerateInterpolator()) {
+                animate(createPlayList) {
+                    scale(0f, 0f)
+                }
+            }.start()
+            createPlayList.isClickable = false
+            createPlayList.isFocusable = false
         }
     }
 
@@ -122,6 +149,9 @@ class MainViewModel(
             please(190, AccelerateInterpolator()) {
                 animate(bottomControls) {
                     bottomOfItsParent()
+                }
+                animate(createPlayList) {
+                    aboveOf(bottomControls, 20f)
                 }
             }.start()
         }

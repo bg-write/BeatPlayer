@@ -62,24 +62,5 @@
                 android:textColor="?bodyTextColor"
                 android:textSize="@dimen/text_size_14" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/createPlayList"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/btn_size"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="140dp"
-            android:background="@drawable/btn_play_background"
-            android:contentDescription="@string/cover"
-            android:drawableStart="@drawable/ic_add"
-            android:drawablePadding="@dimen/margin_6"
-            android:drawableTint="@color/white"
-            android:elevation="3dp"
-            android:padding="@dimen/margin_12"
-            android:text="@string/new_playlist"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

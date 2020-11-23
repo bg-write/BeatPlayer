@@ -32,8 +32,8 @@ class LibraryFragment : BaseSongDetailFragment() {
     private var binding by AutoClearBinding<FragmentLibraryBinding>(this)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         binding = inflater.inflateWithBinding(R.layout.fragment_library, container)
         return binding.root
@@ -74,9 +74,12 @@ class LibraryFragment : BaseSongDetailFragment() {
             offscreenPageLimit = 1
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrollStateChanged(s: Int) = Unit
-                override fun onPageScrolled(p: Int, po: Float, pop: Int) = Unit
+                override fun onPageScrolled(position: Int, offset: Float, offsetPixel: Int) = Unit
                 override fun onPageSelected(p: Int) {
                     settingsUtility.startPageIndexSelected = p
+                    if(p == 1){
+                        mainViewModel.showCreatePlaylistButton()
+                    } else mainViewModel.hideCreatePlaylistButton()
                 }
             })
             setCurrentItem(settingsUtility.startPageIndexSelected, false)

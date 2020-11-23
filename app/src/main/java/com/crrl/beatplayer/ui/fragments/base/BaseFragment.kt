@@ -216,7 +216,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
         }.show(requireActivity() as AppCompatActivity)
     }
 
-    private fun addSongs(name: String, song: Song?) {
+    private fun addSongs(name: String, song: Song? = null) {
         if (song != null) {
             val id = playlistViewModel.create(name, listOf(song))
             if (id != -1L) {
@@ -384,13 +384,11 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
     }
 
     open fun onBackPressed(): Boolean {
-        return if (powerMenu != null) {
-            if (powerMenu!!.isShowing) {
-                powerMenu!!.dismiss()
-                false
-            } else {
-                true
-            }
+        powerMenu ?: return true
+
+        return if (powerMenu!!.isShowing) {
+            powerMenu!!.dismiss()
+            false
         } else {
             true
         }

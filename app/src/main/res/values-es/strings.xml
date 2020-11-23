@@ -110,6 +110,8 @@
     <string name="lyrics_tip">Por favor, selecciona la opcion que deseas utilizar.</string>
     <string name="others">Otras</string>
     <string name="cannot_read_file">No se pudo leer el archivo %s.</string>
+    <string name="internal_storage">Almacenamiento Interno</string>
+    <string name="external_storage">Tarjeta SD</string>
 
     <plurals name="number_of_songs" tools:ignore="UnusedQuantity">
         <item quantity="zero">%d Pistas</item>
