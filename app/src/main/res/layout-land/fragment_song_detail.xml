@@ -186,7 +186,8 @@
                 android:text="@{viewModel.currentData.title, default=Title}"
                 android:textColor="?titleTextColor"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:isSelected="@{true}"/>
 
             <TextView
                 android:id="@+id/album_title"
@@ -199,9 +200,10 @@
                 android:maxLines="1"
                 android:paddingStart="@dimen/margin_10"
                 android:paddingEnd="@dimen/margin_10"
-                android:text="@{viewModel.currentData.album, default=Album}"
+                android:text="@{viewModel.currentData.artist, default=Album}"
                 android:textColor="?bodyTextColor"
-                android:textSize="@dimen/title_text_size" />
+                android:textSize="@dimen/title_text_size"
+                app:isSelected="@{true}"/>
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -305,3 +305,15 @@ fun setScale(view: View, state: Int) {
         view.scaleDown()
     }
 }
+
+@BindingAdapter("app:album", "app:artist")
+fun setArtistAlbum(view: TextView, artist: String?, album: String?){
+    view.text = if(artist != null && album != null)
+        view.context.getString(R.string.with_separator, artist, album)
+    else artist ?: album ?: ""
+}
+
+@BindingAdapter("app:isSelected", requireAll = true)
+fun setSelected(view: View, selected: Boolean){
+    view.isSelected = selected
+}

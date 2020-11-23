@@ -61,7 +61,6 @@ class MainActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        val context = get<Context>()
         settingsUtility.didStop = true
     }
 
@@ -99,9 +98,6 @@ class MainActivity : BaseActivity() {
         viewModel.binding.let {
             it.viewModel = songDetailViewModel
             it.executePendingBindings()
-
-            it.title.isSelected = true
-
             it.lifecycleOwner = this
         }
 
