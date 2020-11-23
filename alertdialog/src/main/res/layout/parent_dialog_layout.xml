@@ -28,7 +28,7 @@
 
         <View
             android:id="@+id/scroller"
-            android:layout_width="50dp"
+            android:layout_width="25dp"
             android:layout_height="2dp"
             android:background="#000000"
             android:layout_gravity="center_horizontal"
