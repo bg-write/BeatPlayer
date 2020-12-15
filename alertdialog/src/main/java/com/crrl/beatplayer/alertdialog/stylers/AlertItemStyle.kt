@@ -21,5 +21,5 @@ class AlertItemStyle(
     var selectedBackgroundColor: Int = Color.parseColor("#E8E8E8"),
     var textColor: Int = Color.parseColor("#131313"),
     var selectedTextColor: Int = Color.parseColor("#F44336"),
-    var cornerRadius: Float = 60f
+    var cornerRadius: Float = 66f
 ) : ItemStyle()

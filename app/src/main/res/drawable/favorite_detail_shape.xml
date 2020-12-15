@@ -14,7 +14,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/colorPrimaryDarkOpacity" />
+            <solid android:color="@color/colorAccentBlackOpacity" />
             <corners android:radius="@dimen/album_item_radius" />
         </shape>
     </item>

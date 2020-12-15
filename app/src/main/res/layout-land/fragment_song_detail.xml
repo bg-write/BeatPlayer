@@ -117,18 +117,30 @@
                 android:text="@{GeneralUtils.INSTANCE.formatMilliseconds(viewModel.time), default=@string/def_time}"
                 android:textColor="?bodyTextColor" />
 
-            <TextView
-                android:id="@+id/description"
+            <LinearLayout
+                android:id="@+id/description_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/btn_ripple_with_stroke"
+                android:paddingStart="@dimen/padding_14"
+                android:paddingTop="4dp"
+                android:paddingEnd="@dimen/padding_14"
+                android:paddingBottom="4.5dp"
+                android:layout_marginTop="@dimen/margin_6"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_8"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@{viewModel.currentData.description}"
-                android:textColor="?bodyTextColor"
-                tools:ignore="RelativeOverlap" />
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:text="@{viewModel.currentData.description}"
+                    android:textColor="?bodyTextColor"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/time_left"

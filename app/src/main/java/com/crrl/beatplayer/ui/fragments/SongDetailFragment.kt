@@ -17,35 +17,50 @@ package com.crrl.beatplayer.ui.fragments
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import com.crrl.beatplayer.R
+import com.crrl.beatplayer.alertdialog.AlertDialog
+import com.crrl.beatplayer.alertdialog.enums.AlertType
+import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
 import com.crrl.beatplayer.databinding.FragmentSongDetailBinding
 import com.crrl.beatplayer.extensions.*
+import com.crrl.beatplayer.interfaces.ItemMovedListener
 import com.crrl.beatplayer.models.MediaItemData
+import com.crrl.beatplayer.models.Song
+import com.crrl.beatplayer.ui.adapters.QueueAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseSongDetailFragment
+import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
 import com.crrl.beatplayer.ui.viewmodels.SongViewModel
 import com.crrl.beatplayer.utils.AutoClearBinding
 import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_BOUND
+import com.crrl.beatplayer.utils.BeatConstants.FROM_POSITION_KEY
 import com.crrl.beatplayer.utils.BeatConstants.SONG_ID_DEFAULT
+import com.crrl.beatplayer.utils.BeatConstants.SWAP_ACTION
+import com.crrl.beatplayer.utils.BeatConstants.TO_POSITION_KEY
 import com.crrl.beatplayer.utils.GeneralUtils
 import com.crrl.beatplayer.utils.GeneralUtils.getSongUri
 import kotlinx.android.synthetic.main.fragment_song_detail.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import kotlin.math.absoluteValue
 
-class SongDetailFragment : BaseSongDetailFragment() {
+class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
 
     private var binding by AutoClearBinding<FragmentSongDetailBinding>(this)
     private val songViewModel by sharedViewModel<SongViewModel>()
-    private lateinit var gestureDetector: GestureDetector
+    private val playlistViewModel by sharedViewModel<PlaylistViewModel>()
     private val minFlingVelocity = 800
+
+    private lateinit var gestureDetector: GestureDetector
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = inflater.inflateWithBinding(R.layout.fragment_song_detail, container)
         return binding.root
     }
@@ -82,7 +97,10 @@ class SongDetailFragment : BaseSongDetailFragment() {
             }
         }
 
-        binding.sharedSong.setOnClickListener { shareItem() }
+        binding.apply {
+            sharedSong.setOnClickListener { shareItem() }
+            descriptionContainer.setOnClickListener { showQueueList() }
+        }
 
         songDetailViewModel.currentState.observe(viewLifecycleOwner) {
             songDetailViewModel.update(it.position)
@@ -102,6 +120,35 @@ class SongDetailFragment : BaseSongDetailFragment() {
         super.onDetach()
         songDetailViewModel.update(byteArrayOf())
         songDetailViewModel.update()
+    }
+
+    private fun showQueueList() {
+        val style = AlertItemStyle().apply {
+            textColor = activity?.getColorByTheme(R.attr.titleTextColor)!!
+            selectedTextColor = activity?.getColorByTheme(R.attr.colorAccent)!!
+            backgroundColor = activity?.getColorByTheme(R.attr.colorPrimarySecondary2)!!
+        }
+
+        val queueAdapter = QueueAdapter(viewLifecycleOwner).apply {
+            itemClickListener = this@SongDetailFragment
+            itemMovedListener = this@SongDetailFragment
+        }
+
+        songDetailViewModel.queueData.observeOnce { queue ->
+            queueAdapter.updateDataSet(queue.queue.toSongList(get()))
+        }
+
+        songDetailViewModel.currentData.observe(viewLifecycleOwner){
+            queueAdapter.scrollToPosition(it.id)
+        }
+
+        AlertDialog(
+            title = getString(R.string.queue_title),
+            message = getString(R.string.queue_msg),
+            style = style,
+            type = AlertType.QUEUE_LIST,
+            adapter = queueAdapter
+        ).show(activity as AppCompatActivity)
     }
 
     private fun initViewComponents() {
@@ -189,5 +236,24 @@ class SongDetailFragment : BaseSongDetailFragment() {
                 }
             })
         now_playing_cover.setOnTouchListener(touchListener)
+    }
+
+    override fun onItemClick(view: View, position: Int, item: Song) {
+        mainViewModel.mediaItemClicked(item.toMediaItem())
+    }
+
+    override fun onPopupMenuClick(view: View, position: Int, item: Song, itemList: List<Song>) {
+        super.onPopupMenuClick(view, position, item, itemList)
+        powerMenu?.showAsAnchorRightTop(view)
+        playlistViewModel.playLists().observe(viewLifecycleOwner) {
+            buildPlaylistMenu(it, item)
+        }
+    }
+
+    override fun itemMoved(from: Int, to: Int) {
+        mainViewModel.transportControls()?.sendCustomAction(
+            SWAP_ACTION,
+            bundleOf(FROM_POSITION_KEY to from, TO_POSITION_KEY to to)
+        )
     }
 }

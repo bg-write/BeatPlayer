@@ -26,6 +26,7 @@ import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.AudioFocusHelper
 import com.crrl.beatplayer.repository.SongsRepository
 import com.crrl.beatplayer.utils.BeatConstants.BY_UI_KEY
+import com.crrl.beatplayer.utils.BeatConstants.FROM_POSITION_KEY
 import com.crrl.beatplayer.utils.BeatConstants.PAUSE_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_ALL_SHUFFLED
@@ -40,6 +41,8 @@ import com.crrl.beatplayer.utils.BeatConstants.SET_MEDIA_STATE
 import com.crrl.beatplayer.utils.BeatConstants.SHUFFLE_MODE
 import com.crrl.beatplayer.utils.BeatConstants.SONG_KEY
 import com.crrl.beatplayer.utils.BeatConstants.SONG_LIST_NAME
+import com.crrl.beatplayer.utils.BeatConstants.SWAP_ACTION
+import com.crrl.beatplayer.utils.BeatConstants.TO_POSITION_KEY
 import com.crrl.beatplayer.utils.BeatConstants.UPDATE_QUEUE
 import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_INFO_KEY
 import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_LIST_KEY
@@ -110,6 +113,7 @@ class MediaSessionCallback(
         val seekTo = extras?.getInt(SEEK_TO) ?: 0
 
         if (queue != null) {
+            musicPlayer.setCurrentSongId(songId)
             musicPlayer.setData(queue, queueTitle!!)
         }
 
@@ -160,9 +164,7 @@ class MediaSessionCallback(
                     putInt(SHUFFLE_MODE, shuffleMode)
                 }).build()
         )
-        if (shuffleMode == SHUFFLE_MODE_NONE) {
-            musicPlayer.clearRandomSongPlayed()
-        }
+        musicPlayer.shuffleQueue(shuffleMode != SHUFFLE_MODE_NONE)
     }
 
     override fun onCustomAction(action: String?, extras: Bundle?) {
@@ -183,7 +185,6 @@ class MediaSessionCallback(
                     musicPlayer.playSong(song)
                 }
             }
-
             UPDATE_QUEUE -> {
                 extras ?: return
 
@@ -192,7 +193,6 @@ class MediaSessionCallback(
 
                 musicPlayer.updateData(queue, queueTitle)
             }
-
             PLAY_ALL_SHUFFLED -> {
                 extras ?: return
 
@@ -206,6 +206,14 @@ class MediaSessionCallback(
                 controller.transportControls.setShuffleMode(SHUFFLE_MODE_ALL)
 
                 musicPlayer.nextSong()
+            }
+            SWAP_ACTION -> {
+                extras ?: return
+                val from = extras.getInt(FROM_POSITION_KEY)
+                val to = extras.getInt(TO_POSITION_KEY)
+
+                musicPlayer.swapQueueSongs(from, to)
+
             }
         }
     }

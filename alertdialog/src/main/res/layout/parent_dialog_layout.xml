@@ -21,7 +21,6 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="12dp"
         android:layout_weight="1"
         android:background="@drawable/alert_background"
         android:orientation="vertical">
@@ -33,10 +32,11 @@
             android:background="#000000"
             android:layout_gravity="center_horizontal"
             android:alpha="0.3"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:visibility="gone"/>
 
         <LinearLayout
+            android:id="@+id/title_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -67,20 +67,38 @@
                 tools:text="Enter the playlist's name" />
         </LinearLayout>
 
-        <ScrollView
-            android:id="@+id/itemScroll"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:nestedScrollingEnabled="true"
-            android:theme="@style/OverScrollColor">
-
-            <LinearLayout
-                android:id="@+id/item_container"
+            android:layout_weight="1">
+            <ScrollView
+                android:id="@+id/itemScroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
+                android:nestedScrollingEnabled="true"
+                android:theme="@style/OverScrollColor">
+
+                <LinearLayout
+                    android:id="@+id/item_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/list_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:theme="@style/OverScrollColor"
+                    android:background="@drawable/album_detail_shape"/>
+            </LinearLayout>
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/bottom_container"
             android:layout_width="match_parent"

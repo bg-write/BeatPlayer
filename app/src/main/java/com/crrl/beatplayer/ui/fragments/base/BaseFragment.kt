@@ -39,6 +39,7 @@ import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.activities.SelectSongActivity
 import com.crrl.beatplayer.ui.fragments.FavoriteDetailFragment
 import com.crrl.beatplayer.ui.fragments.PlaylistDetailFragment
+import com.crrl.beatplayer.ui.fragments.SongDetailFragment
 import com.crrl.beatplayer.ui.viewmodels.*
 import com.crrl.beatplayer.utils.BeatConstants.FAVORITE_ID
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_LIST_DETAIL
@@ -131,7 +132,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
                     getString(R.string.playlist_name_error),
                     LENGTH_SHORT,
                     action = getString(R.string.retry),
-                    clickListener = View.OnClickListener {
+                    clickListener = {
                         createPlaylistDialog(song, action.input)
                     }
                 ) else addSongs(action.input, song)
@@ -162,7 +163,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
                 getString(R.string.song_added_error),
                 LENGTH_SHORT,
                 action = getString(R.string.retry),
-                clickListener = View.OnClickListener {
+                clickListener = {
                     addFavorite()
                 })
     }
@@ -243,7 +244,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
     private fun initPopUpMenu(): PowerMenu.Builder {
         return PowerMenu.Builder(context).apply {
             addItem(PowerMenuItem(getString(R.string.play)))
-            if (this@BaseFragment !is PlaylistDetailFragment && this@BaseFragment !is FavoriteDetailFragment)
+            if (this@BaseFragment !is PlaylistDetailFragment && this@BaseFragment !is FavoriteDetailFragment && this@BaseFragment !is SongDetailFragment)
                 addItem(PowerMenuItem(getString(R.string.add)))
             addItem(PowerMenuItem(getString(R.string.share)))
             setAnimation(MenuAnimation.SHOWUP_TOP_RIGHT)
@@ -263,13 +264,12 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
             )
             setMenuColor(requireActivity().getColorByTheme(R.attr.colorPrimarySecondary))
             setSelectedMenuColor(requireActivity().getColorByTheme(R.attr.colorPrimarySecondary))
-            if (this@BaseFragment is PlaylistDetailFragment || this@BaseFragment is FavoriteDetailFragment)
+            if (this@BaseFragment is PlaylistDetailFragment || this@BaseFragment is FavoriteDetailFragment || this@BaseFragment is SongDetailFragment)
                 addItem(PowerMenuItem(getString(R.string.remove)))
             else {
                 addItem(PowerMenuItem(getString(R.string.delete)))
             }
         }
-
     }
 
     private fun createConfDialog(song: Song): AlertDialog {
@@ -307,7 +307,7 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
             getString(R.string.deleted_err),
             LENGTH_SHORT,
             action = getString(R.string.retry),
-            clickListener = View.OnClickListener {
+            clickListener = {
                 deleteItem(id)
             })
     }
@@ -320,13 +320,15 @@ open class BaseFragment<T : MediaItem> : CoroutineFragment(), ItemClickListener<
             }
             1 -> {
                 when (this) {
-                    is PlaylistDetailFragment, is FavoriteDetailFragment -> shareItem()
+                    is PlaylistDetailFragment, is FavoriteDetailFragment, is SongDetailFragment -> shareItem()
                     else -> alertPlaylists?.show(requireActivity() as AppCompatActivity)
                 }
             }
             2 -> {
                 when (this) {
                     is PlaylistDetailFragment -> removeFromList(binding.playlist!!.id, currentItem)
+                    is SongDetailFragment -> mainViewModel.transportControls()
+                        ?.sendCustomAction(REMOVE_SONG, bundleOf(SONG_KEY to currentItem._id))
                     is FavoriteDetailFragment -> favoriteViewModel.remove(
                         FAVORITE_ID,
                         longArrayOf(currentItem._id)

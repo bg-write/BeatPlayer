@@ -124,13 +124,15 @@
                 android:id="@+id/description_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_stroke"
+                android:background="@drawable/btn_ripple_with_stroke"
                 android:paddingStart="@dimen/padding_14"
                 android:paddingTop="4dp"
                 android:paddingEnd="@dimen/padding_14"
                 android:paddingBottom="4.5dp"
                 android:layout_marginTop="@dimen/margin_6"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/description"

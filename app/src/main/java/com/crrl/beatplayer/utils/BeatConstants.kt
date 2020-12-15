@@ -35,6 +35,7 @@ object BeatConstants {
     const val PLAY_ACTION = "action_play"
     const val PAUSE_ACTION = "action_pause"
     const val PLAY_SONG_FROM_INTENT = "action_play_song_from_intent"
+    const val SWAP_ACTION = "swap_action"
 
     const val REPEAT_MODE = "repeat_mode"
     const val SHUFFLE_MODE = "shuffle_mode"
@@ -55,6 +56,8 @@ object BeatConstants {
     const val SONG_KEY = "song_key"
     const val QUEUE_LIST_TYPE_KEY = "queue_list_type_key"
     const val BY_UI_KEY = "by_ui_key"
+    const val FROM_POSITION_KEY = "from_position_key"
+    const val TO_POSITION_KEY = "to_position_key"
 
     const val LIBRARY = "library_fragment"
     const val SONG_LIST_NAME = "song_list_name"
@@ -75,8 +78,6 @@ object BeatConstants {
     const val ARTIST_TYPE = "Artist"
     const val FOLDER_TYPE = "Folder"
     const val PLAY_LIST_TYPE = "Playlist"
-
-    const val MAX_RANDOM_BUFFER_SIZE = 20
 
     const val READ_ONLY_MODE = "r"
 

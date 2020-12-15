@@ -14,6 +14,7 @@
 package com.crrl.beatplayer.alertdialog
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
 import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
 import com.crrl.beatplayer.alertdialog.enums.AlertType
@@ -22,14 +23,16 @@ import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
 import com.crrl.beatplayer.alertdialog.views.BottomSheetDialogAlert
 import com.crrl.beatplayer.alertdialog.views.DialogAlert
 import com.crrl.beatplayer.alertdialog.views.InputDialog
+import com.crrl.beatplayer.alertdialog.views.SongListDialog
 import com.crrl.beatplayer.alertdialog.views.base.DialogFragmentBase
 
 class AlertDialog(
-    private val title: String,
-    private val message: String,
-    private var style: ItemStyle,
-    private val type: AlertType,
-    private val inputText: String = ""
+    private val title: String = "",
+    private val message: String = "",
+    private var style: ItemStyle = ItemStyle(),
+    private val type: AlertType = BOTTOM_SHEET,
+    private val inputText: String = "",
+    private val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
 ) {
 
     private var theme: AlertType? = DIALOG
@@ -55,6 +58,7 @@ class AlertDialog(
             BOTTOM_SHEET -> BottomSheetDialogAlert.newInstance(title, message, actions, style)
             DIALOG -> DialogAlert.newInstance(title, message, actions, style)
             INPUT -> InputDialog.newInstance(title, message, actions, style, inputText)
+            QUEUE_LIST -> SongListDialog.newInstance(title, message, adapter!!, style)
         }
         alert?.show(activity.supportFragmentManager, alert?.tag)
     }

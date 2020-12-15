@@ -32,6 +32,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.alertdialog.MusicVisualizer
 import com.crrl.beatplayer.ui.widgets.SimpleCustomSnackbar
@@ -58,7 +61,7 @@ fun View?.show(animated: Boolean = false) {
     val view = this ?: return
     visibility = VISIBLE
     if (animated) {
-        please(200, AccelerateInterpolator()) {
+        please(200, OvershootInterpolator()) {
             animate(view) {
                 scale(1f, 1f)
             }
@@ -69,7 +72,7 @@ fun View?.show(animated: Boolean = false) {
 fun View?.hide(animated: Boolean = false) {
     val view = this ?: return
     if (animated) {
-        please(200, AccelerateInterpolator()) {
+        please(200, OvershootInterpolator()) {
             animate(view) {
                 scale(0f, 0f)
             }
@@ -119,7 +122,8 @@ fun View?.slideLeft(animated: Boolean = false) {
 
 fun View?.scaleUp() {
     val view = this ?: return
-    please(250, AccelerateDecelerateInterpolator()) {
+    elevation = 100f
+    please(250, OvershootInterpolator()) {
         animate(view) {
             originalScale()
         }
@@ -128,9 +132,10 @@ fun View?.scaleUp() {
 
 fun View?.scaleDown() {
     val view = this ?: return
-    please(250, AccelerateDecelerateInterpolator()) {
+    elevation = 0f
+    please(250, OvershootInterpolator()) {
         animate(view) {
-            scale(0.9f, 0.9f)
+            scale(0.95f, 0.95f)
         }
     }.start()
 }
@@ -260,5 +265,18 @@ fun View?.setCustomColor(color: Int, hasBackground: Boolean = false, opacity: Bo
         } else {
             setTextColor(if (opacity) c else color)
         }
+    }
+}
+
+fun RecyclerView.snapToPosition(position: Int, snapMode: Int = LinearSmoothScroller.SNAP_TO_START, smooth: Boolean = true) {
+    if(smooth){
+        val smoothScroller = object : LinearSmoothScroller(this.context) {
+            override fun getVerticalSnapPreference(): Int = snapMode
+            override fun getHorizontalSnapPreference(): Int = snapMode
+        }
+        smoothScroller.targetPosition = position
+        layoutManager?.startSmoothScroll(smoothScroller)
+    } else {
+        (layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(position, 20)
     }
 }

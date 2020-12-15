@@ -19,12 +19,29 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import com.crrl.beatplayer.alias.LiveDataFilter
 
+/**
+ * @sample {livedata.observe(lifecycleOwner){}}
+ * @author Carlos René Ramos López
+ * @param owner is the lifecycle owner where the observer is called.
+ * @param onEmission is the action to perform when live data changes.
+ * @param T is a generic type of live data.
+ * */
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, onEmission: (T) -> Unit) {
     return observe(owner, Observer {
         if (it != null) {
             onEmission(it)
         }
     })
+}
+
+fun <T> LiveData<T>.observeOnce(onEmission: (T) -> Unit) {
+    val observer = object : Observer<T> {
+        override fun onChanged(value: T) {
+            onEmission(value)
+            removeObserver(this)
+        }
+    }
+    observeForever(observer)
 }
 
 class FilterLiveData<T>(

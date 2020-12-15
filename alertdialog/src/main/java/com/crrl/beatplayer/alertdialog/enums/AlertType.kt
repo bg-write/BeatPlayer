@@ -16,5 +16,6 @@ package com.crrl.beatplayer.alertdialog.enums
 enum class AlertType {
     BOTTOM_SHEET,
     DIALOG,
-    INPUT
+    INPUT,
+    QUEUE_LIST
 }

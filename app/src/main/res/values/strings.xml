@@ -124,6 +124,8 @@
     <string name="cannot_read_file">Cannot read the file \"%s\".</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="external_storage">SD Card</string>
+    <string name="queue_title">Playing Queue</string>
+    <string name="queue_msg">Up Next</string>
 
     <plurals name="number_of_songs">
         <item quantity="zero">%d Tracks</item>

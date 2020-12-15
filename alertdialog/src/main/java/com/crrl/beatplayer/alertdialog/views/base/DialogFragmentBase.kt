@@ -17,6 +17,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
+import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.alertdialog.R
 import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
 import com.crrl.beatplayer.alertdialog.interfaces.ItemListener
@@ -26,6 +28,7 @@ open class DialogFragmentBase : BottomSheetDialogFragment(), ItemListener {
 
     protected lateinit var title: String
     protected lateinit var message: String
+    protected lateinit var adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
     protected lateinit var itemList: List<AlertItemAction>
 
     override fun onCreate(savedInstanceState: Bundle?) {

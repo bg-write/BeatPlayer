@@ -117,8 +117,4 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
         <item name="android:textColor">?titleTextColor</item>
     </style>
-
-    <style name="OverScrollColor">
-        <item name="android:colorPrimary">?colorAccent</item>
-    </style>
 </resources>

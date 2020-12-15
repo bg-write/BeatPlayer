@@ -27,4 +27,7 @@
         <item name="android:fontFamily">@font/product_sans_regular</item>
     </style>
 
+    <style name="OverScrollColor">
+        <item name="android:colorPrimary">@color/colorAccent</item>
+    </style>
 </resources>

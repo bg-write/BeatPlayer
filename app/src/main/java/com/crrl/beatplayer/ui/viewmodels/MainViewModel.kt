@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.ActivityMainBinding
 import com.crrl.beatplayer.extensions.filter
+import com.crrl.beatplayer.extensions.toggleShow
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.PlaybackConnection
 import com.crrl.beatplayer.repository.FavoritesRepository
@@ -49,7 +50,7 @@ class MainViewModel(
 
     lateinit var binding: ActivityMainBinding
 
-    fun mediaItemClicked(mediaItem: MediaBrowserCompat.MediaItem, extras: Bundle?) {
+    fun mediaItemClicked(mediaItem: MediaBrowserCompat.MediaItem, extras: Bundle? = null) {
         transportControls()?.playFromMediaId(mediaItem.mediaId, extras)
     }
 
@@ -121,11 +122,7 @@ class MainViewModel(
 
     fun showCreatePlaylistButton() {
         binding.apply {
-            please(190, AccelerateInterpolator()) {
-                animate(createPlayList) {
-                    scale(1f, 1f)
-                }
-            }.start()
+            createPlayList.toggleShow(show = true, animated = true)
             createPlayList.isClickable = true
             createPlayList.isFocusable = true
         }
@@ -133,11 +130,7 @@ class MainViewModel(
 
     fun hideCreatePlaylistButton() {
         binding.apply {
-            please(190, AccelerateInterpolator()) {
-                animate(createPlayList) {
-                    scale(0f, 0f)
-                }
-            }.start()
+            createPlayList.toggleShow(show = false, animated = true)
             createPlayList.isClickable = false
             createPlayList.isFocusable = false
         }

@@ -70,6 +70,8 @@ interface BeatPlayer {
     fun setData(list: LongArray = longArrayOf(), title: String = "")
     fun restoreQueueData()
     fun clearRandomSongPlayed()
+    fun setCurrentSongId(songId: Long)
+    fun shuffleQueue(isShuffle: Boolean)
 }
 
 class BeatPlayerImplementation(
@@ -251,6 +253,7 @@ class BeatPlayerImplementation(
 
     override fun swapQueueSongs(from: Int, to: Int) {
         queueUtils.swap(from, to)
+        setMetaData(queueUtils.currentSong)
     }
 
     override fun removeFromQueue(id: Long) {
@@ -348,7 +351,15 @@ class BeatPlayerImplementation(
     }
 
     override fun clearRandomSongPlayed() {
-        queueUtils.clearPreviousRandomIndexes()
+        queueUtils.clearPlayedSongs()
+    }
+
+    override fun setCurrentSongId(songId: Long) {
+        queueUtils.currentSongId = songId
+    }
+
+    override fun shuffleQueue(isShuffle: Boolean) {
+        queueUtils.shuffleQueue(isShuffle)
     }
 
     private fun goToStart() {

@@ -49,7 +49,8 @@ data class Song(
     val path: String = "",
     var isFav: Boolean = false,
     var isSelected: Boolean = false,
-    var playListId: Long = -1
+    var playListId: Long = -1,
+    var played: Boolean = false
 ) : MediaItem(id) {
     companion object {
         fun createFromCursor(cursor: Cursor, album_id: Long = 0): Song {

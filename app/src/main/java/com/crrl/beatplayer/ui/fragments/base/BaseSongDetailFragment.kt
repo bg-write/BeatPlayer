@@ -16,10 +16,11 @@ package com.crrl.beatplayer.ui.fragments.base
 import android.os.Bundle
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.models.MediaItem
+import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.fragments.LyricFragment
 import com.crrl.beatplayer.ui.fragments.SongDetailFragment
 
-open class BaseSongDetailFragment : BaseFragment<MediaItem>() {
+open class BaseSongDetailFragment : BaseFragment<Song>() {
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

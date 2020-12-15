@@ -20,9 +20,8 @@ import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.repository.SongsRepository
 
 fun <T> List<T>?.moveElement(fromIndex: Int, toIndex: Int): List<T> {
-    if (this == null) {
-        return emptyList()
-    }
+    this ?: return emptyList()
+    if(this.isEmpty()) return emptyList()
     return toMutableList().apply {
         val deleted = removeAt(fromIndex)
         add(toIndex, deleted)
@@ -47,10 +46,10 @@ internal fun <T> List<T>.optimizeReadOnlyList() = when (size) {
 }
 
 fun <T : MediaItem> Collection<T>.deepEquals(
-    list2: Collection<T>
+    other: Collection<T>
 ) = when {
-    size != list2.size || size == 0 -> false
-    else -> zip(list2).all { (elt1, elt2) -> elt1.compare(elt2) }
+    size != other.size || size == 0 -> false
+    else -> zip(other).all { (a, b) -> a.compare(b) }
 }
 
 fun List<MediaItem>?.toIDList(): LongArray {
@@ -76,6 +75,13 @@ fun LongArray.toQueue(songsRepository: SongsRepository): List<MediaSessionCompat
     songList.keepInOrder(this)?.let {
         return it.toQueue()
     } ?: return songList.toQueue()
+}
+
+fun LongArray.toSongList(songsRepository: SongsRepository): List<Song> {
+    val songList = songsRepository.getSongsForIds(this)
+    songList.keepInOrder(this)?.let {
+        return it
+    } ?: return songList
 }
 
 fun List<Song>.keepInOrder(queue: LongArray): List<Song>? {
