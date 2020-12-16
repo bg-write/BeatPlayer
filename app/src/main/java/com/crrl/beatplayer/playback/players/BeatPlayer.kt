@@ -76,7 +76,7 @@ interface BeatPlayer {
 
 class BeatPlayerImplementation(
     private val context: Application,
-    private val musicPlayer: BeatMediaPlayer,
+    private val musicPlayer: AudioPlayer,
     private val songsRepository: SongsRepository,
     private val settingsUtility: SettingsUtility,
     private val queueUtils: QueueUtils,
@@ -154,7 +154,6 @@ class BeatPlayerImplementation(
             musicPlayer.play()
             return
         }
-        musicPlayer.reset()
 
         val path = if (queueUtils.currentSongId != SONG_ID_DEFAULT)
             getSongUri(queueUtils.currentSongId).toString()
@@ -162,7 +161,7 @@ class BeatPlayerImplementation(
         val isSourceSet = if (path.startsWith("content://")) {
             musicPlayer.setSource(path.toUri())
         } else {
-            musicPlayer.setSource(path)
+            musicPlayer.setSource(path = path)
         }
         if (isSourceSet) {
             isInitialized = true
