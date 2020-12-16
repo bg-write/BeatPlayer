@@ -120,7 +120,6 @@ class BeatPlayerImplementation(
         musicPlayer.onPrepared {
             preparedCallback(this@BeatPlayerImplementation)
             playSong()
-            seekTo(getSession().position().toInt())
         }
 
         musicPlayer.onCompletion {

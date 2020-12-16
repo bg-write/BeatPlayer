@@ -15,11 +15,11 @@ package com.crrl.beatplayer.playback.players
 
 import android.app.Application
 import android.net.Uri
-import android.os.PowerManager
 import com.crrl.beatplayer.alias.OnCompletion
 import com.crrl.beatplayer.alias.OnError
 import com.crrl.beatplayer.alias.OnPrepared
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.util.PriorityTaskManager
 import java.io.File
 
@@ -30,7 +30,7 @@ interface AudioPlayer {
     fun seekTo(position: Int)
     fun isPrepared(): Boolean
     fun isPlaying(): Boolean
-    fun position(): Int
+    fun position(): Long
     fun pause()
     fun stop()
     fun release()
@@ -65,10 +65,10 @@ class AudioPlayerImplementation(
     override fun setSource(uri: Uri?, path: String?): Boolean {
         return try {
             uri?.let {
-                player.setMediaItem(MediaItem.fromUri(it))
+                player.setMediaItem(MediaItem.fromUri(it), true)
             }
             path?.let {
-                player.setMediaItem(MediaItem.fromUri(Uri.fromFile(File(it))))
+                player.setMediaItem(MediaItem.fromUri(Uri.fromFile(File(it))), true)
             }
             true
         } catch (ex: Exception) {
@@ -89,7 +89,7 @@ class AudioPlayerImplementation(
 
     override fun isPlaying() = player.isPlaying
 
-    override fun position() = player.currentPosition.toInt()
+    override fun position() = player.currentPosition
 
     override fun pause() {
         player.pause()
@@ -137,18 +137,16 @@ class AudioPlayerImplementation(
 
     private fun createPlayer(owner: AudioPlayerImplementation): ExoPlayer {
         return SimpleExoPlayer.Builder(context)
+            .setSkipSilenceEnabled(false)
+            .setUseLazyPreparation(true)
             .build().apply {
-                setWakeMode(PowerManager.PARTIAL_WAKE_LOCK)
-                val attr = com.google.android.exoplayer2.audio.AudioAttributes.Builder().apply {
+                val attr = AudioAttributes.Builder().apply {
                     setContentType(C.CONTENT_TYPE_MUSIC)
                     setUsage(C.USAGE_MEDIA)
                 }.build()
-                setAudioAttributes(attr, true)
-                setHandleAudioBecomingNoisy(true)
-                setForegroundMode(true)
+
+                setAudioAttributes(attr, false)
                 setPriorityTaskManager(PriorityTaskManager())
-                val seekParams = SeekParameters(0, 0)
-                setSeekParameters(seekParams)
                 addListener(owner)
             }
     }
