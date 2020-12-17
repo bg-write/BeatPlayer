@@ -95,13 +95,13 @@ object GeneralUtils {
         return data
     }
 
-    fun audio2Raw(context: Context, path: String, didTry: Boolean = false): ByteArray? {
+    fun audio2Raw(context: Context, path: String, tryCountDown: Int = 3): ByteArray? {
         val fis = FileInputStream(File(path))
         val data = try {
             fis.readBytes().optimize()
         } catch (ex: Exception) {
             Timber.e(ex)
-            if (didTry) byteArrayOf() else audio2Raw(context, path, didTry = true)
+            if (tryCountDown == 0) byteArrayOf() else audio2Raw(context, path, tryCountDown - 1)
         }
         fis.close()
         return data

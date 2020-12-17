@@ -114,6 +114,7 @@
     <string name="external_storage">Tarjeta SD</string>
     <string name="queue_title">Cola de Reproducción</string>
     <string name="queue_msg">A Continuación</string>
+    <string name="raw_error">No se pudo generar la gráfica de la canción.</string>
 
     <plurals name="number_of_songs" tools:ignore="UnusedQuantity">
         <item quantity="zero">%d Pistas</item>

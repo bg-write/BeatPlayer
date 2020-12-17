@@ -24,7 +24,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.*
 import androidx.annotation.LayoutRes
@@ -40,6 +39,8 @@ import com.crrl.beatplayer.alertdialog.MusicVisualizer
 import com.crrl.beatplayer.ui.widgets.SimpleCustomSnackbar
 import com.crrl.beatplayer.utils.GeneralUtils
 import com.github.florent37.kotlin.pleaseanimate.please
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import rm.com.audiowave.AudioWaveView
 
@@ -173,8 +174,8 @@ fun View?.animateScale(from: Float, to: Float, dur: Long) {
 fun View?.snackbar(
     type: String,
     msg: String,
-    dur: Int,
-    custom: Int = R.drawable.app_icon,
+    @BaseTransientBottomBar.Duration dur : Int,
+    custom: Int = R.drawable.ic_alert,
     action: String? = null,
     clickListener: View.OnClickListener? = null
 ) {
@@ -192,6 +193,8 @@ fun View?.snackbar(
         ERROR -> R.drawable.background_error
         else -> R.drawable.background_default
     }
+
+    Snackbar.LENGTH_SHORT
     SimpleCustomSnackbar.make(this, msg, dur, clickListener, icon, action, color)?.show()
 }
 
@@ -268,7 +271,11 @@ fun View?.setCustomColor(color: Int, hasBackground: Boolean = false, opacity: Bo
     }
 }
 
-fun RecyclerView.snapToPosition(position: Int, snapMode: Int = LinearSmoothScroller.SNAP_TO_START, smooth: Boolean = true) {
+fun RecyclerView.snapToPosition(
+    position: Int,
+    snapMode: Int = LinearSmoothScroller.SNAP_TO_START,
+    smooth: Boolean = true
+) {
     if(smooth){
         val smoothScroller = object : LinearSmoothScroller(this.context) {
             override fun getVerticalSnapPreference(): Int = snapMode

@@ -126,6 +126,7 @@
     <string name="external_storage">SD Card</string>
     <string name="queue_title">Playing Queue</string>
     <string name="queue_msg">Up Next</string>
+    <string name="raw_error">Could not generate the song graph.</string>
 
     <plurals name="number_of_songs">
         <item quantity="zero">%d Tracks</item>

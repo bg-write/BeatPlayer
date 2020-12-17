@@ -42,7 +42,7 @@ class SimpleCustomSnackbar(
 
         fun make(
             view: View,
-            message: String, duration: Int,
+            message: String, @BaseTransientBottomBar.Duration duration : Int,
             listener: View.OnClickListener?, icon: Int, action: String?, backgroundId: Int
         ): SimpleCustomSnackbar? {
             val parent = view.findSuitableParent() ?: throw IllegalArgumentException(

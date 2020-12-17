@@ -40,6 +40,7 @@ import com.crrl.beatplayer.utils.BeatConstants.SWAP_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.TO_POSITION_KEY
 import com.crrl.beatplayer.utils.GeneralUtils
 import com.crrl.beatplayer.utils.GeneralUtils.getSongUri
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_song_detail.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -76,15 +77,7 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
 
         songDetailViewModel.currentData.observe(viewLifecycleOwner) {
             initNeeded(songViewModel.getSongById(it.id), emptyList(), 0L)
-            launch {
-                val raw = withContext(IO) {
-                    if (it.id == SONG_ID_DEFAULT) {
-                        GeneralUtils.audio2Raw(context!!, settingsUtility.intentPath)
-                            ?: byteArrayOf()
-                    } else GeneralUtils.audio2Raw(context!!, getSongUri(it.id)) ?: byteArrayOf()
-                }
-                songDetailViewModel.update(raw)
-            }
+            calculateSongWaveGraph(it)
         }
 
         songDetailViewModel.time.observe(viewLifecycleOwner) {
@@ -120,6 +113,23 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
         super.onDetach()
         songDetailViewModel.update(byteArrayOf())
         songDetailViewModel.update()
+    }
+
+    private fun calculateSongWaveGraph(item: MediaItemData){
+        launch {
+            val raw = withContext(IO) {
+                if (item.id == SONG_ID_DEFAULT) {
+                    GeneralUtils.audio2Raw(context!!, settingsUtility.intentPath)
+                        ?: byteArrayOf()
+                } else GeneralUtils.audio2Raw(context!!, getSongUri(item.id)) ?: byteArrayOf()
+            }
+            songDetailViewModel.update(raw)
+            if(raw.isEmpty()){
+                view.snackbar(CUSTOM, getString(R.string.raw_error), Snackbar.LENGTH_LONG, action = getString(R.string.retry)){
+                    calculateSongWaveGraph(item)
+                }
+            }
+        }
     }
 
     private fun showQueueList() {
