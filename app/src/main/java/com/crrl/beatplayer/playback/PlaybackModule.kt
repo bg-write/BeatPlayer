@@ -13,8 +13,8 @@
 
 package com.crrl.beatplayer.playback
 
-import com.crrl.beatplayer.playback.players.BeatMediaPlayer
-import com.crrl.beatplayer.playback.players.BeatMediaPlayerImplementation
+import com.crrl.beatplayer.playback.players.AudioPlayer
+import com.crrl.beatplayer.playback.players.AudioPlayerImplementation
 import com.crrl.beatplayer.playback.players.BeatPlayer
 import com.crrl.beatplayer.playback.players.BeatPlayerImplementation
 import org.koin.dsl.bind
@@ -22,8 +22,8 @@ import org.koin.dsl.module
 
 val playbackModule = module {
     factory {
-        BeatMediaPlayerImplementation(get())
-    } bind (BeatMediaPlayer::class)
+        AudioPlayerImplementation(get())
+    } bind (AudioPlayer::class)
 
     factory {
         AudioFocusHelperImplementation(get())

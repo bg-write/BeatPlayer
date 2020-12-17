@@ -29,8 +29,8 @@ android {
         applicationId "com.crrl.beatplayer"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 100
-        versionName "1.0.0"
+        versionCode Integer.parseInt(101 + betaReleaseCode)
+        versionName "1.0.1-beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -45,6 +45,12 @@ android {
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             multiDexEnabled = true
+
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${applicationName}-${defaultConfig.versionName}-${variant.buildType.name}.apk"
+                }
+            }
         }
         debug {
             versionNameSuffix "-debug"
@@ -70,6 +76,7 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 }
+
 
 dependencies {
 
@@ -117,4 +124,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'androidx.palette:palette-ktx:1.0.0'
+
+    // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.12.2'
 }
+
