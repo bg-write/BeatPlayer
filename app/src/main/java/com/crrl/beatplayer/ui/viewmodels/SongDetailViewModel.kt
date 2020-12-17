@@ -19,6 +19,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.crrl.beatplayer.models.IdsChanged
 import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.PlaybackState
 import com.crrl.beatplayer.models.Queue
@@ -45,8 +46,8 @@ class SongDetailViewModel(
     private val currentDataBase = MutableLiveData<MediaItemData>()
     val currentData: LiveData<MediaItemData> = currentDataBase
 
-    private val lastDataBase = MutableLiveData<MediaItemData>()
-    val lastData: LiveData<MediaItemData> = lastDataBase
+    private val idsChangedBase = MutableLiveData<IdsChanged>()
+    val idsChanged: LiveData<IdsChanged> = idsChangedBase
 
     private val currentStateBase = MutableLiveData<PlaybackState>()
     val currentState: LiveData<PlaybackState> = currentStateBase
@@ -75,9 +76,9 @@ class SongDetailViewModel(
         }
     }
 
-    private val lastMediaMetadataObserver = Observer<MediaMetadataCompat> { mediaMetaData ->
-        mediaMetaData?.let {
-            lastDataBase.postValue(MediaItemData.pullMediaMetadata(it) ?: return@let)
+    private val idsChangedObserver = Observer<IdsChanged> { idsChanged ->
+        idsChanged?.let {
+            idsChangedBase.postValue(it)
         }
     }
 
@@ -90,7 +91,7 @@ class SongDetailViewModel(
     private val mediaMediaConnection = mediaPlaybackConnection.also {
         it.playbackState.observeForever(playbackStateObserver)
         it.nowPlaying.observeForever(nowMediaMetadataObserver)
-        it.lastPlayed.observeForever(lastMediaMetadataObserver)
+        it.idsChanged.observeForever(idsChangedObserver)
         it.queueLiveData.observeForever(queueDataObserver)
 
         it.isConnected.observeForever { connected ->
@@ -149,6 +150,6 @@ class SongDetailViewModel(
         super.onCleared()
         mediaMediaConnection.playbackState.removeObserver(playbackStateObserver)
         mediaMediaConnection.nowPlaying.removeObserver(nowMediaMetadataObserver)
-        mediaMediaConnection.lastPlayed.removeObserver(lastMediaMetadataObserver)
+        mediaMediaConnection.idsChanged.removeObserver(idsChangedObserver)
     }
 }

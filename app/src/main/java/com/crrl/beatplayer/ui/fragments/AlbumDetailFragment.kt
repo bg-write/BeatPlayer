@@ -24,6 +24,7 @@ import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentAlbumDetailBinding
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.Album
+import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
@@ -61,7 +62,7 @@ class AlbumDetailFragment : BaseFragment<Song>() {
         val id = arguments!!.getLong(BeatConstants.ALBUM_KEY)
         album = albumViewModel.getAlbum(id)
         initNeeded(Song(), emptyList(), id)
-        songAdapter = SongAdapter().apply {
+        songAdapter = SongAdapter(songDetailViewModel).apply {
             itemClickListener = this@AlbumDetailFragment
             showHeader = true
             isAlbumDetail = true
@@ -73,6 +74,14 @@ class AlbumDetailFragment : BaseFragment<Song>() {
             adapter = songAdapter
             clipToOutline = true
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        }
+
+        songDetailViewModel.idsChanged.observe(this) {
+            songAdapter.notifyDataSetChanged()
+        }
+
+        songDetailViewModel.currentState.observe(this) {
+            songAdapter.notifyDataSetChanged()
         }
 
         binding.addFavorites.setOnClickListener { toggleAddFav() }

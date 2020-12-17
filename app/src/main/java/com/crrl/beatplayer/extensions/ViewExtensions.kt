@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.R
-import com.crrl.beatplayer.alertdialog.MusicVisualizer
+import com.crrl.beatplayer.ui.widgets.MusicVisualizer
 import com.crrl.beatplayer.ui.widgets.SimpleCustomSnackbar
 import com.crrl.beatplayer.utils.GeneralUtils
 import com.github.florent37.kotlin.pleaseanimate.please
@@ -174,7 +174,7 @@ fun View?.animateScale(from: Float, to: Float, dur: Long) {
 fun View?.snackbar(
     type: String,
     msg: String,
-    @BaseTransientBottomBar.Duration dur : Int,
+    @BaseTransientBottomBar.Duration dur: Int,
     custom: Int = R.drawable.ic_alert,
     action: String? = null,
     clickListener: View.OnClickListener? = null
@@ -276,7 +276,7 @@ fun RecyclerView.snapToPosition(
     snapMode: Int = LinearSmoothScroller.SNAP_TO_START,
     smooth: Boolean = true
 ) {
-    if(smooth){
+    if (smooth) {
         val smoothScroller = object : LinearSmoothScroller(this.context) {
             override fun getVerticalSnapPreference(): Int = snapMode
             override fun getHorizontalSnapPreference(): Int = snapMode

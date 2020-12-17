@@ -25,6 +25,7 @@ import com.crrl.beatplayer.extensions.deepEquals
 import com.crrl.beatplayer.extensions.inflateWithBinding
 import com.crrl.beatplayer.extensions.observe
 import com.crrl.beatplayer.extensions.toIDList
+import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
@@ -65,10 +66,18 @@ class FolderDetailFragment : BaseFragment<Song>() {
         val id = arguments?.getLong(FOLDER_KEY)!!
         val folder = folderViewModel.getFolder(id)
 
-        songAdapter = SongAdapter().apply {
+        songAdapter = SongAdapter(songDetailViewModel).apply {
             showHeader = true
             isAlbumDetail = true
             itemClickListener = this@FolderDetailFragment
+        }
+
+        songDetailViewModel.idsChanged.observe(this) {
+            songAdapter.notifyDataSetChanged()
+        }
+
+        songDetailViewModel.currentState.observe(this) {
+            songAdapter.notifyDataSetChanged()
         }
 
         initNeeded(Song(), emptyList(), id)

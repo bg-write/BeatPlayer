@@ -21,8 +21,8 @@
             type="com.crrl.beatplayer.models.Song" />
 
         <variable
-            name="size"
-            type="Integer" />
+            name="viewModel"
+            type="com.crrl.beatplayer.ui.viewmodels.SongDetailViewModel" />
     </data>
 
     <RelativeLayout
@@ -81,7 +81,9 @@
                         android:maxLines="1"
                         android:textColor="?titleTextColor"
                         android:textSize="@dimen/title_text_size"
-                        app:html="@{song.title}" />
+                        app:html="@{song.title}"
+                        app:marquee="@{true}"
+                        app:selected="@{safeUnbox(viewModel.idsChanged.current == song.id)}" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -97,7 +99,9 @@
                         android:singleLine="true"
                         android:text="@{song.artist}"
                         android:textColor="?subTitleTextColor"
-                        android:textSize="@dimen/sub_title_text_size" />
+                        android:textSize="@dimen/sub_title_text_size"
+                        app:marquee="@{false}"
+                        app:selected="@{safeUnbox(viewModel.currentData.id == song.id)}"/>
 
                     <TextView
                         android:id="@+id/sep"
@@ -109,7 +113,9 @@
                         android:singleLine="true"
                         android:text="@string/separator"
                         android:textColor="?subTitleTextColor"
-                        android:textSize="@dimen/sub_title_text_size" />
+                        android:textSize="@dimen/sub_title_text_size"
+                        app:marquee="@{false}"
+                        app:selected="@{safeUnbox(viewModel.currentData.id == song.id)}"/>
 
                     <TextView
                         android:id="@+id/album"
@@ -119,10 +125,34 @@
                         android:singleLine="true"
                         android:text="@{song.album}"
                         android:textColor="?subTitleTextColor"
-                        android:textSize="@dimen/sub_title_text_size" />
+                        android:textSize="@dimen/sub_title_text_size"
+                        app:marquee="@{false}"
+                        app:selected="@{safeUnbox(viewModel.currentData.id == song.id)}"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/song_cover_size"
+            android:layout_height="@dimen/song_cover_size"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_12"
+            android:gravity="center"
+            android:background="@drawable/visualizer_song_item"
+            app:show="@{safeUnbox(viewModel.currentData.id == song.id)}"
+            app:state="@{safeUnbox(viewModel.currentState.state)}">
+
+            <com.crrl.beatplayer.ui.widgets.MusicVisualizer
+                android:id="@+id/visualizer"
+                android:layout_width="31dp"
+                android:layout_height="40dp"
+                app:tint="@color/white"
+                app:chunkCount="5"
+                app:chunkSize="4dp"
+                app:chunkSpace="2dp"
+                app:alignType="center"
+                app:chunkRound="true"/>
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/item_menu"

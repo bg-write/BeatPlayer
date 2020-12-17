@@ -18,16 +18,18 @@ import android.net.Uri
 import com.crrl.beatplayer.alias.OnCompletion
 import com.crrl.beatplayer.alias.OnError
 import com.crrl.beatplayer.alias.OnPrepared
+import com.crrl.beatplayer.interfaces.LoadEventController
+import com.crrl.beatplayer.utils.LoadController
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.util.PriorityTaskManager
 import java.io.File
 
 interface AudioPlayer {
-    fun play()
+    fun play(startAtPosition: Long? = null)
     fun setSource(uri: Uri? = null, path: String? = null): Boolean
     fun prepare()
-    fun seekTo(position: Int)
+    fun seekTo(position: Long)
     fun isPrepared(): Boolean
     fun isPlaying(): Boolean
     fun position(): Long
@@ -42,7 +44,8 @@ interface AudioPlayer {
 class AudioPlayerImplementation(
     internal val context: Application
 ) : AudioPlayer,
-    Player.EventListener {
+    Player.EventListener,
+    LoadEventController {
 
     private var playerBase: ExoPlayer? = null
     private val player: ExoPlayer
@@ -58,7 +61,9 @@ class AudioPlayerImplementation(
     private var onError: OnError<AudioPlayer> = {}
     private var onCompletion: OnCompletion<AudioPlayer> = {}
 
-    override fun play() {
+    override fun play(startAtPosition: Long?) {
+        startAtPosition ?: return player.play()
+        player.seekTo(startAtPosition)
         player.play()
     }
 
@@ -81,8 +86,8 @@ class AudioPlayerImplementation(
         player.prepare()
     }
 
-    override fun seekTo(position: Int) {
-        player.seekTo(position.toLong())
+    override fun seekTo(position: Long) {
+        player.seekTo(position)
     }
 
     override fun isPrepared() = isPrepared
@@ -122,12 +127,9 @@ class AudioPlayerImplementation(
         }
     }
 
-    override fun onIsLoadingChanged(isLoading: Boolean) {
-        super.onIsLoadingChanged(isLoading)
-        if (!isLoading) {
-            isPrepared = true
-            onPrepared(this)
-        }
+    override fun onPrepared() {
+        isPrepared = true
+        onPrepared(this)
     }
 
     override fun onPlayerError(error: ExoPlaybackException) {
@@ -137,8 +139,9 @@ class AudioPlayerImplementation(
 
     private fun createPlayer(owner: AudioPlayerImplementation): ExoPlayer {
         return SimpleExoPlayer.Builder(context)
-            .setSkipSilenceEnabled(false)
-            .setUseLazyPreparation(true)
+            .setLoadControl(LoadController().apply {
+                eventController = owner
+            })
             .build().apply {
                 val attr = AudioAttributes.Builder().apply {
                     setContentType(C.CONTENT_TYPE_MUSIC)

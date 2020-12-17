@@ -19,10 +19,8 @@ import android.support.v4.media.session.PlaybackStateCompat.*
 import android.text.Html
 import android.view.View
 import android.view.View.GONE
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.view.View.VISIBLE
+import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -31,12 +29,12 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.crrl.beatplayer.R
-import com.crrl.beatplayer.alertdialog.MusicVisualizer
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.Album
 import com.crrl.beatplayer.models.Favorite
 import com.crrl.beatplayer.models.SearchData
 import com.crrl.beatplayer.models.Song
+import com.crrl.beatplayer.ui.widgets.MusicVisualizer
 import com.crrl.beatplayer.utils.BeatConstants.ALBUM_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.ARTIST_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.FAVORITE_TYPE
@@ -104,7 +102,7 @@ fun setTextHtml(view: TextView, html: String) {
 
 @BindingAdapter("app:track_number")
 fun setTrackNumber(view: TextView, trackNumber: Int) {
-    val numberStr = when(trackNumber){
+    val numberStr = when (trackNumber) {
         0 -> "-"
         else -> trackNumber.toString()
     }
@@ -223,15 +221,19 @@ fun setTextCount(view: TextView, type: String, data: SearchData) {
 fun fixArtistLength(view: TextView, album: Album) {
     val maxSize = if (getOrientation(view.context) == PORTRAIT) 13 else 8
     album.apply {
-        view.text = "${if (artist.length > maxSize) {
-            artist.substring(0, maxSize)
-        } else {
-            artist
-        }} ${view.resources.getString(R.string.separator)} ${view.resources.getQuantityString(
-            R.plurals.number_of_songs,
-            songCount,
-            songCount
-        )}"
+        view.text = "${
+            if (artist.length > maxSize) {
+                artist.substring(0, maxSize)
+            } else {
+                artist
+            }
+        } ${view.resources.getString(R.string.separator)} ${
+            view.resources.getQuantityString(
+                R.plurals.number_of_songs,
+                songCount,
+                songCount
+            )
+        }"
     }
 }
 
@@ -259,6 +261,12 @@ fun setVisibility(view: View, visible: Boolean = true, animate: Boolean = false)
     view.toggleShow(visible, animate)
 }
 
+@BindingAdapter("app:hide")
+fun setHide(view: View, hide: Boolean = true) {
+    if(hide) view.visibility = View.INVISIBLE
+    else view.visibility = VISIBLE
+}
+
 @BindingAdapter("app:selected", "app:marquee")
 fun setSelectedTextColor(view: TextView, selected: Boolean, marquee: Boolean) {
     please(200) {
@@ -280,9 +288,9 @@ fun setSelectedTextColor(view: TextView, selected: Boolean, marquee: Boolean) {
 }
 
 @BindingAdapter("app:show", "app:state")
-fun setVisualizerVisibility(view: MusicVisualizer, visible: Boolean, state: Int) {
+fun setVisualizerVisibility(view: LinearLayout, visible: Boolean, state: Int) {
     if (visible) {
-        if (state == STATE_PLAYING) view.show(true) else view.hide(true)
+        if (state == STATE_PLAYING) view.show(false) else view.hide(false)
     } else view.hide(false)
 }
 
@@ -307,13 +315,13 @@ fun setScale(view: View, state: Int) {
 }
 
 @BindingAdapter("app:album", "app:artist")
-fun setArtistAlbum(view: TextView, artist: String?, album: String?){
-    view.text = if(artist != null && album != null)
+fun setArtistAlbum(view: TextView, artist: String?, album: String?) {
+    view.text = if (artist != null && album != null)
         view.context.getString(R.string.with_separator, artist, album)
     else artist ?: album ?: ""
 }
 
 @BindingAdapter("app:isSelected", requireAll = true)
-fun setSelected(view: View, selected: Boolean){
+fun setSelected(view: View, selected: Boolean) {
     view.isSelected = selected
 }

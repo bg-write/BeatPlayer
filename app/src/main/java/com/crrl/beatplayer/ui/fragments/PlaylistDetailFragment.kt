@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentPlaylistDetailBinding
 import com.crrl.beatplayer.extensions.*
+import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.activities.SelectSongActivity
 import com.crrl.beatplayer.ui.adapters.SongAdapter
@@ -62,10 +63,18 @@ class PlaylistDetailFragment : BaseFragment<Song>() {
 
         binding.playlist = playlistViewModel.getPlaylist(id)
 
-        songAdapter = SongAdapter().apply {
+        songAdapter = SongAdapter(songDetailViewModel).apply {
             showHeader = true
             isAlbumDetail = true
             itemClickListener = this@PlaylistDetailFragment
+        }
+
+        songDetailViewModel.idsChanged.observe(this) {
+            songAdapter.notifyDataSetChanged()
+        }
+
+        songDetailViewModel.currentState.observe(this) {
+            songAdapter.notifyDataSetChanged()
         }
 
         list.apply {

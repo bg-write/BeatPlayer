@@ -48,7 +48,7 @@ interface BeatPlayer {
     fun playSong(extras: Bundle = bundleOf(BY_UI_KEY to true))
     fun playSong(id: Long)
     fun playSong(song: Song)
-    fun seekTo(position: Int)
+    fun seekTo(position: Long)
     fun pause(extras: Bundle = bundleOf(BY_UI_KEY to true))
     fun nextSong(): Long?
     fun repeatSong()
@@ -119,6 +119,7 @@ class BeatPlayerImplementation(
         queueUtils.setMediaSession(mediaSession)
         musicPlayer.onPrepared {
             preparedCallback(this@BeatPlayerImplementation)
+            musicPlayer.seekTo(mediaSession.position())
             playSong()
         }
 
@@ -187,20 +188,20 @@ class BeatPlayerImplementation(
         playSong()
     }
 
-    override fun seekTo(position: Int) {
+    override fun seekTo(position: Long) {
         if (isInitialized) {
             musicPlayer.seekTo(position)
             updatePlaybackState {
                 setState(
                     mediaSession.controller.playbackState.state,
-                    position.toLong(),
+                    position,
                     1F
                 )
             }
         } else updatePlaybackState {
             setState(
                 mediaSession.controller.playbackState.state,
-                position.toLong(),
+                position,
                 1F
             )
         }
@@ -316,11 +317,12 @@ class BeatPlayerImplementation(
     }
 
     override fun updateData(list: LongArray, title: String) {
-        if (title == queueUtils.queueTitle) {
-            queueUtils.queue = list
-            queueUtils.queueTitle = title
-            setMetaData(queueUtils.currentSong)
-        }
+        if (mediaSession.shuffleMode == SHUFFLE_MODE_NONE)
+            if (title == queueUtils.queueTitle) {
+                queueUtils.queue = list
+                queueUtils.queueTitle = title
+                setMetaData(queueUtils.currentSong)
+            }
     }
 
     override fun setData(list: LongArray, title: String) {
@@ -358,6 +360,7 @@ class BeatPlayerImplementation(
 
     override fun shuffleQueue(isShuffle: Boolean) {
         queueUtils.shuffleQueue(isShuffle)
+        setMetaData(queueUtils.currentSong)
     }
 
     private fun goToStart() {

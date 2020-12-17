@@ -14,14 +14,12 @@
 package com.crrl.beatplayer.utils
 
 import android.app.Application
-import android.media.session.MediaSession
 import android.support.v4.media.session.MediaSessionCompat
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.extensions.*
-import com.crrl.beatplayer.models.Queue
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.repository.SongsRepository
-import kotlin.random.Random
+import com.google.gson.Gson
 
 interface QueueUtils {
     var currentSongId: Long
@@ -44,7 +42,8 @@ interface QueueUtils {
 
 class QueueUtilsImplementation(
     private val context: Application,
-    private val songsRepository: SongsRepository
+    private val songsRepository: SongsRepository,
+    private val settingsUtility: SettingsUtility
 ) : QueueUtils {
 
     private lateinit var mediaSession: MediaSessionCompat
@@ -61,6 +60,7 @@ class QueueUtilsImplementation(
             field = value
             if (value.isNotEmpty()) {
                 mediaSession.setQueue(value.toQueue(songsRepository))
+                auxQueue.setAll(settingsUtility.originalQueueList.toQueueList().toMutableList())
             }
         }
 
@@ -130,24 +130,26 @@ class QueueUtilsImplementation(
     }
 
     override fun shuffleQueue(isShuffle: Boolean) {
-        if(isShuffle)
+        if (isShuffle)
             mediaSession.setQueue(shuffleQueue())
         else
             restoreQueueOrder()
     }
 
-    private fun shuffleQueue(): List<MediaSessionCompat.QueueItem>{
+    private fun shuffleQueue(): List<MediaSessionCompat.QueueItem> {
         val sQueue = mediaSession.controller.queue.shuffled()
         val realQueue = sQueue.moveElement(sQueue.indexOfFirst { it.queueId == currentSongId }, 0)
 
         auxQueue.setAll(queue.toList())
-        queue = sQueue.toIdList()
+        settingsUtility.originalQueueList = Gson().toJson(auxQueue)
+        queue = realQueue.toIdList()
 
         return realQueue
     }
 
     private fun restoreQueueOrder() {
         queue = auxQueue.toLongArray()
+        settingsUtility.originalQueueList = "[]"
         auxQueue.clear()
     }
 }

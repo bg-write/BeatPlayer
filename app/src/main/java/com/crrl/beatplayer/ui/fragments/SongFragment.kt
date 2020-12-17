@@ -25,6 +25,7 @@ import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
 import com.crrl.beatplayer.alertdialog.enums.AlertItemTheme
 import com.crrl.beatplayer.databinding.FragmentSongBinding
 import com.crrl.beatplayer.extensions.*
+import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
@@ -60,7 +61,7 @@ class SongFragment : BaseFragment<Song>() {
     }
 
     private fun init() {
-        songAdapter = SongAdapter().apply {
+        songAdapter = SongAdapter(songDetailViewModel).apply {
             showHeader = true
             itemClickListener = this@SongFragment
         }
@@ -69,6 +70,14 @@ class SongFragment : BaseFragment<Song>() {
             layoutManager = LinearLayoutManager(context)
             adapter = songAdapter
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        }
+
+        songDetailViewModel.idsChanged.observe(this) {
+            songAdapter.notifyDataSetChanged()
+        }
+
+        songDetailViewModel.currentState.observe(this) {
+            songAdapter.notifyDataSetChanged()
         }
 
         viewModel.getSongList()

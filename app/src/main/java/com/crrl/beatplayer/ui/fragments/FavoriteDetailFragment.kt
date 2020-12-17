@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentFavoriteDetailBinding
 import com.crrl.beatplayer.extensions.*
+import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
@@ -59,10 +60,18 @@ class FavoriteDetailFragment : BaseFragment<Song>() {
         val id = arguments!!.getLong(FAVORITE_KEY)
         binding.favorite = favoriteViewModel.getFavorite(id)
 
-        songAdapter = SongAdapter().apply {
+        songAdapter = SongAdapter(songDetailViewModel).apply {
             showHeader = true
             isAlbumDetail = true
             itemClickListener = this@FavoriteDetailFragment
+        }
+
+        songDetailViewModel.idsChanged.observe(this) {
+            songAdapter.notifyDataSetChanged()
+        }
+
+        songDetailViewModel.currentState.observe(this) {
+            songAdapter.notifyDataSetChanged()
         }
 
         viewModel.songListFavorite(id).observe(viewLifecycleOwner) {

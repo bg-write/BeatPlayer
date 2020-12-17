@@ -15,9 +15,11 @@ import com.crrl.beatplayer.interfaces.ItemClickListener
 import com.crrl.beatplayer.interfaces.ItemMovedListener
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.callbacks.ItemTouchHelperCallback
+import com.crrl.beatplayer.ui.viewmodels.SongDetailViewModel
 
 class QueueAdapter(
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val songDetailViewModel: SongDetailViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var itemTouchHelper: ItemTouchHelper
     private var queueViewLiveData = MutableLiveData<RecyclerView>()
@@ -82,6 +84,7 @@ class QueueAdapter(
         fun bind(song: Song) {
             binding.apply {
                 this.song = song
+                this.viewModel = songDetailViewModel
                 container.setOnClickListener(this@QueueViewHolder)
                 itemMenu.setOnClickListener(this@QueueViewHolder)
                 selected.setOnTouchListener(this@QueueViewHolder)

@@ -139,9 +139,27 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
             backgroundColor = activity?.getColorByTheme(R.attr.colorPrimarySecondary2)!!
         }
 
-        val queueAdapter = QueueAdapter(viewLifecycleOwner).apply {
+        val queueAdapter = QueueAdapter(viewLifecycleOwner, songDetailViewModel).apply {
             itemClickListener = this@SongDetailFragment
             itemMovedListener = this@SongDetailFragment
+        }
+
+        songDetailViewModel.idsChanged.observe(this) { mediaItemData ->
+            val currentPosition = queueAdapter.songList.indexOfFirst { it.id == mediaItemData.current }
+            val lastPosition = queueAdapter.songList.indexOfFirst { it.id == mediaItemData.last }
+            if (settingsUtility.didStop) {
+                queueAdapter.notifyDataSetChanged()
+                settingsUtility.didStop = false
+            } else {
+                queueAdapter.notifyItemChanged(currentPosition)
+                queueAdapter.notifyItemChanged(lastPosition)
+            }
+        }
+
+        songDetailViewModel.currentState.observe(this) {
+            val mediaItemData = songDetailViewModel.currentData.value ?: MediaItemData()
+            val position = queueAdapter.songList.indexOfFirst { it.id == mediaItemData.id } + 1
+            queueAdapter.notifyItemChanged(position)
         }
 
         songDetailViewModel.queueData.observeOnce { queue ->

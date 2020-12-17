@@ -110,7 +110,7 @@ class MediaSessionCallback(
         val songId = mediaId.toMediaId().mediaId!!.toLong()
         val queue = extras?.getLongArray(QUEUE_INFO_KEY)
         val queueTitle = extras?.getString(SONG_LIST_NAME)
-        val seekTo = extras?.getInt(SEEK_TO) ?: 0
+        val seekTo = extras?.getLong(SEEK_TO) ?: 0
 
         if (queue != null) {
             musicPlayer.setCurrentSongId(songId)
@@ -126,7 +126,7 @@ class MediaSessionCallback(
 
     override fun onSeekTo(pos: Long) {
         Timber.d("onSeekTo()")
-        musicPlayer.seekTo(pos.toInt())
+        musicPlayer.seekTo(pos)
     }
 
     override fun onSkipToNext() {

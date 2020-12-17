@@ -24,6 +24,14 @@
     </declare-styleable>
 
     <declare-styleable name="MusicVisualizer">
-        <attr name="android:tint" format="color"/>
+        <attr name="tint" format="color"/>
+        <attr name="chunkCount" format="integer"/>
+        <attr name="chunkSpace" format="dimension"/>
+        <attr name="chunkSize" format="dimension"/>
+        <attr name="chunkRound" format="boolean"/>
+        <attr name="alignType" format="enum">
+            <enum name="center" value="0"/>
+            <enum name="bottom" value="1"/>
+        </attr>
     </declare-styleable>
 </resources>

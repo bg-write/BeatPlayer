@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package com.crrl.beatplayer.alertdialog
+package com.crrl.beatplayer.ui.widgets
 
 import android.content.Context
 import android.graphics.Canvas
@@ -25,6 +25,22 @@ import java.util.*
 class MusicVisualizer : View {
 
     private var random = Random()
+    private val chunks = mutableListOf<Chunk>()
+    var round = false
+        set(value) {
+            if (value) paint.strokeCap = Paint.Cap.ROUND
+            else paint.strokeCap = Paint.Cap.BUTT
+            field = value
+        }
+    var chunkSize = 4.dp()
+        set(value) {
+            paint.strokeWidth = value
+            field = value
+        }
+
+    var alignType = 0
+    var chunkCount = 5
+    var chunkSpace = 1.dp()
 
     private var paint = Paint()
     private val animateView = object : Runnable {
@@ -40,7 +56,16 @@ class MusicVisualizer : View {
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val att = context.obtainStyledAttributes(attrs, R.styleable.MusicVisualizer)
-        paint.color = att.getColor(0, context.getColor(R.color.colorPrimary))
+        paint.color =
+            att.getColor(R.styleable.MusicVisualizer_tint, context.getColor(R.color.colorPrimary))
+
+        chunkCount = att.getInt(R.styleable.MusicVisualizer_chunkCount, 6)
+        chunkSpace = att.getDimension(R.styleable.MusicVisualizer_chunkSpace, 1.dp())
+        chunkSize = att.getDimension(R.styleable.MusicVisualizer_chunkSize, 4.dp())
+        round = att.getBoolean(R.styleable.MusicVisualizer_chunkRound, false)
+        alignType = att.getInteger(R.styleable.MusicVisualizer_alignType, 0)
+
+        initChunks()
         removeCallbacks(animateView)
         post(animateView)
         att.recycle()
@@ -51,54 +76,64 @@ class MusicVisualizer : View {
 
         paint.style = Paint.Style.FILL
 
-        canvas.drawRoundRect(
-            getDimensionInPixel(2).toFloat(),
-            (height - (40 + random.nextInt((height / 1.5f).toInt() - 25))).toFloat(),
-            getDimensionInPixel(6).toFloat(),
-            (height - 15).toFloat(),
-            30f, 30f,
-            paint
-        )
-        canvas.drawRoundRect(
-            getDimensionInPixel(7).toFloat(),
-            (height - (40 + random.nextInt((height / 1.5f).toInt() - 25))).toFloat(),
-            getDimensionInPixel(11).toFloat(),
-            (height - 15).toFloat(),
-            30f, 30f,
-            paint
-        )
-        canvas.drawRoundRect(
-            getDimensionInPixel(12).toFloat(),
-            (height - (40 + random.nextInt((height / 1.5f).toInt() - 25))).toFloat(),
-            getDimensionInPixel(16).toFloat(),
-            (height - 15).toFloat(),
-            30f, 30f,
-            paint
-        )
-        canvas.drawRoundRect(
-            getDimensionInPixel(17).toFloat(),
-            (height - (40 + random.nextInt((height / 1.5f).toInt() - 25))).toFloat(),
-            getDimensionInPixel(21).toFloat(),
-            (height - 15).toFloat(),
-            30f, 30f,
-            paint
-        )
-        canvas.drawRoundRect(
-            getDimensionInPixel(22).toFloat(),
-            (height - (40 + random.nextInt((height / 1.5f).toInt() - 25))).toFloat(),
-            getDimensionInPixel(26).toFloat(),
-            (height - 15).toFloat(),
-            30f, 30f,
-            paint
+        when (alignType) {
+            0 -> drawShapeAlignCenter(canvas)
+            1 -> drawShapeAlignBottom(canvas)
+        }
+    }
+
+    private fun initChunks() {
+        for (i in 1 until chunkCount + 1) {
+            if (i == 1) {
+                chunks.add(Chunk(2 * chunkSpace, chunkSize + (2 * chunkSpace)))
+            } else {
+                val last = chunks.last()
+                chunks.add(
+                    Chunk(
+                        last.size + chunkSpace,
+                        last.size + chunkSpace + chunkSize
+                    )
+                )
+            }
+        }
+
+    }
+
+    private fun Int.dp(): Float {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this.toFloat(),
+            resources.displayMetrics
         )
     }
 
-    private fun getDimensionInPixel(dp: Int): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(),
-            resources.displayMetrics
-        ).toInt()
+    private fun drawShapeAlignCenter(canvas: Canvas) {
+        val verticalCenter = height / 2f
+        for (i in chunks.indices) {
+            val rm = (40 + random.nextInt((height / 2f).toInt() - 25)).toFloat()
+            val chunk = chunks[i]
+
+            canvas.drawLine(
+                chunk.x,
+                verticalCenter - rm / 2,
+                chunk.x,
+                verticalCenter + rm / 2,
+                paint
+            )
+        }
+    }
+
+    private fun drawShapeAlignBottom(canvas: Canvas) {
+        for (i in chunks.indices) {
+            val chunk = chunks[i]
+            canvas.drawLine(
+                chunk.x,
+                (height - (40 + random.nextInt((height / 2f).toInt() - 25))).toFloat(),
+                chunk.x,
+                (height - 15).toFloat(),
+                paint
+            )
+        }
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {
@@ -111,7 +146,12 @@ class MusicVisualizer : View {
         }
     }
 
-    fun setTint(color: Int){
+    fun setTint(color: Int) {
         paint.color = color
     }
+
+
 }
+
+data class Chunk(val x: Float, val size: Float)
+
