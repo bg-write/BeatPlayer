@@ -15,6 +15,7 @@ package com.crrl.beatplayer.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.crrl.beatplayer.utils.BeatConstants.AUTO_THEME
+import com.crrl.beatplayer.utils.BeatConstants.NORMAL_TRANSFORMER
 import com.crrl.beatplayer.utils.SortModes.AlbumModes.Companion.ALBUM_A_Z
 import com.crrl.beatplayer.utils.SortModes.ArtistModes.Companion.ARTIST_A_Z
 import com.crrl.beatplayer.utils.SortModes.SongModes.Companion.SONG_A_Z
@@ -91,6 +92,13 @@ class SettingsUtility(context: Context) {
             setPreference(ORIGINAL_QUEUE_LIST, value)
         }
 
+    var currentItemTransformer: String
+        get() = sPreferences.getString(CURRENT_TRANSFORMER_KEY, null) ?: NORMAL_TRANSFORMER
+        set(value) {
+            setPreference(CURRENT_TRANSFORMER_KEY, value)
+        }
+
+
     private fun setPreference(key: String, value: String) {
         val editor = sPreferences.edit()
         editor.putString(key, value)
@@ -120,6 +128,7 @@ class SettingsUtility(context: Context) {
         private const val DID_STOP_KEY = "did_stop_key"
         private const val INTENT_PATH_KEY = "intent_path_key"
         private const val ORIGINAL_QUEUE_LIST = "original_queue_list"
+        private const val CURRENT_TRANSFORMER_KEY = "current_transformer_key"
 
         const val QUEUE_INFO_KEY = "queue_info_key"
         const val QUEUE_LIST_KEY = "queue_list_key"

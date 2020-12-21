@@ -13,7 +13,6 @@
 
 package com.crrl.beatplayer.ui.viewmodels
 
-import android.content.Context
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
@@ -129,7 +128,7 @@ class SongDetailViewModel(
     }
 
     fun isSongFav(id: Long): LiveData<Boolean> {
-        GlobalScope.launch {
+        launch {
             val isFav = withContext(IO) {
                 favoritesRepository.songExist(id)
             }

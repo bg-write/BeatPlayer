@@ -187,15 +187,9 @@ fun View?.snackbar(
         else -> custom
     }
 
-    val color = when (type) {
-        DEFAULT -> R.drawable.background_default
-        SUCCESS -> R.drawable.background_success
-        ERROR -> R.drawable.background_error
-        else -> R.drawable.background_default
-    }
+    val background = R.drawable.background_default
 
-    Snackbar.LENGTH_SHORT
-    SimpleCustomSnackbar.make(this, msg, dur, clickListener, icon, action, color)?.show()
+    SimpleCustomSnackbar.make(this, msg, dur, clickListener, icon, action, background)?.show()
 }
 
 internal fun View?.findSuitableParent(): ViewGroup? {

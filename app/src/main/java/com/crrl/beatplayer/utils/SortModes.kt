@@ -13,7 +13,6 @@
 
 package com.crrl.beatplayer.utils
 
-import com.crrl.beatplayer.extensions.setAll
 import com.crrl.beatplayer.models.Artist
 import java.util.*
 
@@ -58,6 +57,4 @@ object SortModes {
             }
         }
     }
-
-
 }

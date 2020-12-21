@@ -127,5 +127,8 @@ dependencies {
 
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.12.2'
+
+    // DiscreteScrollview
+    implementation 'com.yarolegovich:discrete-scrollview:1.5.1'
 }
 

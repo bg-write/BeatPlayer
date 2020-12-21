@@ -39,6 +39,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_song_detail.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -235,23 +236,7 @@ class MainActivity : BaseActivity() {
     fun toggleAddToFav(v: View) {
         val mediaItemData = songDetailViewModel.currentData.value ?: return
         val song = songViewModel.getSongById(mediaItemData.id)
-        if (!favoriteViewModel.favExist(FAVORITE_ID)) return
-        if (favoriteViewModel.songExist(song.id)) {
-            val resp = favoriteViewModel.deleteSongByFavorite(FAVORITE_ID, longArrayOf(song.id))
-            showSnackBar(v, resp, 0)
-        } else {
-            val resp = favoriteViewModel.addToFavorite(FAVORITE_ID, listOf(song))
-            showSnackBar(v, resp, 1)
-        }
-    }
-
-    private fun showSnackBar(view: View, resp: Int, type: Int) {
-        val ok = when (type) {
-            0 -> getString(R.string.song_no_fav_ok)
-            else -> getString(R.string.song_fav_ok)
-        }
-
-        if (resp > 0) view.snackbar(SUCCESS, ok, LENGTH_SHORT)
+        viewModel.toggleFav(song)
     }
 
     private fun handlePlaybackIntent(intent: Intent?) {

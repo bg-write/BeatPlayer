@@ -35,14 +35,16 @@
             android:id="@+id/view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="@dimen/margin_12"
+            android:layout_marginTop="@dimen/margin_12"
+            android:layout_marginRight="@dimen/margin_12"
+            android:layout_marginBottom="@dimen/margin_12"
             android:background="@drawable/album_detail_shape"
             android:clickable="true"
             android:elevation="1dp"
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/now_playing_cover"
+            app:layout_constraintStart_toEndOf="@id/song_list"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <ImageButton
@@ -75,24 +77,18 @@
             app:layout_constraintStart_toStartOf="@id/view"
             app:layout_constraintTop_toTopOf="@+id/info_container" />
 
-        <ImageView
-            android:id="@+id/now_playing_cover"
+        <com.yarolegovich.discretescrollview.DiscreteScrollView
+            android:id="@+id/song_list"
             android:layout_width="280dp"
             android:layout_height="280dp"
-            android:layout_margin="@dimen/margin_12"
-            android:background="@drawable/song_detail_cover_frame"
-            android:contentDescription="@string/cover"
-            android:elevation="5dp"
-            android:src="@drawable/ic_empty_cover"
-            android:transitionName="now_cover"
+            app:dsv_orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintEnd_toStartOf="@id/view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/view"
-            app:albumId="@{viewModel.currentData.albumId}"
+            tools:listitem="@layout/song_detail_item"
             app:height="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4}"
-            app:recycled="@{true}"
-            app:state="@{safeUnbox(viewModel.currentState.state)}"
-            app:width="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4}" />
+            app:width="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4 + 35}" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -121,15 +117,15 @@
                 android:id="@+id/description_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_6"
                 android:background="@drawable/btn_ripple_with_stroke"
+                android:clickable="true"
+                android:focusable="true"
                 android:paddingStart="@dimen/padding_14"
                 android:paddingTop="4dp"
                 android:paddingEnd="@dimen/padding_14"
-                android:paddingBottom="4.5dp"
-                android:layout_marginTop="@dimen/margin_6"
-                android:layout_centerHorizontal="true"
-                android:clickable="true"
-                android:focusable="true">
+                android:paddingBottom="4.5dp">
 
                 <TextView
                     android:id="@+id/description"
@@ -139,7 +135,7 @@
                     android:focusable="false"
                     android:gravity="center"
                     android:text="@{viewModel.currentData.description}"
-                    android:textColor="?bodyTextColor"/>
+                    android:textColor="?bodyTextColor" />
             </LinearLayout>
 
             <TextView
@@ -162,7 +158,7 @@
                 android:layout_height="65dp"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="34dp"
-                app:animateExpansion="true"
+                app:animateExpansion="false"
                 app:chunkHeight="30dp"
                 app:chunkRadius="1dp"
                 app:chunkSpacing="1dp"
@@ -176,9 +172,9 @@
             android:id="@+id/info_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
             android:elevation="10dp"
             android:orientation="vertical"
-            android:layout_marginTop="22dp"
             app:layout_constraintEnd_toStartOf="@+id/sharedSong"
             app:layout_constraintStart_toEndOf="@+id/add_favorites"
             app:layout_constraintTop_toTopOf="@+id/view">
@@ -188,25 +184,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="10dp"
-                android:gravity="center"
                 android:ellipsize="marquee"
+                android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
                 android:paddingStart="@dimen/margin_10"
                 android:paddingEnd="@dimen/margin_10"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
                 android:text="@{viewModel.currentData.title, default=Title}"
                 android:textColor="?titleTextColor"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:isSelected="@{true}"/>
+                app:isSelected="@{true}" />
 
             <TextView
                 android:id="@+id/album_title"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_marginTop="3dp"
+                android:layout_weight="1"
                 android:elevation="10dp"
                 android:gravity="center"
                 android:maxLines="1"
@@ -215,7 +211,7 @@
                 android:text="@{viewModel.currentData.artist, default=Album}"
                 android:textColor="?bodyTextColor"
                 android:textSize="@dimen/title_text_size"
-                app:isSelected="@{true}"/>
+                app:isSelected="@{true}" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -263,12 +259,12 @@
                 android:layout_marginStart="8dp"
                 android:background="@drawable/btn_ripple_header_with_background"
                 android:contentDescription="@string/cover"
-                android:src="@drawable/ic_shuffle"
                 android:onClick="shuffleModeClick"
-                app:shuffleState="@{viewModel.currentState.shuffleMode}"
+                android:src="@drawable/ic_shuffle"
                 app:layout_constraintBottom_toBottomOf="@+id/lyrics_container"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/lyrics_container" />
+                app:layout_constraintTop_toTopOf="@+id/lyrics_container"
+                app:shuffleState="@{viewModel.currentState.shuffleMode}" />
 
             <ImageButton
                 android:id="@+id/repeat_btn"
@@ -277,13 +273,13 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/btn_ripple_header_with_background"
                 android:contentDescription="@string/cover"
-                android:src="@drawable/ic_repeat"
                 android:onClick="repeatModeClick"
-                app:repeatState="@{viewModel.currentState.repeatMode}"
+                android:src="@drawable/ic_repeat"
                 app:layout_constraintBottom_toBottomOf="@+id/lyrics_container"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/next_btn"
-                app:layout_constraintTop_toTopOf="@+id/lyrics_container" />
+                app:layout_constraintTop_toTopOf="@+id/lyrics_container"
+                app:repeatState="@{viewModel.currentState.repeatMode}" />
 
             <LinearLayout
                 android:id="@+id/play_container"
@@ -342,7 +338,7 @@
                     android:focusable="false"
                     android:text="@string/lyrics"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sub_title_text_size"/>
+                    android:textSize="@dimen/sub_title_text_size" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -371,13 +367,13 @@
                 android:layout_marginStart="@dimen/margin_10"
                 android:layout_marginEnd="@dimen/margin_10"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:maxLines="1"
                 android:padding="7dp"
                 android:text="@{viewModel.queueData.queueTitle}"
                 android:textColor="?colorAccent"
                 android:textSize="@dimen/title_text_size"
                 android:textStyle="bold"
-                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="@+id/back"
                 app:layout_constraintEnd_toStartOf="@+id/menu"
                 app:layout_constraintStart_toEndOf="@+id/back"

@@ -48,8 +48,8 @@ object BeatConstants {
     const val PLAY_LIST_DETAIL = "play_list_detail"
     const val NOW_PLAYING = "now_playing"
     const val ARTIST_DETAIL = "artist_detail"
-    const val FAVORITE_KEY = "favorite_key"
 
+    const val FAVORITE_KEY = "favorite_key"
     const val ARTIST_KEY = "artist_key"
     const val ALBUM_KEY = "album_key"
     const val FOLDER_KEY = "folder_key"
@@ -69,6 +69,9 @@ object BeatConstants {
     const val BLACK_THEME = "black_theme"
     const val DARK_THEME = "dark_theme"
     const val AUTO_THEME = "auto_theme"
+    const val NORMAL_TRANSFORMER = "normal_transformer"
+    const val DEPTH_PAGE_TRANSFORMER = "depth_page_transformer"
+    const val CUBE_TRANSFORMER = "cube_transformer"
     const val FAVORITE_ID = -7440L
     const val FAVORITE_NAME = "${R.string.favorites}"
 

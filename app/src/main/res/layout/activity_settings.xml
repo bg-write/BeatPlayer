@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/themes"
+                        android:id="@+id/appearance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_10"
@@ -83,7 +83,7 @@
                         app:clipToOutline="@{true}"
                         android:background="@drawable/song_detail_cover_frame"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/themes">
+                        app:layout_constraintTop_toBottomOf="@id/appearance">
 
                         <LinearLayout
                             android:id="@+id/theme"
@@ -103,13 +103,13 @@
                                 android:layout_height="@dimen/btn_size"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/ic_theme"
-                                android:tint="?btnTintColor" />
+                                app:tint="?btnTintColor"
+                                android:contentDescription="@string/cover" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                app:layout_constraintTop_toBottomOf="@id/themes">
+                                android:orientation="vertical">
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -121,12 +121,84 @@
                                     android:textSize="@dimen/title_text_size" />
 
                                 <TextView
-                                    android:id="@+id/sub_title"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
                                     android:maxLines="1"
                                     android:text="@string/settings_theme_description"
+                                    android:textColor="?colorAccent"
+                                    android:textSize="@dimen/sub_title_text_size" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/now_playing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:text="@string/now_playing"
+                        android:textColor="?bodyTextColor"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10"
+                        app:clipToOutline="@{true}"
+                        android:background="@drawable/song_detail_cover_frame"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/now_playing">
+
+                        <LinearLayout
+                            android:id="@+id/cover_transition"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/list_item_ripple"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:onClick="showCoverTransformers"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/margin_10"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="@dimen/btn_size"
+                                android:layout_height="@dimen/btn_size"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_animation"
+                                app:tint="?btnTintColor"
+                                android:contentDescription="@string/cover" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:maxLines="1"
+                                    android:text="@string/cover_transition"
+                                    android:textColor="?titleTextColor"
+                                    android:textSize="@dimen/title_text_size" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:maxLines="1"
+                                    android:text="@string/cover_transition_description"
                                     android:textColor="?colorAccent"
                                     android:textSize="@dimen/sub_title_text_size" />
                             </LinearLayout>

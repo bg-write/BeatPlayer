@@ -16,18 +16,22 @@ package com.crrl.beatplayer.ui.viewmodels
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.ActivityMainBinding
+import com.crrl.beatplayer.extensions.SUCCESS
 import com.crrl.beatplayer.extensions.filter
+import com.crrl.beatplayer.extensions.snackbar
 import com.crrl.beatplayer.extensions.toggleShow
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.PlaybackConnection
 import com.crrl.beatplayer.repository.FavoritesRepository
 import com.crrl.beatplayer.ui.viewmodels.base.CoroutineViewModel
+import com.crrl.beatplayer.utils.BeatConstants
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_SONG_FROM_INTENT
 import com.crrl.beatplayer.utils.BeatConstants.QUEUE_LIST_TYPE_KEY
 import com.crrl.beatplayer.utils.BeatConstants.SONG_KEY
@@ -35,13 +39,15 @@ import com.crrl.beatplayer.utils.BeatConstants.UPDATE_QUEUE
 import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_INFO_KEY
 import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_LIST_KEY
 import com.github.florent37.kotlin.pleaseanimate.please
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
 
 class MainViewModel(
         private val favoritesRepository: FavoritesRepository,
-        private val playbackConnection: PlaybackConnection
+        private val playbackConnection: PlaybackConnection,
+        private val favoriteViewModel: FavoriteViewModel
 ) : CoroutineViewModel(Main) {
 
     private val isFavLiveData = MutableLiveData<Boolean>()
@@ -148,6 +154,27 @@ class MainViewModel(
                 }
             }.start()
         }
+    }
+
+    fun toggleFav(song: Song){
+        if (!favoriteViewModel.favExist(BeatConstants.FAVORITE_ID)) return
+        if (favoriteViewModel.songExist(song.id)) {
+            val resp = favoriteViewModel.deleteSongByFavorite(BeatConstants.FAVORITE_ID, longArrayOf(song.id))
+            showSnackBar(binding.root, resp, 0)
+        } else {
+            val resp = favoriteViewModel.addToFavorite(BeatConstants.FAVORITE_ID, listOf(song))
+            showSnackBar(binding.root, resp, 1)
+        }
+    }
+
+    private fun showSnackBar(view: View, resp: Int, type: Int) {
+        val context = binding.root.context
+        val ok = when (type) {
+            0 -> context.getString(R.string.song_no_fav_ok)
+            else -> context.getString(R.string.song_fav_ok)
+        }
+
+        if (resp > 0) view.snackbar(SUCCESS, ok, BaseTransientBottomBar.LENGTH_SHORT)
     }
 }
 

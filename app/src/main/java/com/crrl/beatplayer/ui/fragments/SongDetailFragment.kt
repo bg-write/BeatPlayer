@@ -29,7 +29,9 @@ import com.crrl.beatplayer.interfaces.ItemMovedListener
 import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.adapters.QueueAdapter
+import com.crrl.beatplayer.ui.adapters.SongDetailAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseSongDetailFragment
+import com.crrl.beatplayer.ui.transformers.base.BaseTransformer
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
 import com.crrl.beatplayer.ui.viewmodels.SongViewModel
 import com.crrl.beatplayer.utils.AutoClearBinding
@@ -46,17 +48,12 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
-import kotlin.math.absoluteValue
 
 class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
 
     private var binding by AutoClearBinding<FragmentSongDetailBinding>(this)
     private val songViewModel by sharedViewModel<SongViewModel>()
     private val playlistViewModel by sharedViewModel<PlaylistViewModel>()
-    private val minFlingVelocity = 800
-
-    private lateinit var gestureDetector: GestureDetector
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +66,6 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
-        initSwipeGestures()
     }
 
     private fun init() {
@@ -91,7 +87,6 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
         }
 
         binding.apply {
-            sharedSong.setOnClickListener { shareItem() }
             descriptionContainer.setOnClickListener { showQueueList() }
         }
 
@@ -109,13 +104,55 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
         }
     }
 
+    private fun initSongDetailView() {
+        val songDetailAdapter = SongDetailAdapter()
+
+        binding.songList.apply {
+            adapter = songDetailAdapter
+            addOnItemChangedListener { _, position ->
+                val currentId = songDetailViewModel.currentData.value?.id ?: -1L
+                val selectedSong = songDetailAdapter.songList[position]
+
+                if (currentId != selectedSong.id) mainViewModel.mediaItemClicked(selectedSong.toMediaItem())
+            }
+            setSlideOnFling(false)
+            setItemTransitionTimeMillis(150)
+            setSlideOnFlingThreshold(5100)
+        }
+
+        songDetailViewModel.queueData.observe(viewLifecycleOwner) {
+            val currentId = songDetailViewModel.currentData.value?.id ?: -1L
+            val currentPosition = it.queue.indexOf(currentId)
+
+            songDetailAdapter.updateData(it.queue.toSongList(get()))
+            binding.songList.scrollToPosition(currentPosition)
+        }
+
+        songDetailViewModel.idsChanged.observe(viewLifecycleOwner) { item ->
+            val lastPosition = songDetailAdapter.songList.indexOfFirst { it.id == item.last }
+            val currentPosition = songDetailAdapter.songList.indexOfFirst { it.id == item.current }
+
+            if (-1 !in listOf(lastPosition, currentPosition))
+                binding.songList.smoothScrollToPosition(currentPosition)
+        }
+    }
+
+    override fun onResume() {
+        binding.songList.setItemTransformer(getCurrentTransformer())
+        super.onResume()
+    }
+
     override fun onDetach() {
         super.onDetach()
         songDetailViewModel.update(byteArrayOf())
         songDetailViewModel.update()
     }
 
-    private fun calculateSongWaveGraph(item: MediaItemData){
+    private fun getCurrentTransformer(): BaseTransformer {
+        return GeneralUtils.getTransformerFromString(settingsUtility.currentItemTransformer)
+    }
+
+    private fun calculateSongWaveGraph(item: MediaItemData) {
         launch {
             val raw = withContext(IO) {
                 if (item.id == SONG_ID_DEFAULT) {
@@ -124,8 +161,13 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
                 } else GeneralUtils.audio2Raw(context!!, getSongUri(item.id)) ?: byteArrayOf()
             }
             songDetailViewModel.update(raw)
-            if(raw.isEmpty()){
-                view.snackbar(CUSTOM, getString(R.string.raw_error), Snackbar.LENGTH_LONG, action = getString(R.string.retry)){
+            if (raw.isEmpty()) {
+                view.snackbar(
+                    CUSTOM,
+                    getString(R.string.raw_error),
+                    Snackbar.LENGTH_LONG,
+                    action = getString(R.string.retry)
+                ) {
                     calculateSongWaveGraph(item)
                 }
             }
@@ -145,7 +187,8 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
         }
 
         songDetailViewModel.idsChanged.observe(this) { mediaItemData ->
-            val currentPosition = queueAdapter.songList.indexOfFirst { it.id == mediaItemData.current }
+            val currentPosition =
+                queueAdapter.songList.indexOfFirst { it.id == mediaItemData.current }
             val lastPosition = queueAdapter.songList.indexOfFirst { it.id == mediaItemData.last }
             if (settingsUtility.didStop) {
                 queueAdapter.notifyDataSetChanged()
@@ -166,7 +209,7 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
             queueAdapter.updateDataSet(queue.queue.toSongList(get()))
         }
 
-        songDetailViewModel.currentData.observe(viewLifecycleOwner){
+        songDetailViewModel.currentData.observe(viewLifecycleOwner) {
             queueAdapter.scrollToPosition(it.id)
         }
 
@@ -203,67 +246,11 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
                     }
                 }
             }
-        }
-    }
 
-    private var touchListener: View.OnTouchListener =
-        View.OnTouchListener { v: View, motionEvent: MotionEvent ->
-            gestureDetector.onTouchEvent(motionEvent)
-            when (motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> {
-                }
-                MotionEvent.ACTION_UP -> v.performClick()
-                else -> {
-                }
-            }
-            true
+            sharedSong.setOnClickListener { shareItem() }
         }
 
-    private fun initSwipeGestures() {
-        gestureDetector =
-            GestureDetector(activity, object : GestureDetector.OnGestureListener {
-                override fun onDown(event: MotionEvent): Boolean {
-                    return true
-                }
-
-                override fun onFling(
-                    e1: MotionEvent,
-                    e2: MotionEvent,
-                    velocityX: Float,
-                    velocityY: Float
-                ): Boolean {
-                    if (velocityX.absoluteValue > minFlingVelocity) {
-                        if (velocityX < 0) {
-                            mainViewModel.transportControls()?.skipToNext()
-                        } else {
-                            mainViewModel.transportControls()?.skipToPrevious()
-                        }
-                    }
-                    return true
-                }
-
-                override fun onShowPress(e: MotionEvent?) {
-                    Timber.e("onShowPress detected")
-                }
-
-                override fun onSingleTapUp(e: MotionEvent?): Boolean {
-                    return true
-                }
-
-                override fun onLongPress(e: MotionEvent?) {
-                    Timber.e("onLongPress detected")
-                }
-
-                override fun onScroll(
-                    e1: MotionEvent?,
-                    e2: MotionEvent?,
-                    distanceX: Float,
-                    distanceY: Float
-                ): Boolean {
-                    return true
-                }
-            })
-        now_playing_cover.setOnTouchListener(touchListener)
+        initSongDetailView()
     }
 
     override fun onItemClick(view: View, position: Int, item: Song) {

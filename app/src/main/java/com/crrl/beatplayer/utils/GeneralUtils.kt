@@ -36,7 +36,13 @@ import com.crrl.beatplayer.extensions.optimize
 import com.crrl.beatplayer.extensions.systemService
 import com.crrl.beatplayer.extensions.toFileDescriptor
 import com.crrl.beatplayer.models.Song
+import com.crrl.beatplayer.ui.transformers.DepthPageTransformer
+import com.crrl.beatplayer.ui.transformers.CubeOutTransformer
+import com.crrl.beatplayer.ui.transformers.NormalTransformer
+import com.crrl.beatplayer.ui.transformers.base.BaseTransformer
 import com.crrl.beatplayer.utils.BeatConstants.ARTWORK_URI
+import com.crrl.beatplayer.utils.BeatConstants.CUBE_TRANSFORMER
+import com.crrl.beatplayer.utils.BeatConstants.DEPTH_PAGE_TRANSFORMER
 import com.crrl.beatplayer.utils.BeatConstants.SEEK_TO_POS
 import com.crrl.beatplayer.utils.BeatConstants.SONG_LIST_NAME
 import com.crrl.beatplayer.utils.BeatConstants.SONG_URI
@@ -191,6 +197,14 @@ object GeneralUtils {
             bundle.putInt(SEEK_TO_POS, seekTo)
         else bundle.putInt(SEEK_TO_POS, 0)
         return bundle
+    }
+
+    fun getTransformerFromString(transformerString: String): BaseTransformer {
+        return when(transformerString){
+            CUBE_TRANSFORMER -> CubeOutTransformer()
+            DEPTH_PAGE_TRANSFORMER -> DepthPageTransformer()
+            else -> NormalTransformer()
+        }
     }
 
     fun isOreo() = SDK_INT >= O

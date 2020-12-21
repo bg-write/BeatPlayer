@@ -46,7 +46,7 @@
     <string name="track_number" translatable="false">0</string>
     <string name="unknown">Unknown</string>
     <string name="no_track" translatable="false">-</string>
-    <string name="now_playing">Now Playing</string>
+    <string name="now_playing">Now playing</string>
     <string name="now_transition" translatable="false">now_playing_transition_name</string>
     <string name="mini_transition" translatable="false">mini_transition_name</string>
     <string name="new_playlist">New Playlist</string>
@@ -127,6 +127,12 @@
     <string name="queue_title">Playing Queue</string>
     <string name="queue_msg">Up Next</string>
     <string name="raw_error">Could not generate the song graph.</string>
+    <string name="normal_cover_transition">Normal</string>
+    <string name="depth_page_cover_transition">Depth</string>
+    <string name="cube_cover_transition">Cube</string>
+    <string name="cover_transition">Cover Transition</string>
+    <string name="cover_transition_msg">Please, select a cover transition</string>
+    <string name="cover_transition_description">Transition effect when a song is changed.</string>
 
     <plurals name="number_of_songs">
         <item quantity="zero">%d Tracks</item>

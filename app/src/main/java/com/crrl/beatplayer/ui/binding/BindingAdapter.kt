@@ -86,11 +86,11 @@ fun setAlbumId(
         }
 }
 
-@BindingAdapter("app:width", "app:height")
-fun setImageSize(view: View, width: Int, height: Int) {
+@BindingAdapter("app:width", "app:height", requireAll = false)
+fun setImageSize(view: View, width: Int? = null, height: Int? = null) {
     view.layoutParams.apply {
-        this.width = width
-        this.height = height
+        this.width = width ?: this.width
+        this.height = height ?: this.height
     }
     if (view is ImageView) view.scaleType = ImageView.ScaleType.CENTER_CROP
 }

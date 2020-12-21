@@ -36,7 +36,7 @@
     <string name="sort_year">Año</string>
     <string name="title">Título</string>
     <string name="unknown">Desconosido</string>
-    <string name="now_playing">Reproduciendo Ahora</string>
+    <string name="now_playing">Reproduciendo ahora</string>
     <string name="new_playlist">Nueva Lista</string>
     <string name="no_playlist">Sin Listas de Reproducción</string>
     <string name="no_songs">Sin Pistas</string>
@@ -115,6 +115,12 @@
     <string name="queue_title">Cola de Reproducción</string>
     <string name="queue_msg">A Continuación</string>
     <string name="raw_error">No se pudo generar la gráfica de la canción.</string>
+    <string name="normal_cover_transition">Normal</string>
+    <string name="depth_page_cover_transition">Profundidad</string>
+    <string name="cube_cover_transition">Cubo</string>
+    <string name="cover_transition">Transición de Portada</string>
+    <string name="cover_transition_msg">Por favor, selecciona una transición de portada</string>
+    <string name="cover_transition_description">Efecto de transición al cambiar canción.</string>
 
     <plurals name="number_of_songs" tools:ignore="UnusedQuantity">
         <item quantity="zero">%d Pistas</item>

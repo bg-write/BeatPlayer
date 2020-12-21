@@ -119,7 +119,7 @@ class BeatPlayerImplementation(
         queueUtils.setMediaSession(mediaSession)
         musicPlayer.onPrepared {
             preparedCallback(this@BeatPlayerImplementation)
-            musicPlayer.seekTo(mediaSession.position())
+            if(!mediaSession.isPlaying()) musicPlayer.seekTo(mediaSession.position())
             playSong()
         }
 
