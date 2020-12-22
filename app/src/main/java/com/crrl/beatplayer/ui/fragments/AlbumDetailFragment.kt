@@ -62,7 +62,7 @@ class AlbumDetailFragment : BaseFragment<Song>() {
         val id = arguments!!.getLong(BeatConstants.ALBUM_KEY)
         album = albumViewModel.getAlbum(id)
         initNeeded(Song(), emptyList(), id)
-        songAdapter = SongAdapter(songDetailViewModel).apply {
+        songAdapter = SongAdapter(this).apply {
             itemClickListener = this@AlbumDetailFragment
             showHeader = true
             isAlbumDetail = true
@@ -74,14 +74,6 @@ class AlbumDetailFragment : BaseFragment<Song>() {
             adapter = songAdapter
             clipToOutline = true
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        }
-
-        songDetailViewModel.idsChanged.observe(this) {
-            songAdapter.notifyDataSetChanged()
-        }
-
-        songDetailViewModel.currentState.observe(this) {
-            songAdapter.notifyDataSetChanged()
         }
 
         binding.addFavorites.setOnClickListener { toggleAddFav() }

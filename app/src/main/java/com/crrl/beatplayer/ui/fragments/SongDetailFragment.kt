@@ -128,11 +128,10 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
             binding.songList.scrollToPosition(currentPosition)
         }
 
-        songDetailViewModel.idsChanged.observe(viewLifecycleOwner) { item ->
-            val lastPosition = songDetailAdapter.songList.indexOfFirst { it.id == item.last }
-            val currentPosition = songDetailAdapter.songList.indexOfFirst { it.id == item.current }
+        songDetailViewModel.currentData.observe(viewLifecycleOwner) { item ->
+            val currentPosition = songDetailAdapter.songList.indexOfFirst { it.id == item.id }
 
-            if (-1 !in listOf(lastPosition, currentPosition))
+            if (-1 != currentPosition)
                 binding.songList.smoothScrollToPosition(currentPosition)
         }
     }
@@ -184,19 +183,6 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
         val queueAdapter = QueueAdapter(viewLifecycleOwner, songDetailViewModel).apply {
             itemClickListener = this@SongDetailFragment
             itemMovedListener = this@SongDetailFragment
-        }
-
-        songDetailViewModel.idsChanged.observe(this) { mediaItemData ->
-            val currentPosition =
-                queueAdapter.songList.indexOfFirst { it.id == mediaItemData.current }
-            val lastPosition = queueAdapter.songList.indexOfFirst { it.id == mediaItemData.last }
-            if (settingsUtility.didStop) {
-                queueAdapter.notifyDataSetChanged()
-                settingsUtility.didStop = false
-            } else {
-                queueAdapter.notifyItemChanged(currentPosition)
-                queueAdapter.notifyItemChanged(lastPosition)
-            }
         }
 
         songDetailViewModel.currentState.observe(this) {

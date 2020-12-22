@@ -24,6 +24,7 @@ class QueueAdapter(
     private lateinit var itemTouchHelper: ItemTouchHelper
     private var queueViewLiveData = MutableLiveData<RecyclerView>()
     private var isFirstTime = true
+    private var currentPosition = -1
 
     val songList = mutableListOf<Song>()
     var itemClickListener: ItemClickListener<Song>? = null
@@ -50,6 +51,7 @@ class QueueAdapter(
     fun updateDataSet(newList: List<Song>) {
         songList.setAll(newList.toMutableList())
         notifyDataSetChanged()
+        initObservers()
     }
 
     fun onItemMove(from: Int, to: Int): Boolean {
@@ -85,6 +87,9 @@ class QueueAdapter(
             binding.apply {
                 this.song = song
                 this.viewModel = songDetailViewModel
+
+                executePendingBindings()
+
                 container.setOnClickListener(this@QueueViewHolder)
                 itemMenu.setOnClickListener(this@QueueViewHolder)
                 selected.setOnTouchListener(this@QueueViewHolder)
@@ -124,6 +129,25 @@ class QueueAdapter(
         fun onSelected() {
             binding.root.elevation = 100.0f
             binding.root.setBackgroundResource(R.drawable.list_item_ripple_background)
+        }
+    }
+
+    private fun initObservers() {
+        songDetailViewModel.currentData.observe(lifecycleOwner) { itemData ->
+            val lastPosition = currentPosition
+            currentPosition = songList.indexOfFirst { itemData.id == it.id }
+
+            if (lastPosition != -1)
+                notifyItemChanged(lastPosition)
+
+            if (currentPosition != -1)
+                notifyItemChanged(currentPosition)
+        }
+
+
+        songDetailViewModel.currentState.observe(lifecycleOwner){
+            if (currentPosition != -1)
+                notifyItemChanged(currentPosition)
         }
     }
 }

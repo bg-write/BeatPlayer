@@ -18,7 +18,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.crrl.beatplayer.models.IdsChanged
 import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.PlaybackState
 import com.crrl.beatplayer.models.Queue
@@ -44,9 +43,6 @@ class SongDetailViewModel(
 
     private val currentDataBase = MutableLiveData<MediaItemData>()
     val currentData: LiveData<MediaItemData> = currentDataBase
-
-    private val idsChangedBase = MutableLiveData<IdsChanged>()
-    val idsChanged: LiveData<IdsChanged> = idsChangedBase
 
     private val currentStateBase = MutableLiveData<PlaybackState>()
     val currentState: LiveData<PlaybackState> = currentStateBase
@@ -75,12 +71,6 @@ class SongDetailViewModel(
         }
     }
 
-    private val idsChangedObserver = Observer<IdsChanged> { idsChanged ->
-        idsChanged?.let {
-            idsChangedBase.postValue(it)
-        }
-    }
-
     private val queueDataObserver = Observer<Queue> { queueData ->
         queueData?.let {
             queueDataBase.postValue(queueData)
@@ -90,7 +80,6 @@ class SongDetailViewModel(
     private val mediaMediaConnection = mediaPlaybackConnection.also {
         it.playbackState.observeForever(playbackStateObserver)
         it.nowPlaying.observeForever(nowMediaMetadataObserver)
-        it.idsChanged.observeForever(idsChangedObserver)
         it.queueLiveData.observeForever(queueDataObserver)
 
         it.isConnected.observeForever { connected ->
@@ -149,6 +138,6 @@ class SongDetailViewModel(
         super.onCleared()
         mediaMediaConnection.playbackState.removeObserver(playbackStateObserver)
         mediaMediaConnection.nowPlaying.removeObserver(nowMediaMetadataObserver)
-        mediaMediaConnection.idsChanged.removeObserver(idsChangedObserver)
+        mediaMediaConnection.queueLiveData.removeObserver(queueDataObserver)
     }
 }

@@ -46,7 +46,7 @@
                 android:transitionName="now_cover"
                 app:albumId="@{song.albumId}"
                 app:height="@{GeneralUtils.INSTANCE.screenWidth - 35}"
-                app:recycled="@{false}"
+                app:recycled="@{true}"
                 app:width="@{GeneralUtils.INSTANCE.screenWidth - 35}" />
 
             <LinearLayout

@@ -15,6 +15,7 @@ package com.crrl.beatplayer.ui.adapters
 
 import android.app.Activity
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,13 +35,13 @@ import com.crrl.beatplayer.utils.BeatConstants.SONG_TYPE
 @Suppress("UNCHECKED_CAST")
 class SearchAdapter(
     activity: Activity,
-    private val songDetailViewModel: SongDetailViewModel,
+    lifecycleOwner: LifecycleOwner,
     private val viewModel: SearchViewModel,
     itemClickListener: ItemClickListener<MediaItem>,
     private val sc: Int = 2
 ) : RecyclerView.Adapter<SearchAdapter.ViewHolderSearch>() {
 
-    val songAdapter: SongAdapter = SongAdapter(songDetailViewModel).apply {
+    val songAdapter: SongAdapter = SongAdapter(lifecycleOwner).apply {
         this.itemClickListener = itemClickListener as ItemClickListener<Song>
         showHeader = false
     }

@@ -46,7 +46,8 @@
                 app:track_number="@{safeUnbox(song.trackNumber)}"
                 android:textColor="?titleTextColor"
                 android:textSize="@dimen/title_text_size"
-                app:hide="@{safeUnbox(viewModel.currentData.id == song.id)}"/>
+                app:hide="@{safeUnbox(viewModel.currentData.id == song.id)}"
+                app:state="@{safeUnbox(viewModel.currentState.state)}"/>
 
             <LinearLayout
                 android:id="@+id/textViewContainer"
@@ -78,7 +79,7 @@
                         android:textSize="@dimen/title_text_size"
                         app:html="@{song.title}"
                         app:marquee="@{true}"
-                        app:selected="@{safeUnbox(viewModel.idsChanged.current == song.id)}" />
+                        app:selected="@{safeUnbox(viewModel.currentData.id == song.id)}" />
                 </RelativeLayout>
 
                 <LinearLayout

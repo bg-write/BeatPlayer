@@ -18,8 +18,7 @@ import android.graphics.drawable.Drawable
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.text.Html
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.databinding.BindingAdapter
@@ -34,7 +33,6 @@ import com.crrl.beatplayer.models.Album
 import com.crrl.beatplayer.models.Favorite
 import com.crrl.beatplayer.models.SearchData
 import com.crrl.beatplayer.models.Song
-import com.crrl.beatplayer.ui.widgets.MusicVisualizer
 import com.crrl.beatplayer.utils.BeatConstants.ALBUM_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.ARTIST_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.FAVORITE_TYPE
@@ -261,10 +259,12 @@ fun setVisibility(view: View, visible: Boolean = true, animate: Boolean = false)
     view.toggleShow(visible, animate)
 }
 
-@BindingAdapter("app:hide")
-fun setHide(view: View, hide: Boolean = true) {
-    if(hide) view.visibility = View.INVISIBLE
-    else view.visibility = VISIBLE
+@BindingAdapter("app:hide", "app:state")
+fun setHide(view: View, hide: Boolean, state: Int) {
+    if (hide) {
+        if (state == STATE_PLAYING) view.visibility = INVISIBLE else view.visibility = VISIBLE
+    } else view.visibility = VISIBLE
+    setSelectedTextColor(view as TextView, hide, hide)
 }
 
 @BindingAdapter("app:selected", "app:marquee")

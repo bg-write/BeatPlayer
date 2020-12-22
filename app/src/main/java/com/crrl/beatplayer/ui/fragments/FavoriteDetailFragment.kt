@@ -60,18 +60,10 @@ class FavoriteDetailFragment : BaseFragment<Song>() {
         val id = arguments!!.getLong(FAVORITE_KEY)
         binding.favorite = favoriteViewModel.getFavorite(id)
 
-        songAdapter = SongAdapter(songDetailViewModel).apply {
+        songAdapter = SongAdapter(this).apply {
             showHeader = true
             isAlbumDetail = true
             itemClickListener = this@FavoriteDetailFragment
-        }
-
-        songDetailViewModel.idsChanged.observe(this) {
-            songAdapter.notifyDataSetChanged()
-        }
-
-        songDetailViewModel.currentState.observe(this) {
-            songAdapter.notifyDataSetChanged()
         }
 
         viewModel.songListFavorite(id).observe(viewLifecycleOwner) {

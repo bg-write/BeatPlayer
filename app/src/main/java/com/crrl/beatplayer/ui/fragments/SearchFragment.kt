@@ -72,7 +72,7 @@ class SearchFragment : BaseFragment<MediaItem>(), TextWatcher {
     private fun init() {
         val sc = if (getOrientation(requireActivity()) == PORTRAIT) 2 else 5
 
-        searchAdapter = SearchAdapter(requireActivity(), songDetailViewModel, searchViewModel, this, sc)
+        searchAdapter = SearchAdapter(requireActivity(), this, searchViewModel, this, sc)
 
         binding.apply {
             searchSrcText.apply {

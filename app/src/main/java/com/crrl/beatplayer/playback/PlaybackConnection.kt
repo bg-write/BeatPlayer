@@ -21,8 +21,6 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
-import com.crrl.beatplayer.extensions.id
-import com.crrl.beatplayer.models.IdsChanged
 import com.crrl.beatplayer.models.Queue
 
 val NONE_PLAYBACK_STATE: PlaybackStateCompat = PlaybackStateCompat.Builder()
@@ -38,7 +36,6 @@ val NONE_PLAYING: MediaMetadataCompat = MediaMetadataCompat.Builder()
 interface PlaybackConnection {
     val isConnected: MutableLiveData<Boolean>
     val playbackState: MutableLiveData<PlaybackStateCompat>
-    val idsChanged: MutableLiveData<IdsChanged>
     val nowPlaying: MutableLiveData<MediaMetadataCompat>
     val transportControls: MediaControllerCompat.TransportControls?
     val queueLiveData: MutableLiveData<Queue>
@@ -52,7 +49,6 @@ class PlaybackConnectionImplementation(
 
     override val isConnected = MutableLiveData<Boolean>()
     override val playbackState = MutableLiveData<PlaybackStateCompat>()
-    override val idsChanged = MutableLiveData<IdsChanged>()
     override val nowPlaying = MutableLiveData<MediaMetadataCompat>()
     override val queueLiveData = MutableLiveData<Queue>()
     override var mediaController: MediaControllerCompat? = null
@@ -93,12 +89,6 @@ class PlaybackConnectionImplementation(
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             metadata ?: return
-            idsChanged.postValue(
-                IdsChanged(
-                    metadata.id.toLong(),
-                    nowPlaying.value?.id?.toLong() ?: 0
-                )
-            )
             nowPlaying.postValue(metadata)
         }
 

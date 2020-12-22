@@ -83,7 +83,7 @@
                         android:textSize="@dimen/title_text_size"
                         app:html="@{song.title}"
                         app:marquee="@{true}"
-                        app:selected="@{safeUnbox(viewModel.idsChanged.current == song.id)}" />
+                        app:selected="@{safeUnbox(viewModel.currentData.id == song.id)}" />
                 </RelativeLayout>
 
                 <LinearLayout

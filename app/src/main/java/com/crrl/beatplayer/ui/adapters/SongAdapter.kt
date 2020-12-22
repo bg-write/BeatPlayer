@@ -16,24 +16,30 @@ package com.crrl.beatplayer.ui.adapters
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.R
-import com.crrl.beatplayer.databinding.SongItemNoCoverBinding
 import com.crrl.beatplayer.databinding.SongItemBinding
 import com.crrl.beatplayer.databinding.SongItemHeaderBinding
+import com.crrl.beatplayer.databinding.SongItemNoCoverBinding
 import com.crrl.beatplayer.extensions.hide
 import com.crrl.beatplayer.extensions.inflateWithBinding
 import com.crrl.beatplayer.extensions.setAll
 import com.crrl.beatplayer.interfaces.ItemClickListener
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.viewmodels.SongDetailViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val HEADER_TYPE = 0
 private const val ITEM_TYPE = 1
 
 class SongAdapter(
-    private val songDetailViewModel: SongDetailViewModel
+    val lifecycleOwner: LifecycleOwner
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var currentPosition = -1
+
+    val songDetailViewModel by lifecycleOwner.viewModel<SongDetailViewModel>()
 
     val songList = mutableListOf<Song>()
     var showHeader = false
@@ -43,14 +49,15 @@ class SongAdapter(
     var itemClickListener: ItemClickListener<Song>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val viewBindingSong = when{
+        val viewBindingSong = when {
             showCover -> parent.inflateWithBinding<SongItemNoCoverBinding>(R.layout.song_item)
             else -> parent.inflateWithBinding<SongItemBinding>(R.layout.song_item_no_cover)
         }
 
         return when (viewType) {
             HEADER_TYPE -> {
-                val viewBinding = parent.inflateWithBinding<SongItemHeaderBinding>(R.layout.song_item_header)
+                val viewBinding =
+                    parent.inflateWithBinding<SongItemHeaderBinding>(R.layout.song_item_header)
                 ViewHolderSongHeader(viewBinding)
             }
             ITEM_TYPE -> {
@@ -99,13 +106,14 @@ class SongAdapter(
     fun updateDataSet(newList: List<Song>) {
         songList.setAll(newList.toMutableList())
         notifyDataSetChanged()
+        initObservers()
     }
 
     inner class ViewHolderSong(private val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         fun bind(currentSong: Song) {
-            when(binding){
+            when (binding) {
                 is SongItemBinding -> bindSong(currentSong)
                 is SongItemNoCoverBinding -> bindAlbumSong(currentSong)
             }
@@ -181,5 +189,23 @@ class SongAdapter(
                 }
         }
 
+    }
+
+    private fun initObservers() {
+        songDetailViewModel.currentData.observe(lifecycleOwner) { itemData ->
+            val lastPosition = currentPosition
+            currentPosition = songList.indexOfFirst { itemData.id == it.id } + 1
+
+            if (lastPosition != -1)
+                notifyItemChanged(lastPosition)
+
+            if (currentPosition != -1)
+                notifyItemChanged(currentPosition)
+        }
+
+        songDetailViewModel.currentState.observe(lifecycleOwner){
+            if (currentPosition != -1)
+                notifyItemChanged(currentPosition)
+        }
     }
 }

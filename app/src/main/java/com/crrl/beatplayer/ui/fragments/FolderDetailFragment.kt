@@ -66,18 +66,10 @@ class FolderDetailFragment : BaseFragment<Song>() {
         val id = arguments?.getLong(FOLDER_KEY)!!
         val folder = folderViewModel.getFolder(id)
 
-        songAdapter = SongAdapter(songDetailViewModel).apply {
+        songAdapter = SongAdapter(this).apply {
             showHeader = true
             isAlbumDetail = true
             itemClickListener = this@FolderDetailFragment
-        }
-
-        songDetailViewModel.idsChanged.observe(this) {
-            songAdapter.notifyDataSetChanged()
-        }
-
-        songDetailViewModel.currentState.observe(this) {
-            songAdapter.notifyDataSetChanged()
         }
 
         initNeeded(Song(), emptyList(), id)

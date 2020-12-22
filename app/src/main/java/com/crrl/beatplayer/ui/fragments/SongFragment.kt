@@ -61,7 +61,7 @@ class SongFragment : BaseFragment<Song>() {
     }
 
     private fun init() {
-        songAdapter = SongAdapter(songDetailViewModel).apply {
+        songAdapter = SongAdapter(this).apply {
             showHeader = true
             itemClickListener = this@SongFragment
         }
@@ -70,14 +70,6 @@ class SongFragment : BaseFragment<Song>() {
             layoutManager = LinearLayoutManager(context)
             adapter = songAdapter
             (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        }
-
-        songDetailViewModel.idsChanged.observe(this) {
-            songAdapter.notifyDataSetChanged()
-        }
-
-        songDetailViewModel.currentState.observe(this) {
-            songAdapter.notifyDataSetChanged()
         }
 
         viewModel.getSongList()
