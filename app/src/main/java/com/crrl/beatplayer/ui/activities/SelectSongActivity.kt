@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.ActivitySelectSongBinding
 import com.crrl.beatplayer.extensions.delete
-import com.crrl.beatplayer.extensions.observe
 import com.crrl.beatplayer.interfaces.ItemClickListener
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.activities.base.BaseActivity

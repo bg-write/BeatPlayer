@@ -52,6 +52,7 @@ class QueueAdapter(
         songList.setAll(newList.toMutableList())
         notifyDataSetChanged()
         initObservers()
+        scrollToPosition(currentPosition)
     }
 
     fun onItemMove(from: Int, to: Int): Boolean {
@@ -70,12 +71,12 @@ class QueueAdapter(
         return true
     }
 
-    fun scrollToPosition(id: Long) {
+    fun scrollToPosition(position: Int) {
         queueViewLiveData
             .filter { it != null }
             .filter { !it.isAnimating }
             .observe(lifecycleOwner) { view ->
-                view.snapToPosition(songList.indexOfFirst { it.id == id }, smooth = !isFirstTime)
+                view.snapToPosition(position, smooth = !isFirstTime)
                 isFirstTime = false
             }
     }
@@ -143,7 +144,6 @@ class QueueAdapter(
             if (currentPosition != -1)
                 notifyItemChanged(currentPosition)
         }
-
 
         songDetailViewModel.currentState.observe(lifecycleOwner){
             if (currentPosition != -1)

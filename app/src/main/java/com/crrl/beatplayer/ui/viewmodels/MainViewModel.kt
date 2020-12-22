@@ -18,6 +18,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -115,22 +116,35 @@ class MainViewModel(
     fun hideMiniPlayer() {
         binding.apply {
             bottomControls.isEnabled = false
-            please(190, AccelerateInterpolator()) {
+            please(150, DecelerateInterpolator()) {
                 animate(bottomControls) {
                     belowOf(mainContainer)
                 }
                 animate(createPlayList) {
                     belowOf(mainContainer)
                 }
+
+                animate(addSong){
+                    belowOf(mainContainer)
+                }
             }.start()
         }
     }
 
-    fun showCreatePlaylistButton() {
+    fun showMiniPlayer() {
         binding.apply {
-            createPlayList.toggleShow(show = true, animated = true)
-            createPlayList.isClickable = true
-            createPlayList.isFocusable = true
+            bottomControls.isEnabled = true
+            please(150, DecelerateInterpolator()) {
+                animate(bottomControls) {
+                    bottomOfItsParent()
+                }
+                animate(createPlayList) {
+                    aboveOf(bottomControls, 20f)
+                }
+                animate(addSong) {
+                    aboveOf(bottomControls, 20f)
+                }
+            }.start()
         }
     }
 
@@ -142,17 +156,11 @@ class MainViewModel(
         }
     }
 
-    fun showMiniPlayer() {
+    fun showCreatePlaylistButton() {
         binding.apply {
-            bottomControls.isEnabled = true
-            please(190, AccelerateInterpolator()) {
-                animate(bottomControls) {
-                    bottomOfItsParent()
-                }
-                animate(createPlayList) {
-                    aboveOf(bottomControls, 20f)
-                }
-            }.start()
+            createPlayList.toggleShow(show = true, animated = true)
+            createPlayList.isClickable = true
+            createPlayList.isFocusable = true
         }
     }
 

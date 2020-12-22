@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast.LENGTH_SHORT
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,11 +24,11 @@ import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentPlaylistBinding
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.Playlist
-import com.crrl.beatplayer.ui.activities.MainActivity
 import com.crrl.beatplayer.ui.adapters.PlaylistAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
 import com.crrl.beatplayer.utils.BeatConstants.PLAY_LIST_DETAIL
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import kotlinx.android.synthetic.main.layout_recyclerview.*
 import org.koin.android.ext.android.inject
 
@@ -44,7 +43,7 @@ class PlaylistFragment : BaseFragment<Playlist>() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = inflater.inflateWithBinding(R.layout.fragment_playlist, container)
         return binding.root
     }
@@ -69,7 +68,7 @@ class PlaylistFragment : BaseFragment<Playlist>() {
                     if (dy > 0) {
                         mainViewModel.hideCreatePlaylistButton()
                     }
-                    if(dy < 0){
+                    if (dy < 0) {
                         mainViewModel.showCreatePlaylistButton()
                     }
                 }
@@ -80,16 +79,13 @@ class PlaylistFragment : BaseFragment<Playlist>() {
             playlistAdapter.updateDataSet(it)
         }
 
+        mainViewModel.binding.createPlayList.setOnClickListener { createPlaylistDialog() }
+
         binding.let {
             it.viewModel = playlistViewModel
             it.lifecycleOwner = this
             it.executePendingBindings()
         }
-    }
-
-    override fun onResume() {
-        mainViewModel.binding.createPlayList.setOnClickListener { createPlaylistDialog() }
-        super.onResume()
     }
 
     override fun onItemClick(view: View, position: Int, item: Playlist) {

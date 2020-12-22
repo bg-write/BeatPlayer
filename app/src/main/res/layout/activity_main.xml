@@ -51,6 +51,24 @@
             app:layout_constraintBottom_toTopOf="@+id/bottom_controls"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <ImageButton
+            android:id="@+id/add_song"
+            android:layout_width="@dimen/btn_size"
+            android:layout_height="@dimen/btn_size"
+            android:background="@drawable/btn_play_background"
+            android:contentDescription="@string/cover"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/white"
+            android:drawablePadding="@dimen/margin_6"
+            android:elevation="3dp"
+            android:padding="@dimen/margin_12"
+            android:textAllCaps="false"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_controls"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/bottom_controls"
             android:layout_width="match_parent"

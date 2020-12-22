@@ -88,11 +88,16 @@ class PlaylistDetailFragment : BaseFragment<Song>() {
             it.lifecycleOwner = this
             it.executePendingBindings()
         }
+
+        mainViewModel.binding.addSong.visibility = View.VISIBLE
+        mainViewModel.binding.createPlayList.visibility = View.GONE
+        mainViewModel.binding.addSong.setOnClickListener { addSongsToPlaylist(binding.playlist?.id) }
     }
 
-    override fun onResume() {
-        mainViewModel.binding.createPlayList.setOnClickListener { addSongsToPlaylist(binding.playlist?.id) }
-        super.onResume()
+    override fun onPause() {
+        super.onPause()
+        mainViewModel.binding.createPlayList.visibility = View.VISIBLE
+        mainViewModel.binding.addSong.visibility = View.GONE
     }
 
     private fun addSongsToPlaylist(id: Long?){

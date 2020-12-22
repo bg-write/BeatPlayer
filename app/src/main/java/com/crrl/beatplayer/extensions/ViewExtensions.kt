@@ -24,6 +24,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnticipateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.*
 import androidx.annotation.LayoutRes
@@ -73,7 +75,7 @@ fun View?.show(animated: Boolean = false) {
 fun View?.hide(animated: Boolean = false) {
     val view = this ?: return
     if (animated) {
-        please(200, OvershootInterpolator()) {
+        please(200, AnticipateInterpolator()) {
             animate(view) {
                 scale(0f, 0f)
             }

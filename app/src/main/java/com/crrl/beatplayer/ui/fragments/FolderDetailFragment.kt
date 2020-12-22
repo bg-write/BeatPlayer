@@ -23,9 +23,7 @@ import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.FragmentFolderDetailBinding
 import com.crrl.beatplayer.extensions.deepEquals
 import com.crrl.beatplayer.extensions.inflateWithBinding
-import com.crrl.beatplayer.extensions.observe
 import com.crrl.beatplayer.extensions.toIDList
-import com.crrl.beatplayer.models.MediaItemData
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.ui.adapters.SongAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseFragment

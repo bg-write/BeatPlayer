@@ -185,18 +185,8 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
             itemMovedListener = this@SongDetailFragment
         }
 
-        songDetailViewModel.currentState.observe(this) {
-            val mediaItemData = songDetailViewModel.currentData.value ?: MediaItemData()
-            val position = queueAdapter.songList.indexOfFirst { it.id == mediaItemData.id } + 1
-            queueAdapter.notifyItemChanged(position)
-        }
-
         songDetailViewModel.queueData.observeOnce { queue ->
             queueAdapter.updateDataSet(queue.queue.toSongList(get()))
-        }
-
-        songDetailViewModel.currentData.observe(viewLifecycleOwner) {
-            queueAdapter.scrollToPosition(it.id)
         }
 
         AlertDialog(
