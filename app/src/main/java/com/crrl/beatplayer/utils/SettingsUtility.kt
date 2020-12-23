@@ -98,6 +98,17 @@ class SettingsUtility(context: Context) {
             setPreference(CURRENT_TRANSFORMER_KEY, value)
         }
 
+    var isExtraAction: Boolean
+        get() = sPreferences.getBoolean(EXTRA_ACTION_KEY, false)
+        set(value) {
+            setPreference(EXTRA_ACTION_KEY, value)
+        }
+
+    var isExtraInfo: Boolean
+        get() = sPreferences.getBoolean(EXTRA_INFO_KEY, false)
+        set(value) {
+            setPreference(EXTRA_INFO_KEY, value)
+        }
 
     private fun setPreference(key: String, value: String) {
         val editor = sPreferences.edit()
@@ -129,6 +140,8 @@ class SettingsUtility(context: Context) {
         private const val INTENT_PATH_KEY = "intent_path_key"
         private const val ORIGINAL_QUEUE_LIST = "original_queue_list"
         private const val CURRENT_TRANSFORMER_KEY = "current_transformer_key"
+        private const val EXTRA_INFO_KEY = "extra_info_key"
+        private const val EXTRA_ACTION_KEY = "extra_action_key"
 
         const val QUEUE_INFO_KEY = "queue_info_key"
         const val QUEUE_LIST_KEY = "queue_list_key"

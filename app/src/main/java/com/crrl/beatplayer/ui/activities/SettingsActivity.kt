@@ -43,9 +43,20 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun init() {
-        binding.let {
-            it.executePendingBindings()
+        binding.apply {
+            extraActionsContainer.setOnClickListener {
+                extraActions.isChecked = !extraActions.isChecked
+            }
+            extraActions.setOnCheckedChangeListener { _, isChecked -> extraActionsChange(isChecked) }
 
+            extraInfoContainer.setOnClickListener { extraInfo.isChecked = !extraInfo.isChecked }
+            extraInfo.setOnCheckedChangeListener { _, isChecked -> extraInfoChange(isChecked) }
+        }
+
+        binding.let {
+            it.settings = settingsUtility
+
+            it.executePendingBindings()
             it.lifecycleOwner = this
         }
     }
@@ -161,5 +172,15 @@ class SettingsActivity : BaseActivity() {
         } catch (ex: IllegalStateException) {
             Timber.e(ex)
         }
+    }
+
+    private fun extraInfoChange(state: Boolean) {
+        settingsUtility.isExtraInfo = state
+        // binding.showExtraInfoContainer.visibility = if (state) View.VISIBLE else View.GONE
+    }
+
+    private fun extraActionsChange(state: Boolean) {
+        settingsUtility.isExtraAction = state
+        // binding.showExtraActionContainer.visibility = if (state) View.VISIBLE else View.GONE
     }
 }

@@ -98,6 +98,7 @@ class MainActivity : BaseActivity() {
 
         viewModel.binding.let {
             it.viewModel = songDetailViewModel
+            it.settingsViewModel = get()
             it.executePendingBindings()
             it.lifecycleOwner = this
         }

@@ -18,7 +18,9 @@
         android:id="@android:id/mask"
         android:gravity="center">
         <shape android:shape="rectangle">
-            <corners android:bottomLeftRadius="@dimen/btn_radius" />
+            <corners
+                android:topLeftRadius="@dimen/btn_radius"
+                android:topRightRadius="@dimen/btn_radius"/>
             <solid android:color="#fff" />
         </shape>
     </item>

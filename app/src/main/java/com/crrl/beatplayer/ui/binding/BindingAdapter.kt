@@ -14,7 +14,7 @@
 package com.crrl.beatplayer.ui.binding
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
+import android.content.ContentUris
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.text.Html
 import android.view.View
@@ -23,24 +23,23 @@ import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.Album
 import com.crrl.beatplayer.models.Favorite
 import com.crrl.beatplayer.models.SearchData
 import com.crrl.beatplayer.models.Song
+import com.crrl.beatplayer.utils.BeatConstants
 import com.crrl.beatplayer.utils.BeatConstants.ALBUM_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.ARTIST_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.FAVORITE_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.FOLDER_TYPE
 import com.crrl.beatplayer.utils.GeneralUtils.PORTRAIT
-import com.crrl.beatplayer.utils.GeneralUtils.getAlbumArtUri
 import com.crrl.beatplayer.utils.GeneralUtils.getOrientation
+import com.crrl.beatplayer.utils.SettingsUtility
 import com.github.florent37.kotlin.pleaseanimate.please
+import jp.wasabeef.glide.transformations.BlurTransformation
 import rm.com.audiowave.AudioWaveView
 import timber.log.Timber
 
@@ -49,39 +48,26 @@ import timber.log.Timber
  * @param albumId is the id that will be used to get the image form the DB.
  * @param recycled, if it is true the placeholder will be the last song cover selected.
  * */
-@BindingAdapter("app:albumId", "app:recycled", requireAll = false)
+@BindingAdapter("app:albumId", "app:recycled", "app:blurred", requireAll = false)
 fun setAlbumId(
     view: ImageView,
     albumId: Long,
-    recycled: Boolean = false
+    recycled: Boolean = false,
+    blurred: Boolean = false
 ) {
     view.clipToOutline = true
 
+    val settings = SettingsUtility(view.context)
+    val uri = ContentUris.withAppendedId(BeatConstants.ARTWORK_URI, albumId)
     val drawable = getDrawable(view.context, R.drawable.ic_empty_cover)
-    Glide.with(view)
-        .load(getAlbumArtUri(albumId))
-        .transition(withCrossFade()).apply {
-            if (recycled) {
-                error(Glide.with(view).load(drawable))
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(object : CustomTarget<Drawable>() {
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                            view.setImageDrawable(placeholder)
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable,
-                            transition: Transition<in Drawable>?
-                        ) {
-                            view.setImageDrawable(resource)
-                        }
-                    })
-            } else {
-                placeholder(R.drawable.ic_empty_cover)
-                    .error(R.drawable.ic_empty_cover)
-                    .into(view)
-            }
-        }
+    view.clipToOutline = true
+    Glide.with(view).asBitmap().load(uri).apply {
+        transition(withCrossFade())
+        if (recycled) placeholder(R.color.transparent) else placeholder(drawable)
+        if (blurred) transform(BlurTransformation(25, 5))
+        if (blurred) error(R.color.transparent) else error(drawable)
+        into(view)
+    }
 }
 
 @BindingAdapter("app:width", "app:height", requireAll = false)

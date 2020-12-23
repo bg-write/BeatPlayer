@@ -65,7 +65,7 @@
                         android:scaleX="1.5"
                         android:scaleY="1.5"
                         android:src="@drawable/ic_empty_cover"
-                        android:tint="?subTitleTextColor" />
+                        app:tint="?subTitleTextColor" />
 
                     <TextView
                         android:id="@+id/option_selected"
@@ -89,7 +89,7 @@
                         android:layout_marginStart="@dimen/margin_10"
                         android:layout_marginEnd="@dimen/margin_10"
                         android:layout_toStartOf="@id/menu"
-                        android:background="@drawable/btn_ripple_header_with_background"
+                        android:background="@drawable/btn_ripple_header"
                         android:contentDescription="@string/cover"
                         android:onClick="search"
                         android:src="@drawable/ic_search"
@@ -102,7 +102,7 @@
                         android:layout_height="@dimen/btn_size_header"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="@dimen/margin_10"
-                        android:background="@drawable/btn_ripple_header_with_background"
+                        android:background="@drawable/btn_ripple_header"
                         android:contentDescription="@string/cover"
                         android:onClick="menu"
                         android:src="@drawable/ic_more"

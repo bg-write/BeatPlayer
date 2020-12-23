@@ -27,6 +27,7 @@ import com.crrl.beatplayer.ui.viewmodels.base.CoroutineViewModel
 import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_BOUND
 import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_CANCELED
 import com.crrl.beatplayer.utils.BeatConstants.SET_MEDIA_STATE
+import com.crrl.beatplayer.utils.SettingsUtility
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope

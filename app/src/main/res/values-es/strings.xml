@@ -121,6 +121,10 @@
     <string name="cover_transition">Transición de Portada</string>
     <string name="cover_transition_msg">Por favor, selecciona una transición de portada</string>
     <string name="cover_transition_description">Efecto de transición al cambiar canción.</string>
+    <string name="extra_info">Información Adicional</string>
+    <string name="extra_info_description">Mostrará tasa de bits, tipo de archivo y frecuencia.</string>
+    <string name="extra_actions">Controles Adicionales</string>
+    <string name="extra_actions_description">Agrega controlles adicionales al mini reproductor.</string>
 
     <plurals name="number_of_songs" tools:ignore="UnusedQuantity">
         <item quantity="zero">%d Pistas</item>

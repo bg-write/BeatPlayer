@@ -18,7 +18,7 @@
     <color name="colorAccentBlackOpacity">#800788F1</color>
     <color name="colorPrimaryBlackSecondary">#000000</color>
     <color name="colorPrimaryBlackSecondary2">#262626</color>
-    <color name="colorPrimaryBlackOpacity">#4D000000</color>
+    <color name="colorPrimaryBlackOpacity">#B3000000</color>
     <color name="colorTitleTextBlack">#FCFAFD</color>
     <color name="colorSubTitleTextBlack">#CECECE</color>
     <color name="colorBodyTextBlack">#8E8E8E</color>
@@ -29,7 +29,7 @@
     <color name="colorAccentDarkOpacity">#800788F1</color>
     <color name="colorPrimaryDarkSecondary">#19191A</color>
     <color name="colorPrimaryDarkSecondary2">#2C2D2E</color>
-    <color name="colorPrimaryDarkOpacity">#4D19191A</color>
+    <color name="colorPrimaryDarkOpacity">#B319191A</color>
     <color name="colorTitleTextDark">#E1E3E6</color>
     <color name="colorSubTitleTextDark">#CECECE</color>
     <color name="colorBodyTextDark">#76787A</color>
@@ -40,7 +40,7 @@
     <color name="colorAccentLightOpacity">#800788F1</color>
     <color name="colorPrimaryLightSecondary">#F2F2F2</color>
     <color name="colorPrimaryLightSecondary2">#FCFCFC</color>
-    <color name="colorPrimaryLightOpacity">#F2F2F2</color>
+    <color name="colorPrimaryLightOpacity">#B3FCFCFC</color>
     <color name="colorTitleTextLight">#252525</color>
     <color name="colorSubTitleTextLight">#626262</color>
     <color name="colorBodyTextLight">#878787</color>

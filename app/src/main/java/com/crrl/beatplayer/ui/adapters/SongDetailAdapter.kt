@@ -12,6 +12,8 @@ class SongDetailAdapter : RecyclerView.Adapter<SongDetailAdapter.SongDetailViewH
 
     val songList = mutableListOf<Song>()
 
+    var currentPosition = -1
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongDetailViewHolder {
         val viewBinding =
             parent.inflateWithBinding<SongDetailItemBinding>(R.layout.song_detail_item)

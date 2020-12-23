@@ -48,6 +48,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import kotlin.math.abs
 
 class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
 
@@ -99,6 +100,7 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
 
         binding.let {
             it.viewModel = songDetailViewModel
+            it.settingsViewModel = get()
             it.lifecycleOwner = this
             it.executePendingBindings()
         }
@@ -121,18 +123,27 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
         }
 
         songDetailViewModel.queueData.observe(viewLifecycleOwner) {
-            val currentId = songDetailViewModel.currentData.value?.id ?: -1L
-            val currentPosition = it.queue.indexOf(currentId)
-
             songDetailAdapter.updateData(it.queue.toSongList(get()))
-            binding.songList.scrollToPosition(currentPosition)
         }
 
         songDetailViewModel.currentData.observe(viewLifecycleOwner) { item ->
-            val currentPosition = songDetailAdapter.songList.indexOfFirst { it.id == item.id }
+            val lastPosition = songDetailAdapter.currentPosition
+            songDetailAdapter.currentPosition =
+                songDetailAdapter.songList.indexOfFirst { it.id == item.id }
 
-            if (-1 != currentPosition)
-                binding.songList.smoothScrollToPosition(currentPosition)
+            if (lastPosition == -1)
+                return@observe binding.songList.scrollToPosition(songDetailAdapter.currentPosition)
+
+            if (songDetailAdapter.currentPosition != -1) {
+                if (abs(songDetailAdapter.currentPosition - lastPosition) > 1)
+                    binding.songList.scrollToPosition(songDetailAdapter.currentPosition)
+                else {
+                    if (settingsUtility.didStop) {
+                        binding.songList.scrollToPosition(songDetailAdapter.currentPosition)
+                        settingsUtility.didStop = false
+                    } else binding.songList.smoothScrollToPosition(songDetailAdapter.currentPosition)
+                }
+            }
         }
     }
 
