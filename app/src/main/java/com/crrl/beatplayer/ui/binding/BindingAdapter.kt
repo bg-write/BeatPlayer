@@ -23,7 +23,6 @@ import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.*
@@ -55,12 +54,10 @@ fun setAlbumId(
 ) {
     view.clipToOutline = true
 
-    val settings = SettingsUtility(view.context)
     val uri = ContentUris.withAppendedId(BeatConstants.ARTWORK_URI, albumId)
     val drawable = getDrawable(view.context, R.drawable.ic_empty_cover)
     view.clipToOutline = true
     Glide.with(view).asBitmap().load(uri).apply {
-        transition(withCrossFade())
         if (recycled) placeholder(R.color.transparent) else placeholder(drawable)
         if (blurred) transform(BlurTransformation(25, 5))
         if (blurred) error(R.color.transparent) else error(drawable)

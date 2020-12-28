@@ -345,7 +345,7 @@
                     android:focusable="false"
                     android:gravity="center"
                     app:queue_position="@{viewModel.currentData.description}"
-                    android:textColor="?subTitleTextColor"
+                    android:textColor="?bodyTextColor"
                     android:textSize="@dimen/extra_info_text_size"/>
             </LinearLayout>
 

@@ -63,7 +63,7 @@ data class Song(
                 trackNumber = cursor.getInt(5).fix(),
                 artistId = cursor.getLong(6),
                 albumId = if (album_id == 0L) cursor.getLong(7) else album_id,
-                path = cursor.getString(8)
+                path = if (album_id != 0L) cursor.getString(7) else cursor.getString(8)
             )
         }
 

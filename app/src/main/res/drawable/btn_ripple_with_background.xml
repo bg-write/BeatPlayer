@@ -23,7 +23,7 @@
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/btn_radius" />
-            <solid android:color="?colorPrimaryOpacity" />
+            <solid android:color="?colorPrimarySecondary2" />
         </shape>
     </item>
 </ripple>
