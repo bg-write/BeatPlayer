@@ -134,8 +134,9 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:gravity="center"
-                    android:text="@{viewModel.currentData.description}"
-                    android:textColor="?bodyTextColor" />
+                    app:queue_position="@{viewModel.currentData.description}"
+                    android:textColor="?bodyTextColor"
+                    android:textSize="@dimen/extra_info_text_size"/>
             </LinearLayout>
 
             <TextView

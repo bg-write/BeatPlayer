@@ -134,7 +134,7 @@
     <string name="cover_transition_msg">Please, select a cover transition</string>
     <string name="cover_transition_description">Transition effect when a song is changed.</string>
     <string name="extra_info">Extra Song Information</string>
-    <string name="extra_info_description">Such as bit rate, file type and frequency.</string>
+    <string name="extra_info_description">Such as bit rate, file type and sample rate.</string>
     <string name="extra_actions">Extra Actions</string>
     <string name="extra_actions_description">Add extra actions to mini player</string>
 

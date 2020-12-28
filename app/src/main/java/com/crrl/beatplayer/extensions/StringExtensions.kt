@@ -44,3 +44,11 @@ fun String.fixName(): String {
     } else this
     return nameFixed.trim()
 }
+
+fun String.addIfNotEmpty(other: String): String{
+    return if(isNotEmpty()) "$this $other" else this
+}
+
+fun String.khz(): String{
+    return this.toFloatOrNull()?.div(1000)?.toString() ?: ""
+}

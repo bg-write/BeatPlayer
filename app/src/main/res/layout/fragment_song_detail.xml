@@ -155,7 +155,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:gravity="center"
-                    android:text="320 KBPS 44.1 KHZ MP3"
+                    app:extra_info="@{viewModel.currentData.description}"
                     android:textSize="@dimen/extra_info_text_size"
                     android:textColor="?bodyTextColor" />
             </LinearLayout>
@@ -344,7 +344,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:gravity="center"
-                    android:text="@{viewModel.currentData.description}"
+                    app:queue_position="@{viewModel.currentData.description}"
                     android:textColor="?subTitleTextColor"
                     android:textSize="@dimen/extra_info_text_size"/>
             </LinearLayout>

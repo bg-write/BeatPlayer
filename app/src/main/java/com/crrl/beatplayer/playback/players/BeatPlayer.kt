@@ -28,6 +28,7 @@ import androidx.core.os.bundleOf
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.alias.*
 import com.crrl.beatplayer.extensions.*
+import com.crrl.beatplayer.models.ExtraInfo
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.AudioFocusHelper
 import com.crrl.beatplayer.repository.SongsRepository
@@ -41,6 +42,7 @@ import com.crrl.beatplayer.utils.GeneralUtils.getAlbumArtBitmap
 import com.crrl.beatplayer.utils.GeneralUtils.getSongUri
 import com.crrl.beatplayer.utils.QueueUtils
 import com.crrl.beatplayer.utils.SettingsUtility
+import com.crrl.beatplayer.utils.TagUtils
 
 
 interface BeatPlayer {
@@ -119,7 +121,7 @@ class BeatPlayerImplementation(
         queueUtils.setMediaSession(mediaSession)
         musicPlayer.onPrepared {
             preparedCallback(this@BeatPlayerImplementation)
-            if(!mediaSession.isPlaying()) musicPlayer.seekTo(mediaSession.position())
+            if (!mediaSession.isPlaying()) musicPlayer.seekTo(mediaSession.position())
             playSong()
         }
 
@@ -379,6 +381,7 @@ class BeatPlayerImplementation(
     }
 
     private fun setMetaData(song: Song) {
+        val extraInfo = TagUtils.readExtraTags(song.path, queueUtils.queue())
         val artwork = getAlbumArtBitmap(context, song.albumId)
         val mediaMetadata = metadataBuilder.apply {
             putString(METADATA_KEY_ALBUM, song.album)
@@ -386,7 +389,7 @@ class BeatPlayerImplementation(
             putString(METADATA_KEY_TITLE, song.title)
             putString(METADATA_KEY_ALBUM_ART_URI, song.albumId.toString())
             putString(METADATA_KEY_MEDIA_ID, song.id.toString())
-            putString(METADATA_KEY_DISPLAY_DESCRIPTION, queueUtils.queue())
+            putString(METADATA_KEY_DISPLAY_DESCRIPTION, extraInfo.toString())
             putLong(METADATA_KEY_DURATION, song.duration.toLong())
             putBitmap(METADATA_KEY_ALBUM_ART, artwork)
         }.build()

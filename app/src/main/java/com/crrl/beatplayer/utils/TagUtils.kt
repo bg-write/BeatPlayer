@@ -14,6 +14,7 @@
 package com.crrl.beatplayer.utils
 
 import android.content.Context
+import com.crrl.beatplayer.models.ExtraInfo
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.repository.SongsRepositoryImplementation
 import com.crrl.beatplayer.utils.BeatConstants.SONG_ID_DEFAULT
@@ -97,5 +98,28 @@ object TagUtils {
             album = "Unknown",
             path = path
         )
+    }
+
+    fun readExtraTags(path: String, queuePosition: String = ""): ExtraInfo {
+        try {
+            val audioFile = AudioFileIO.read(Objects.requireNonNull(File(path)))
+
+            return ExtraInfo.createFromAudioFile(audioFile, queuePosition)
+        } catch (ex: CannotReadException) {
+            Timber.e(ex)
+        } catch (ex: IOException) {
+            Timber.e(ex)
+        } catch (ex: TagException) {
+            Timber.e(ex)
+        } catch (ex: ReadOnlyFileException) {
+            Timber.e(ex)
+        } catch (ex: InvalidAudioFrameException) {
+            Timber.e(ex)
+        } catch (ex: IllegalArgumentException) {
+            Timber.e(ex)
+        } catch (ex: CannotWriteException) {
+            Timber.e(ex)
+        }
+        return ExtraInfo("", File(path).extension,"", queuePosition)
     }
 }

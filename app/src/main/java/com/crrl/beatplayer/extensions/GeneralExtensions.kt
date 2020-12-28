@@ -25,7 +25,7 @@ import java.io.FileNotFoundException
 const val BYTE_OFFSET = 44;
 
 inline fun <reified T> Gson.fromJson(json: String): T =
-    this.fromJson<T>(json, object : TypeToken<T>() {}.type)
+    this.fromJson(json, object : TypeToken<T>() {}.type)
 
 fun Uri.toFileDescriptor(context: Context): ParcelFileDescriptor? {
     return try {

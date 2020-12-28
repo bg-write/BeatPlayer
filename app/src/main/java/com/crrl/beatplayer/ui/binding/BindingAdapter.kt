@@ -26,10 +26,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.extensions.*
-import com.crrl.beatplayer.models.Album
-import com.crrl.beatplayer.models.Favorite
-import com.crrl.beatplayer.models.SearchData
-import com.crrl.beatplayer.models.Song
+import com.crrl.beatplayer.models.*
 import com.crrl.beatplayer.utils.BeatConstants
 import com.crrl.beatplayer.utils.BeatConstants.ALBUM_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.ARTIST_TYPE
@@ -42,6 +39,7 @@ import com.github.florent37.kotlin.pleaseanimate.please
 import jp.wasabeef.glide.transformations.BlurTransformation
 import rm.com.audiowave.AudioWaveView
 import timber.log.Timber
+import java.util.*
 
 /**
  * @param view is the target view.
@@ -93,6 +91,25 @@ fun setTrackNumber(view: TextView, trackNumber: Int) {
 
     view.text = numberStr
 }
+
+@BindingAdapter("app:queue_position")
+fun setQueuePosition(view: TextView, queuePosition: String) {
+    view.text = ExtraInfo.fromString(queuePosition).queuePosition
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("app:extra_info")
+fun setExtraInfo(view: TextView, extraInfo: String) {
+    val info = ExtraInfo.fromString(extraInfo)
+    view.text = "${info.frequency} ${info.bitRate} ${info.fileType}".toUpperCase(Locale.ROOT)
+
+    val visibility = if (view.text.isNullOrEmpty() || !SettingsUtility(view.context).isExtraInfo) {
+        GONE
+    } else VISIBLE
+
+    (view.parent as LinearLayout).visibility = visibility
+}
+
 
 @BindingAdapter("app:isFav")
 fun isSongFav(view: ImageButton, isFav: Boolean) {
