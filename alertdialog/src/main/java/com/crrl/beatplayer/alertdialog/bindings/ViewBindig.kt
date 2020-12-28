@@ -11,15 +11,23 @@
  * limitations under the License.
  */
 
-package com.crrl.beatplayer.alertdialog.stylers
+package com.crrl.beatplayer.alertdialog.bindings
 
-import android.graphics.Color
+import android.view.View
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import com.crrl.beatplayer.alertdialog.models.Dialog
+import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
 import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
+import com.crrl.beatplayer.alertdialog.utils.ViewUtils
 
-class AlertItemStyle(
-    backgroundColor: Int = Color.parseColor("#F8F8F8"),
-    var selectedBackgroundColor: Int = Color.parseColor("#E8E8E8"),
-    textColor: Int = Color.parseColor("#131313"),
-    var selectedTextColor: Int = Color.parseColor("#F44336"),
-    cornerRadius: Float = 66f
-) : ItemStyle(backgroundColor, textColor, cornerRadius)
+@BindingAdapter("app:visible")
+fun setVisibility(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("app:text")
+fun setText(view: TextView, text: String) {
+    setVisibility(view, text.isNotEmpty())
+    view.text = text
+}

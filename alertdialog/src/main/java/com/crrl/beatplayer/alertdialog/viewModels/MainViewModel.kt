@@ -11,15 +11,11 @@
  * limitations under the License.
  */
 
-package com.crrl.beatplayer.alertdialog.stylers
+package com.crrl.beatplayer.alertdialog.viewModels
 
-import android.graphics.Color
-import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
+import androidx.lifecycle.ViewModel
+import com.crrl.beatplayer.alertdialog.databinding.ParentDialogLayoutBinding
 
-class AlertItemStyle(
-    backgroundColor: Int = Color.parseColor("#F8F8F8"),
-    var selectedBackgroundColor: Int = Color.parseColor("#E8E8E8"),
-    textColor: Int = Color.parseColor("#131313"),
-    var selectedTextColor: Int = Color.parseColor("#F44336"),
-    cornerRadius: Float = 66f
-) : ItemStyle(backgroundColor, textColor, cornerRadius)
+class MainViewModel: ViewModel() {
+    lateinit var binding: ParentDialogLayoutBinding
+}

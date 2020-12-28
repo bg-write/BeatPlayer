@@ -11,15 +11,18 @@
  * limitations under the License.
  */
 
-package com.crrl.beatplayer.alertdialog.stylers
+package com.crrl.beatplayer.alertdialog.models
 
-import android.graphics.Color
+import androidx.recyclerview.widget.RecyclerView
+import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
 import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
 
-class AlertItemStyle(
-    backgroundColor: Int = Color.parseColor("#F8F8F8"),
-    var selectedBackgroundColor: Int = Color.parseColor("#E8E8E8"),
-    textColor: Int = Color.parseColor("#131313"),
-    var selectedTextColor: Int = Color.parseColor("#F44336"),
-    cornerRadius: Float = 66f
-) : ItemStyle(backgroundColor, textColor, cornerRadius)
+@Suppress("UNCHECKED_CAST")
+data class Dialog<T: ItemStyle>(
+    val title: String = "",
+    val message: String = "",
+    val actions: List<AlertItemAction> = emptyList(),
+    val style: T = ItemStyle() as T,
+    val inputText: String = "",
+    val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
+)

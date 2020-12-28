@@ -19,6 +19,8 @@ import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
 import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
 import com.crrl.beatplayer.alertdialog.enums.AlertType
 import com.crrl.beatplayer.alertdialog.enums.AlertType.*
+import com.crrl.beatplayer.alertdialog.models.Dialog
+import com.crrl.beatplayer.alertdialog.stylers.InputStyle
 import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
 import com.crrl.beatplayer.alertdialog.views.BottomSheetDialogAlert
 import com.crrl.beatplayer.alertdialog.views.DialogAlert
@@ -37,7 +39,7 @@ class AlertDialog(
 
     private var theme: AlertType? = DIALOG
     private val actions: ArrayList<AlertItemAction> = ArrayList()
-    private var alert: DialogFragmentBase? = null
+    private var alert: DialogFragmentBase<out ItemStyle>? = null
 
     /**
      * Add Item to AlertDialog
@@ -55,10 +57,10 @@ class AlertDialog(
      */
     fun show(activity: AppCompatActivity) {
         alert = when (type) {
-            BOTTOM_SHEET -> BottomSheetDialogAlert.newInstance(title, message, actions, style)
-            DIALOG -> DialogAlert.newInstance(title, message, actions, style)
-            INPUT -> InputDialog.newInstance(title, message, actions, style, inputText)
-            QUEUE_LIST -> SongListDialog.newInstance(title, message, adapter!!, style)
+            BOTTOM_SHEET -> BottomSheetDialogAlert.newInstance(Dialog(title, message, actions, style as AlertItemStyle))
+            DIALOG -> DialogAlert.newInstance(Dialog(title, message, actions, style as AlertItemStyle))
+            INPUT -> InputDialog.newInstance(Dialog(title, message, actions, style as InputStyle, inputText))
+            QUEUE_LIST -> SongListDialog.newInstance(Dialog(title, message, style = style as AlertItemStyle, adapter = adapter))
         }
         alert?.show(activity.supportFragmentManager, alert?.tag)
     }

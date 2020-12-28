@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2020. Carlos René Ramos López. All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.crrl.beatplayer.alertdialog.views
 
 import android.os.Bundle
@@ -7,97 +20,43 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.alertdialog.extensions.setMargins
+import com.crrl.beatplayer.alertdialog.models.Dialog
 import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
 import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
 import com.crrl.beatplayer.alertdialog.utils.ViewUtils
 import com.crrl.beatplayer.alertdialog.views.base.DialogFragmentBase
 import kotlinx.android.synthetic.main.parent_dialog_layout.view.*
 
-class SongListDialog : DialogFragmentBase() {
+class SongListDialog : DialogFragmentBase<AlertItemStyle>() {
 
     companion object {
-        fun newInstance(
-                title: String,
-                message: String,
-                adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-                style: ItemStyle
-        ): DialogFragmentBase {
+        fun newInstance(dialog: Dialog<AlertItemStyle>): SongListDialog {
             return SongListDialog().apply {
-                setArguments(title, message, adapter, style as AlertItemStyle)
+                setArguments(dialog)
             }
         }
     }
-
-    private lateinit var style: AlertItemStyle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView(view)
+        bind()
     }
 
-    private fun initView(view: View) {
-        with(view) {
-            title.apply {
-                if (this@SongListDialog.title.isEmpty()) {
-                    visibility = View.GONE
-                } else {
-                    text = this@SongListDialog.title
-                }
-                setTextColor(style.textColor)
-            }
 
-            sub_title.apply {
-                if (message.isEmpty()) {
-                    visibility = View.GONE
-                } else {
-                    text = message
-                }
-                setTextColor(style.textColor)
-            }
+    override fun bind() {
+        super.bind()
+        mainViewModel.binding.apply {
+            this.showScroller = true
+            this.showBottomControllers = false
 
-            if(!sub_title.isVisible && !title.isVisible){
-                title_container.visibility = View.GONE
-            }
-
-            scroller.apply {
-                background = ViewUtils.drawRoundRectShape(
-                        layoutParams.width,
-                        layoutParams.height,
-                        style.textColor,
-                        style.cornerRadius
-                )
-                visibility = View.VISIBLE
-            }
-
-            val background = ViewUtils.drawRoundRectShape(
-                    container.layoutParams.width,
-                    container.layoutParams.height,
-                    style.backgroundColor,
-                    style.cornerRadius
-            )
-
-            container.background = background
-            bottom_container.visibility = View.GONE
             itemScroll.isNestedScrollingEnabled = false
-
-            recycler_view.apply {
-                isNestedScrollingEnabled = true
-                layoutManager = LinearLayoutManager(context)
-                adapter = this@SongListDialog.adapter
-                (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-            }
         }
-    }
 
-    fun setArguments(
-            title: String,
-            message: String,
-            adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-            style: AlertItemStyle
-    ) {
-        this.title = title
-        this.message = message
-        this.adapter = adapter
-        this.style = style
+        mainViewModel.binding.recyclerView.apply {
+            isNestedScrollingEnabled = true
+            layoutManager = LinearLayoutManager(context)
+            adapter = mDialog.adapter
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        }
     }
 }

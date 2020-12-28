@@ -20,150 +20,104 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.crrl.beatplayer.alertdialog.R
 import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
 import com.crrl.beatplayer.alertdialog.enums.AlertItemTheme
 import com.crrl.beatplayer.alertdialog.extensions.addOnWindowFocusChangeListener
 import com.crrl.beatplayer.alertdialog.extensions.setMargins
+import com.crrl.beatplayer.alertdialog.models.Dialog
 import com.crrl.beatplayer.alertdialog.stylers.InputStyle
-import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
 import com.crrl.beatplayer.alertdialog.utils.ViewUtils.dip2px
 import com.crrl.beatplayer.alertdialog.utils.ViewUtils.drawRoundRectShape
 import com.crrl.beatplayer.alertdialog.views.base.DialogFragmentBase
+import kotlinx.android.synthetic.main.input_dialog_item.*
 import kotlinx.android.synthetic.main.input_dialog_item.view.*
 import kotlinx.android.synthetic.main.parent_dialog_layout.view.*
 
-class InputDialog : DialogFragmentBase() {
+class InputDialog : DialogFragmentBase<InputStyle>() {
 
     companion object {
-        fun newInstance(
-            title: String,
-            message: String,
-            actions: List<AlertItemAction>,
-            style: ItemStyle,
-            inputText: String
-        ): DialogFragmentBase {
+        fun newInstance(dialog: Dialog<InputStyle>): InputDialog {
             return InputDialog().apply {
-                setArguments(title, message, actions, style as InputStyle, inputText)
+                setArguments(dialog)
             }
         }
     }
 
-    private lateinit var style: InputStyle
-    private lateinit var inputText: String
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView(view)
+        bind()
         addOnWindowFocusChangeListener {
             if (!it) dismiss()
         }
     }
 
-    private fun initView(view: View) {
-        view.apply {
+    override fun bind() {
+        super.bind()
+        mainViewModel.binding.apply {
+            this.showScroller = false
+            this.showBottomControllers = true
+
+            inflateActionsView(itemContainer)
+
             itemScroll.apply {
                 setMargins(left = dip2px(context, 12), right = dip2px(context, 12))
                 setBackgroundResource(R.drawable.search_text_view_frame)
                 clipToOutline = true
             }
 
-            title.apply {
-                if (this@InputDialog.title.isEmpty()) {
-                    visibility = View.GONE
-                } else {
-                    text = this@InputDialog.title
-                }
-                setTextColor(style.textColor)
-            }
-
-            sub_title.apply {
-                if (message.isEmpty()) {
-                    visibility = View.GONE
-                } else {
-                    text = message
-                }
-                setTextColor(style.textColor)
-            }
+            ok.setOnClickListener { onOkClicked(ok) }
+            cancel.setOnClickListener { onCancelClicked(cancel) }
         }
+    }
 
-        inflateActionsView(view.item_container)
+    private fun onOkClicked(view: TextView) {
+        val action = mDialog.actions[1]
+        view.text = action.title
 
-        val background = drawRoundRectShape(
-            view.container.layoutParams.width,
-            view.container.layoutParams.height,
-            style.backgroundColor,
-            style.cornerRadius
-        )
+        updateItem(view, action)
 
-        view.container.background = background
-        view.sepMid.setBackgroundColor(style.textColor)
+        action.input = text.text.toString()
 
-        view.cancel.apply {
-            val item = itemList[0]
-            text = item.title
+        dismiss()
 
-            updateItem(this, item)
+        action.action(action)
+    }
 
-            setOnClickListener {
-                item.input = view.text.text.toString()
+    private fun onCancelClicked(view: TextView) {
+        val action = mDialog.actions[0]
+        view.text = action.title
 
-                dismiss()
+        updateItem(view, action)
 
-                item.root = view
-                item.action.invoke(item)
-            }
-        }
+        action.input = text.text.toString()
 
-        view.ok.apply {
-            val item = itemList[1]
-            text = item.title
+        dismiss()
 
-            updateItem(this, item)
-
-            setOnClickListener {
-                item.input = view.text.text.toString()
-
-                dismiss()
-
-                item.action.invoke(item)
-            }
-        }
+        action.root = view
+        action.action(action)
     }
 
     @SuppressLint("InflateParams")
     private fun inflateActionsView(actionsLayout: LinearLayout) {
         val view = LayoutInflater.from(context).inflate(R.layout.input_dialog_item, null).apply {
             text.apply {
-                hint = inputText
-                setTextColor(style.textColor)
-                setHintTextColor(style.hintTextColor)
+                hint = mDialog.inputText
+                setTextColor(mDialog.style.textColor)
+                setHintTextColor(mDialog.style.hintTextColor)
                 background = drawRoundRectShape(
                     layoutParams.width,
                     layoutParams.height,
-                    style.inputColor
+                    mDialog.style.inputColor
                 )
                 requestFocus()
-                setText(style.text)
+                setText(mDialog.style.text)
                 selectAll()
             }
         }
         actionsLayout.addView(view)
         dialog?.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-    }
-
-    fun setArguments(
-        title: String,
-        message: String,
-        itemList: List<AlertItemAction>,
-        style: InputStyle,
-        inputText: String
-    ) {
-        this.title = title
-        this.message = message
-        this.itemList = itemList
-        this.style = style
-        this.inputText = inputText
     }
 
     override fun updateItem(view: View, alertItemAction: AlertItemAction) {
@@ -173,13 +127,13 @@ class InputDialog : DialogFragmentBase() {
 
         when (alertItemAction.theme) {
             AlertItemTheme.DEFAULT -> {
-                action.setTextColor(style.hintTextColor)
+                action.setTextColor(mDialog.style.hintTextColor)
             }
             AlertItemTheme.CANCEL -> {
                 action.setTextColor(context!!.getColor(R.color.red))
             }
             AlertItemTheme.ACCEPT -> {
-                action.setTextColor(style.acceptColor)
+                action.setTextColor(mDialog.style.acceptColor)
             }
         }
     }

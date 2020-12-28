@@ -17,82 +17,38 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.widget.Button
 import android.widget.LinearLayout
 import com.crrl.beatplayer.alertdialog.R
 import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
 import com.crrl.beatplayer.alertdialog.enums.AlertItemTheme
+import com.crrl.beatplayer.alertdialog.models.Dialog
 import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
-import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
-import com.crrl.beatplayer.alertdialog.utils.ViewUtils.drawRoundRectShape
 import com.crrl.beatplayer.alertdialog.views.base.DialogFragmentBase
-import kotlinx.android.synthetic.main.parent_dialog_layout.view.*
 
-class BottomSheetDialogAlert : DialogFragmentBase() {
+class BottomSheetDialogAlert : DialogFragmentBase<AlertItemStyle>() {
 
     companion object {
-        fun newInstance(
-            title: String,
-            message: String,
-            actions: List<AlertItemAction>,
-            style: ItemStyle
-        ): DialogFragmentBase {
+        fun newInstance(dialog: Dialog<AlertItemStyle>): BottomSheetDialogAlert {
             return BottomSheetDialogAlert().apply {
-                setArguments(title, message, actions, style as AlertItemStyle)
+                setArguments(dialog)
             }
         }
     }
-
-    private lateinit var style: AlertItemStyle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView(view)
+        bind()
     }
 
-    private fun initView(view: View) {
-        with(view) {
-            title.apply {
-                if (this@BottomSheetDialogAlert.title.isEmpty()) {
-                    visibility = GONE
-                } else {
-                    text = this@BottomSheetDialogAlert.title
-                }
-                setTextColor(style.textColor)
-            }
+    override fun bind() {
+        super.bind()
+        mainViewModel.binding.apply {
+            this.showScroller = true
+            this.showBottomControllers = false
 
-            sub_title.apply {
-                if (message.isEmpty()) {
-                    visibility = GONE
-                } else {
-                    text = message
-                }
-                setTextColor(style.textColor)
-            }
-
-            scroller.apply {
-                background = drawRoundRectShape(
-                    layoutParams.width,
-                    layoutParams.height,
-                    style.textColor,
-                    style.cornerRadius
-                )
-                visibility = View.VISIBLE
-            }
-
-            val background = drawRoundRectShape(
-                container.layoutParams.width,
-                container.layoutParams.height,
-                style.backgroundColor,
-                style.cornerRadius
-            )
-
-            container.background = background
-            bottom_container.visibility = GONE
+            inflateActionsView(itemContainer, mDialog.actions)
         }
-
-        inflateActionsView(view.findViewById(R.id.item_container), itemList)
     }
 
     @SuppressLint("InflateParams")
@@ -124,7 +80,7 @@ class BottomSheetDialogAlert : DialogFragmentBase() {
             }
 
             updateItem(view, item)
-            indicator.setBackgroundColor(style.textColor)
+            indicator.setBackgroundColor(mDialog.style.textColor)
             actionsLayout.addView(view)
         }
     }
@@ -147,30 +103,18 @@ class BottomSheetDialogAlert : DialogFragmentBase() {
             when (alertItemAction.theme) {
                 AlertItemTheme.DEFAULT -> {
                     if (alertItemAction.selected) {
-                        action.setTextColor(style.selectedTextColor)
+                        action.setTextColor(mDialog.style.selectedTextColor)
                     } else {
-                        action.setTextColor(style.textColor)
+                        action.setTextColor(mDialog.style.textColor)
                     }
                 }
                 AlertItemTheme.CANCEL -> {
-                    action.setTextColor(style.backgroundColor)
+                    action.setTextColor(mDialog.style.backgroundColor)
                 }
                 AlertItemTheme.ACCEPT -> {
-                    action.setTextColor(style.selectedTextColor)
+                    action.setTextColor(mDialog.style.selectedTextColor)
                 }
             }
         }
-    }
-
-    fun setArguments(
-        title: String,
-        message: String,
-        itemList: List<AlertItemAction>,
-        style: AlertItemStyle
-    ) {
-        this.title = title
-        this.message = message
-        this.itemList = itemList
-        this.style = style
     }
 }

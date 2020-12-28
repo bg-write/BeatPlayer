@@ -18,23 +18,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.alertdialog.R
 import com.crrl.beatplayer.alertdialog.actions.AlertItemAction
+import com.crrl.beatplayer.alertdialog.extensions.inflateWithBinding
 import com.crrl.beatplayer.alertdialog.interfaces.ItemListener
+import com.crrl.beatplayer.alertdialog.models.Dialog
+import com.crrl.beatplayer.alertdialog.stylers.base.ItemStyle
+import com.crrl.beatplayer.alertdialog.utils.ViewUtils
+import com.crrl.beatplayer.alertdialog.viewModels.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-open class DialogFragmentBase : BottomSheetDialogFragment(), ItemListener {
+open class DialogFragmentBase<T: ItemStyle> : BottomSheetDialogFragment(), ItemListener {
 
-    protected lateinit var title: String
-    protected lateinit var message: String
-    protected lateinit var adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
-    protected lateinit var itemList: List<AlertItemAction>
+    protected lateinit var mDialog: Dialog<T>
+    protected lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.BottomSheetAlertTheme)
         retainInstance = true
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -42,8 +47,39 @@ open class DialogFragmentBase : BottomSheetDialogFragment(), ItemListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.parent_dialog_layout, container, false)
+        mainViewModel.binding = inflater.inflateWithBinding(R.layout.parent_dialog_layout, container, false)
+        return mainViewModel.binding.root
     }
 
     override fun updateItem(view: View, alertItemAction: AlertItemAction) {}
+
+    protected open fun bind(){
+        mainViewModel.binding.apply {
+            this.dialog = mDialog
+
+            lifecycleOwner = viewLifecycleOwner
+            executePendingBindings()
+
+            title.setTextColor(mDialog.style.textColor)
+            subTitle.setTextColor(mDialog.style.textColor)
+
+            ok.setTextColor(mDialog.style.textColor)
+            cancel.setTextColor(mDialog.style.textColor)
+
+            container.apply {
+                background = ViewUtils.drawRoundRectShape(
+                    layoutParams.width,
+                    layoutParams.height,
+                    mDialog.style.backgroundColor,
+                    mDialog.style.cornerRadius
+                )
+            }
+        }
+    }
+
+    fun setArguments(
+        dialog: Dialog<T>
+    ) {
+        this.mDialog = dialog
+    }
 }

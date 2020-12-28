@@ -13,4 +13,10 @@
 
 package com.crrl.beatplayer.alertdialog.stylers.base
 
-open class ItemStyle
+import android.graphics.Color
+
+open class ItemStyle(
+    var backgroundColor: Int = Color.parseColor("#F8F8F8"),
+    var textColor: Int = Color.parseColor("#131313"),
+    var cornerRadius: Float = 66f
+)
