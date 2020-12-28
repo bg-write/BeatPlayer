@@ -28,7 +28,6 @@ import androidx.core.os.bundleOf
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.alias.*
 import com.crrl.beatplayer.extensions.*
-import com.crrl.beatplayer.models.ExtraInfo
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.AudioFocusHelper
 import com.crrl.beatplayer.repository.SongsRepository
@@ -381,6 +380,8 @@ class BeatPlayerImplementation(
     }
 
     private fun setMetaData(song: Song) {
+        if (song.id in listOf<Long>(0, -1)) return
+
         val extraInfo = TagUtils.readExtraTags(song.path, queueUtils.queue())
         val artwork = getAlbumArtBitmap(context, song.albumId)
         val mediaMetadata = metadataBuilder.apply {
