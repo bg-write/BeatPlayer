@@ -211,12 +211,6 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
 
     private fun initViewComponents() {
         binding.apply {
-            nextBtn.setOnClickListener {
-                mainViewModel.transportControls()?.skipToNext()
-            }
-            previousBtn.setOnClickListener {
-                mainViewModel.transportControls()?.skipToPrevious()
-            }
             seekBar.apply {
                 onStartTracking = {
                     songDetailViewModel.update()

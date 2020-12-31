@@ -234,6 +234,14 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    fun nextClick(view: View) {
+        viewModel.transportControls()?.skipToNext()
+    }
+
+    fun previousClick(view: View) {
+        viewModel.transportControls()?.skipToPrevious()
+    }
+
     fun toggleAddToFav(v: View) {
         val mediaItemData = songDetailViewModel.currentData.value ?: return
         val song = songViewModel.getSongById(mediaItemData.id)

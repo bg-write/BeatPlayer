@@ -181,6 +181,7 @@
                         android:contentDescription="@string/cover"
                         android:src="@drawable/ic_previous"
                         android:tint="?colorAccent"
+                        android:onClick="previousClick"
                         app:visible="@{settingsViewModel.isExtraActions()}" />
 
                     <RelativeLayout
@@ -233,6 +234,7 @@
                         android:contentDescription="@string/cover"
                         android:src="@drawable/ic_skip"
                         android:tint="?colorAccent"
+                        android:onClick="nextClick"
                         app:visible="@{settingsViewModel.isExtraActions()}" />
                 </RelativeLayout>
             </RelativeLayout>
