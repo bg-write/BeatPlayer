@@ -13,6 +13,7 @@
 
 package com.crrl.beatplayer.ui.viewmodels
 
+import android.content.Context
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.LiveData
@@ -27,7 +28,7 @@ import com.crrl.beatplayer.ui.viewmodels.base.CoroutineViewModel
 import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_BOUND
 import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_CANCELED
 import com.crrl.beatplayer.utils.BeatConstants.SET_MEDIA_STATE
-import com.crrl.beatplayer.utils.SettingsUtility
+import com.crrl.beatplayer.utils.GeneralUtils
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
@@ -37,7 +38,8 @@ import kotlinx.coroutines.withContext
 
 class SongDetailViewModel(
     private val favoritesRepository: FavoritesRepository,
-    mediaPlaybackConnection: PlaybackConnection
+    mediaPlaybackConnection: PlaybackConnection,
+    private val context: Context
 ) : CoroutineViewModel(Main) {
 
     private var state = BIND_STATE_CANCELED
@@ -56,6 +58,18 @@ class SongDetailViewModel(
 
     private val rawData = MutableLiveData<ByteArray>().apply { value = byteArrayOf() }
     val raw: LiveData<ByteArray> = rawData
+
+    private val isNavBarShownData = MutableLiveData<Boolean>()
+    val isNavBarShown: LiveData<Boolean>
+        get() {
+            launch {
+                val isEnable = withContext(IO) {
+                    GeneralUtils.hasNavBar(context.resources)
+                }
+                isNavBarShownData.postValue(isEnable)
+            }
+            return isNavBarShownData
+        }
 
     private val isSongFavLiveData = MutableLiveData<Boolean>()
     private val lyrics: MutableLiveData<String> = MutableLiveData()

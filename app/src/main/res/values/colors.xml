@@ -15,7 +15,7 @@
     <color name="colorPrimaryBlack">#000000</color>
     <color name="colorPrimaryDarkBlack">#000000</color>
     <color name="colorAccentBlack">@color/colorAccent</color>
-    <color name="colorAccentBlackOpacity">#800788F1</color>
+    <color name="colorAccentBlackOpacity">@color/colorAccentOpacity</color>
     <color name="colorPrimaryBlackSecondary">#000000</color>
     <color name="colorPrimaryBlackSecondary2">#262626</color>
     <color name="colorPrimaryBlackOpacity">#B3000000</color>
@@ -26,7 +26,7 @@
     <color name="colorPrimary">#19191A</color>
     <color name="colorPrimaryDark">#19191A</color>
     <color name="colorAccentDark">@color/colorAccent</color>
-    <color name="colorAccentDarkOpacity">#800788F1</color>
+    <color name="colorAccentDarkOpacity">@color/colorAccentOpacity</color>
     <color name="colorPrimaryDarkSecondary">#19191A</color>
     <color name="colorPrimaryDarkSecondary2">#2C2D2E</color>
     <color name="colorPrimaryDarkOpacity">#B319191A</color>
@@ -37,7 +37,7 @@
     <color name="colorPrimaryLight">#F2F2F2</color>
     <color name="colorPrimaryDarkLight">#F2F2F2</color>
     <color name="colorAccentLight">@color/colorAccent</color>
-    <color name="colorAccentLightOpacity">#800788F1</color>
+    <color name="colorAccentLightOpacity">@color/colorAccentOpacity</color>
     <color name="colorPrimaryLightSecondary">#F2F2F2</color>
     <color name="colorPrimaryLightSecondary2">#FCFCFC</color>
     <color name="colorPrimaryLightOpacity">#B3FCFCFC</color>
@@ -51,7 +51,7 @@
     <color name="success">#339A04</color>
 
     <color name="colorAccent">#0788F1</color>
-    <color name="primary">#F2F2F2</color>
+    <color name="colorAccentOpacity">#800788F1</color>
     <color name="gray">#DDDDDD</color>
 
     <color name="ic_launcher_background">#262626</color>

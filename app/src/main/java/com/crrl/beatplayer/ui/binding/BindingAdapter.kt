@@ -31,6 +31,7 @@ import com.crrl.beatplayer.utils.BeatConstants.ALBUM_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.ARTIST_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.FAVORITE_TYPE
 import com.crrl.beatplayer.utils.BeatConstants.FOLDER_TYPE
+import com.crrl.beatplayer.utils.GeneralUtils
 import com.crrl.beatplayer.utils.GeneralUtils.PORTRAIT
 import com.crrl.beatplayer.utils.GeneralUtils.getOrientation
 import com.crrl.beatplayer.utils.SettingsUtility
@@ -65,13 +66,27 @@ fun setAlbumId(
     }
 }
 
-@BindingAdapter("app:width", "app:height", requireAll = false)
-fun setImageSize(view: View, width: Int? = null, height: Int? = null) {
+@BindingAdapter("app:width", "app:height", "app:check_navbar_height", requireAll = false)
+fun setImageSize(
+    view: View,
+    width: Int? = null,
+    height: Int? = null,
+    checkNavbarHeight: Boolean = false
+) {
+
+    val navBarHeight = if (checkNavbarHeight) GeneralUtils.getNavigationBarHeight(view.resources) else 0
+
     view.layoutParams.apply {
+        if(width ?: this.width == this.width && (height ?: this.height) - navBarHeight == this.height) return
         this.width = width ?: this.width
-        this.height = height ?: this.height
+        this.height = (height ?: this.height) - navBarHeight
     }
     if (view is ImageView) view.scaleType = ImageView.ScaleType.CENTER_CROP
+
+    if (checkNavbarHeight){
+        view.visibility = GONE
+        view.visibility = VISIBLE
+    }
 }
 
 @BindingAdapter("app:html")

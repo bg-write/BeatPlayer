@@ -15,6 +15,7 @@ package com.crrl.beatplayer.utils
 
 import android.content.ContentUris.withAppendedId
 import android.content.Context
+import android.content.res.Configuration
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -22,6 +23,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.O
 import android.os.Build.VERSION_CODES.P
@@ -36,8 +38,8 @@ import com.crrl.beatplayer.extensions.optimize
 import com.crrl.beatplayer.extensions.systemService
 import com.crrl.beatplayer.extensions.toFileDescriptor
 import com.crrl.beatplayer.models.Song
-import com.crrl.beatplayer.ui.transformers.DepthPageTransformer
 import com.crrl.beatplayer.ui.transformers.CubeOutTransformer
+import com.crrl.beatplayer.ui.transformers.DepthPageTransformer
 import com.crrl.beatplayer.ui.transformers.NormalTransformer
 import com.crrl.beatplayer.ui.transformers.base.BaseTransformer
 import com.crrl.beatplayer.utils.BeatConstants.ARTWORK_URI
@@ -62,6 +64,39 @@ object GeneralUtils {
 
     val screenHeight: Int
         get() = Resources.getSystem().displayMetrics.heightPixels
+
+    fun hasNavBar(resources: Resources): Boolean {
+        //Emulator
+        if (Build.FINGERPRINT.startsWith("generic")) return true
+        val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
+        return id > 0 && resources.getBoolean(id)
+    }
+
+    fun getStatusBarHeight(resources: Resources): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+            return result
+        }
+        return 0
+    }
+
+    fun getNavigationBarHeight(resources: Resources): Int {
+        if (!hasNavBar(resources)) return 0
+        val orientation = resources.configuration.orientation
+
+        //Only phone between 0-599 has navigationbar can move
+        val isSmartphone = resources.configuration.smallestScreenWidthDp < 600
+        if (isSmartphone && Configuration.ORIENTATION_LANDSCAPE == orientation) return 0
+        val id = resources
+            .getIdentifier(
+                if (orientation == ORIENTATION_PORTRAIT) "navigation_bar_height" else "navigation_bar_height_landscape",
+                "dimen",
+                "android"
+            )
+        return if (id > 0) resources.getDimensionPixelSize(id) else 0
+    }
 
     fun getOrientation(context: Context): Int {
         return context.resources.configuration.orientation

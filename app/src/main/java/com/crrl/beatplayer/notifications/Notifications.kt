@@ -28,6 +28,7 @@ import androidx.media.session.MediaButtonReceiver.buildMediaButtonPendingIntent
 import androidx.palette.graphics.Palette
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.extensions.isPlaying
+import com.crrl.beatplayer.models.ExtraInfo
 import com.crrl.beatplayer.playback.services.BeatPlayerService
 import com.crrl.beatplayer.ui.activities.MainActivity
 import com.crrl.beatplayer.utils.BeatConstants.CHANNEL_ID
@@ -67,9 +68,12 @@ class NotificationsImplementation(
         val artistName = mediaSession.controller.metadata.getString(METADATA_KEY_ARTIST)
         val trackName = mediaSession.controller.metadata.getString(METADATA_KEY_TITLE)
         val artwork = mediaSession.controller.metadata.getBitmap(METADATA_KEY_ALBUM_ART)
-        val description =
-            mediaSession.controller.metadata.getString(METADATA_KEY_DISPLAY_DESCRIPTION)
         val isPlaying = mediaSession.isPlaying()
+        val description = ExtraInfo.fromString(
+            mediaSession.controller.metadata.getString(
+                METADATA_KEY_DISPLAY_DESCRIPTION
+            )
+        )
 
         val playButtonResId = if (isPlaying) {
             R.drawable.ic_pause_notification
@@ -96,7 +100,7 @@ class NotificationsImplementation(
             setContentIntent(clickIntent)
             setContentTitle(trackName)
             setContentText(context.getString(R.string.with_separator, artistName, albumName))
-            setSubText(description)
+            setSubText(description.queuePosition)
             setColorized(true)
             setShowWhen(false)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

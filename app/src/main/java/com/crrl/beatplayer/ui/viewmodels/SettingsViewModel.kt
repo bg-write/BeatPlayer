@@ -24,25 +24,28 @@ import kotlinx.coroutines.withContext
 class SettingsViewModel(
     private val settingsUtility: SettingsUtility,
 ) : CoroutineViewModel(Main) {
+
     private val isExtraInfoLiveData = MutableLiveData<Boolean>()
-    fun isExtraInfo(): LiveData<Boolean> {
-        launch {
-            val isEnable = withContext(IO) {
-                settingsUtility.isExtraInfo
+    val isExtraInfo: LiveData<Boolean>
+        get() {
+            launch {
+                val isEnable = withContext(IO) {
+                    settingsUtility.isExtraInfo
+                }
+                isExtraInfoLiveData.postValue(isEnable)
             }
-            isExtraInfoLiveData.postValue(isEnable)
+            return isExtraInfoLiveData
         }
-        return isExtraInfoLiveData
-    }
 
     private val isExtraActionsLiveData = MutableLiveData<Boolean>()
-    fun isExtraActions(): LiveData<Boolean> {
-        launch {
-            val isEnable = withContext(IO) {
-                settingsUtility.isExtraAction
+    val isExtraActions: LiveData<Boolean>
+        get() {
+            launch {
+                val isEnable = withContext(IO) {
+                    settingsUtility.isExtraAction
+                }
+                isExtraActionsLiveData.postValue(isEnable)
             }
-            isExtraActionsLiveData.postValue(isEnable)
+            return isExtraActionsLiveData
         }
-        return isExtraActionsLiveData
-    }
 }
