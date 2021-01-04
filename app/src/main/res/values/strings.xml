@@ -66,7 +66,7 @@
     <string name="no_folders">No Folders</string>
     <string name="remove">Remove</string>
     <string name="theme_title">Themes</string>
-    <string name="default_theme">System Default</string>
+    <string name="default_theme">Device Theme</string>
     <string name="light_theme">Light</string>
     <string name="dark_theme">Dark</string>
     <string name="black_theme">Black</string>
@@ -137,6 +137,14 @@
     <string name="extra_info_description">Such as bit rate, file type and sample rate.</string>
     <string name="extra_actions">Extra Actions</string>
     <string name="extra_actions_description">Add extra actions to mini player</string>
+    <string name="forward_rewind_time">Double-tap to seek</string>
+    <string name="forward_rewind_time_msg">Amount of seconds to forward or rewind when double tap on left or right side of song cover.</string>
+
+    <plurals name="number_of_seconds">
+        <item quantity="zero">%d Seconds</item>
+        <item quantity="one">%d Second</item>
+        <item quantity="other">%d Seconds</item>
+    </plurals>
 
     <plurals name="number_of_songs">
         <item quantity="zero">%d Tracks</item>

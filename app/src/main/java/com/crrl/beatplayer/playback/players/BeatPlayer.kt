@@ -50,6 +50,8 @@ interface BeatPlayer {
     fun playSong(id: Long)
     fun playSong(song: Song)
     fun seekTo(position: Long)
+    fun fastForward()
+    fun rewind()
     fun pause(extras: Bundle = bundleOf(BY_UI_KEY to true))
     fun nextSong(): Long?
     fun repeatSong()
@@ -205,6 +207,25 @@ class BeatPlayerImplementation(
                 position,
                 1F
             )
+        }
+    }
+
+    override fun fastForward() {
+        val forwardTo = mediaSession.position() + settingsUtility.forwardRewindTime
+        val duration = queueUtils.currentSong.duration.toLong()
+        if (forwardTo > duration) {
+            seekTo(duration)
+        } else {
+            seekTo(forwardTo)
+        }
+    }
+
+    override fun rewind() {
+        val rewindTo = mediaSession.position() - settingsUtility.forwardRewindTime
+        if (rewindTo < 0) {
+            seekTo(0)
+        } else {
+            seekTo(rewindTo)
         }
     }
 

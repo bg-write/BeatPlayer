@@ -28,25 +28,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/song_detail_cover_frame"
             android:orientation="vertical"
-            android:layout_centerInParent="true">
+            app:clipToOutline="@{true}"
+            app:height="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4}"
+            app:width="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4}">
 
             <ImageView
                 android:id="@+id/now_playing_cover"
-                android:layout_width="280dp"
-                android:layout_height="280dp"
-                android:background="@drawable/song_detail_cover_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/cover"
                 android:src="@drawable/ic_empty_cover"
                 android:transitionName="now_cover"
                 app:albumId="@{song.albumId}"
                 app:recycled="@{true}"
                 app:height="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4}"
-                app:width="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4}" />
+                app:width="@{GeneralUtils.INSTANCE.screenHeight-GeneralUtils.INSTANCE.screenHeight/4}"/>
 
-        </LinearLayout>
+            <com.crrl.beatplayer.ui.widgets.doubletap.DoubleTapView
+                android:id="@+id/double_tap_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:clickable="true"
+                android:focusable="true"
+                app:backgroundCircleColor="?colorPrimarySecondary2"
+                app:colorOpacity="0.5"
+                app:doubleTapDelay="850"
+                app:iconColor="?titleTextColor"
+                app:tapCircleColor="?colorPrimarySecondary2" />
+
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

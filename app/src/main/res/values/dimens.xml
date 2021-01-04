@@ -54,4 +54,5 @@
     <dimen name="song_cover_size">50dp</dimen>
     <dimen name="margin_fab">20dp</dimen>
     <dimen name="extra_info_text_size">10sp</dimen>
+    <dimen name="arc_size">40dp</dimen>
 </resources>

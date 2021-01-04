@@ -30,6 +30,7 @@ interface AudioPlayer {
     fun setSource(uri: Uri? = null, path: String? = null): Boolean
     fun prepare()
     fun seekTo(position: Long)
+    fun duration(): Long
     fun isPrepared(): Boolean
     fun isPlaying(): Boolean
     fun position(): Long
@@ -89,6 +90,8 @@ class AudioPlayerImplementation(
     override fun seekTo(position: Long) {
         player.seekTo(position)
     }
+
+    override fun duration() = player.duration
 
     override fun isPrepared() = isPrepared
 

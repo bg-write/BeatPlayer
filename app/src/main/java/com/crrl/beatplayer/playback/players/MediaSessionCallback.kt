@@ -18,10 +18,7 @@ import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.core.os.bundleOf
-import com.crrl.beatplayer.extensions.isPlaying
-import com.crrl.beatplayer.extensions.toIdList
-import com.crrl.beatplayer.extensions.toMediaId
-import com.crrl.beatplayer.extensions.toSong
+import com.crrl.beatplayer.extensions.*
 import com.crrl.beatplayer.models.Song
 import com.crrl.beatplayer.playback.AudioFocusHelper
 import com.crrl.beatplayer.repository.SongsRepository
@@ -44,6 +41,7 @@ import com.crrl.beatplayer.utils.BeatConstants.SONG_LIST_NAME
 import com.crrl.beatplayer.utils.BeatConstants.SWAP_ACTION
 import com.crrl.beatplayer.utils.BeatConstants.TO_POSITION_KEY
 import com.crrl.beatplayer.utils.BeatConstants.UPDATE_QUEUE
+import com.crrl.beatplayer.utils.SettingsUtility
 import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_INFO_KEY
 import com.crrl.beatplayer.utils.SettingsUtility.Companion.QUEUE_LIST_KEY
 import timber.log.Timber
@@ -102,6 +100,16 @@ class MediaSessionCallback(
                 musicPlayer.playSong(song.first())
             }
         } ?: onPlay()
+    }
+
+    override fun onFastForward() {
+        Timber.d("onFastForward()")
+        musicPlayer.fastForward()
+    }
+
+    override fun onRewind() {
+        Timber.d("onRewind()")
+        musicPlayer.rewind()
     }
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle?) {

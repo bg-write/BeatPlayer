@@ -117,4 +117,18 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
         <item name="android:textColor">?titleTextColor</item>
     </style>
+
+    <style name="CustomSwitch" parent="@style/Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:colorControlNormal">?bodyTextColor</item>
+        <item name="android:colorControlActivated">?colorAccent</item>
+        <item name="android:colorControlHighlight">?colorAccentOpacity</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+        <item name="android:textColor">?titleTextColor</item>
+    </style>
+
+    <style name="SecondsTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sub_title_text_size</item>
+        <item name="android:textColor">?titleTextColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

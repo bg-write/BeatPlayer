@@ -15,9 +15,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="settings"
             type="com.crrl.beatplayer.utils.SettingsUtility" />
+
+        <variable
+            name="viewModel"
+            type="com.crrl.beatplayer.ui.viewmodels.SettingsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -86,8 +91,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_10"
-                        app:clipToOutline="@{true}"
                         android:background="@drawable/song_detail_cover_frame"
+                        app:clipToOutline="@{true}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/appearance">
 
@@ -107,10 +112,10 @@
                             <ImageView
                                 android:layout_width="@dimen/btn_size"
                                 android:layout_height="@dimen/btn_size"
+                                android:contentDescription="@string/cover"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/ic_theme"
-                                app:tint="?btnTintColor"
-                                android:contentDescription="@string/cover" />
+                                app:tint="?btnTintColor" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -160,11 +165,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_10"
-                        app:clipToOutline="@{true}"
                         android:background="@drawable/song_detail_cover_frame"
+                        android:orientation="vertical"
+                        app:clipToOutline="@{true}"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/now_playing"
-                        android:orientation="vertical">
+                        app:layout_constraintTop_toBottomOf="@id/now_playing">
 
                         <LinearLayout
                             android:id="@+id/animation_container"
@@ -176,16 +181,15 @@
                             android:gravity="center"
                             android:onClick="showCoverTransformers"
                             android:orientation="horizontal"
-                            android:padding="@dimen/margin_10"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:padding="@dimen/margin_10">
 
                             <ImageView
                                 android:layout_width="@dimen/btn_size"
                                 android:layout_height="@dimen/btn_size"
+                                android:contentDescription="@string/cover"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/ic_animation"
-                                app:tint="?btnTintColor"
-                                android:contentDescription="@string/cover" />
+                                app:tint="?btnTintColor" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -216,28 +220,27 @@
                             android:id="@+id/extra_info_container"
                             android:layout_width="match_parent"
                             android:layout_height="80dp"
+                            android:layout_below="@+id/animation_container"
                             android:background="@drawable/list_item_ripple"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:padding="@dimen/margin_10"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_below="@+id/animation_container">
+                            android:padding="@dimen/margin_10">
 
                             <ImageView
                                 android:layout_width="@dimen/btn_size"
                                 android:layout_height="@dimen/btn_size"
+                                android:contentDescription="@string/cover"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/ic_extra_info"
-                                app:tint="?btnTintColor"
-                                android:contentDescription="@string/cover" />
+                                app:tint="?btnTintColor" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_weight="1">
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -256,87 +259,40 @@
                                     android:textColor="?colorAccent"
                                     android:textSize="@dimen/sub_title_text_size" />
                             </LinearLayout>
+
                             <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/extra_info"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="@{settings.extraInfo}"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/show_extra_info_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:background="@drawable/btn_ripple_start"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:onClick="showCoverTransformers"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/margin_10"
-                            android:visibility="gone"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_below="@+id/extra_info_container">
-
-                            <ImageView
-                                android:layout_width="@dimen/btn_size"
-                                android:layout_height="@dimen/btn_size"
-                                android:scaleType="centerInside"
-                                android:src="@drawable/ic_animation"
-                                app:tint="?btnTintColor"
-                                android:contentDescription="@string/cover" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:maxLines="1"
-                                    android:text="@string/cover_transition"
-                                    android:textColor="?titleTextColor"
-                                    android:textSize="@dimen/title_text_size" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:maxLines="2"
-                                    android:text="@string/cover_transition_description"
-                                    android:textColor="?colorAccent"
-                                    android:textSize="@dimen/sub_title_text_size" />
-                            </LinearLayout>
+                                android:checked="@{settings.extraInfo}"
+                                android:theme="@style/CustomSwitch" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/extra_actions_container"
                             android:layout_width="match_parent"
                             android:layout_height="80dp"
-                            android:background="@drawable/btn_ripple_end"
+                            android:layout_below="@+id/extra_info_container"
+                            android:background="@drawable/list_item_ripple"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:padding="@dimen/margin_10"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_below="@+id/show_extra_info_container">
+                            android:padding="@dimen/margin_10">
 
                             <ImageView
                                 android:layout_width="@dimen/btn_size"
                                 android:layout_height="@dimen/btn_size"
+                                android:contentDescription="@string/cover"
                                 android:scaleType="centerInside"
-                                app:tint="?btnTintColor"
                                 android:src="@drawable/ic_play"
-                                android:contentDescription="@string/cover" />
+                                app:tint="?btnTintColor" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_weight="1">
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -355,34 +311,35 @@
                                     android:textColor="?colorAccent"
                                     android:textSize="@dimen/sub_title_text_size" />
                             </LinearLayout>
+
                             <androidx.appcompat.widget.SwitchCompat
                                 android:id="@+id/extra_actions"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="@{settings.extraAction}"/>
+                                android:checked="@{settings.extraAction}"
+                                android:theme="@style/CustomSwitch" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/show_extra_action_container"
+                            android:id="@+id/forward_rewind_time"
                             android:layout_width="match_parent"
                             android:layout_height="80dp"
-                            android:background="@drawable/btn_ripple_start"
+                            android:layout_below="@+id/extra_actions_container"
+                            android:background="@drawable/btn_ripple_end"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center"
-                            android:onClick="showCoverTransformers"
+                            android:onClick="showForwardRewindTimes"
                             android:orientation="horizontal"
-                            android:padding="@dimen/margin_10"
-                            android:visibility="gone"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_below="@+id/extra_actions_container">
+                            android:padding="@dimen/margin_10">
 
                             <ImageView
                                 android:layout_width="@dimen/btn_size"
                                 android:layout_height="@dimen/btn_size"
+                                android:contentDescription="@string/cover"
                                 android:scaleType="centerInside"
-                                app:tint="?btnTintColor"
-                                android:contentDescription="@string/cover" />
+                                android:src="@drawable/ic_forward_rewind_time"
+                                app:tint="?btnTintColor" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -394,7 +351,7 @@
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
                                     android:maxLines="1"
-                                    android:text="@string/cover_transition"
+                                    android:text="@string/forward_rewind_time"
                                     android:textColor="?titleTextColor"
                                     android:textSize="@dimen/title_text_size" />
 
@@ -403,7 +360,7 @@
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
                                     android:maxLines="2"
-                                    android:text="@string/cover_transition_description"
+                                    android:text="@{@plurals/number_of_seconds(0, safeUnbox(viewModel.forwardRewindTime) / 1000)}"
                                     android:textColor="?colorAccent"
                                     android:textSize="@dimen/sub_title_text_size" />
                             </LinearLayout>

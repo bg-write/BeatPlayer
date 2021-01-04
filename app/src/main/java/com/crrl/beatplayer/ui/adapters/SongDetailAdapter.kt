@@ -17,11 +17,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.databinding.SongDetailItemBinding
+import com.crrl.beatplayer.enums.State
+import com.crrl.beatplayer.enums.State.*
 import com.crrl.beatplayer.extensions.inflateWithBinding
 import com.crrl.beatplayer.extensions.setAll
+import com.crrl.beatplayer.interfaces.StateListener
 import com.crrl.beatplayer.models.Song
+import com.crrl.beatplayer.ui.viewmodels.MainViewModel
+import com.crrl.beatplayer.ui.viewmodels.SettingsViewModel
 
-class SongDetailAdapter : RecyclerView.Adapter<SongDetailAdapter.SongDetailViewHolder>() {
+class SongDetailAdapter(
+    private val mainViewModel: MainViewModel
+) : RecyclerView.Adapter<SongDetailAdapter.SongDetailViewHolder>() {
 
     val songList = mutableListOf<Song>()
 
@@ -45,11 +52,21 @@ class SongDetailAdapter : RecyclerView.Adapter<SongDetailAdapter.SongDetailViewH
     }
 
     inner class SongDetailViewHolder(internal val binding: SongDetailItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), StateListener {
         fun bind(song: Song) {
             binding.apply {
                 this.song = song
                 executePendingBindings()
+                doubleTapView.setOnActionListener(this@SongDetailViewHolder)
+            }
+        }
+
+        override fun onStateChanged(state: State, seconds: Int) {
+            when (state) {
+                STATE_FORWARD -> { mainViewModel.transportControls()?.fastForward() }
+                STATE_REWIND -> { mainViewModel.transportControls()?.rewind() }
+                STATE_START -> {}
+                STATE_END -> {}
             }
         }
     }

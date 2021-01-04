@@ -57,11 +57,11 @@ fun setAlbumId(
 
     val uri = ContentUris.withAppendedId(BeatConstants.ARTWORK_URI, albumId)
     val drawable = getDrawable(view.context, R.drawable.ic_empty_cover)
-    view.clipToOutline = true
     Glide.with(view).asBitmap().load(uri).apply {
         if (recycled) placeholder(R.color.transparent) else placeholder(drawable)
         if (blurred) transform(BlurTransformation(25, 5))
         if (blurred) error(R.color.transparent) else error(drawable)
+        centerCrop()
         into(view)
     }
 }

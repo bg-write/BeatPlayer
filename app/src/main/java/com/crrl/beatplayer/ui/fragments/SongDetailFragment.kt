@@ -19,6 +19,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.crrl.beatplayer.R
 import com.crrl.beatplayer.alertdialog.AlertDialog
 import com.crrl.beatplayer.alertdialog.enums.AlertType
@@ -33,6 +34,7 @@ import com.crrl.beatplayer.ui.adapters.SongDetailAdapter
 import com.crrl.beatplayer.ui.fragments.base.BaseSongDetailFragment
 import com.crrl.beatplayer.ui.transformers.base.BaseTransformer
 import com.crrl.beatplayer.ui.viewmodels.PlaylistViewModel
+import com.crrl.beatplayer.ui.viewmodels.SettingsViewModel
 import com.crrl.beatplayer.ui.viewmodels.SongViewModel
 import com.crrl.beatplayer.utils.AutoClearBinding
 import com.crrl.beatplayer.utils.BeatConstants.BIND_STATE_BOUND
@@ -44,6 +46,7 @@ import com.crrl.beatplayer.utils.GeneralUtils
 import com.crrl.beatplayer.utils.GeneralUtils.getSongUri
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_song_detail.*
+import kotlinx.android.synthetic.main.song_detail_item.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.get
@@ -107,7 +110,7 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
     }
 
     private fun initSongDetailView() {
-        val songDetailAdapter = SongDetailAdapter()
+        val songDetailAdapter = SongDetailAdapter(mainViewModel)
 
         binding.songList.apply {
             adapter = songDetailAdapter
@@ -117,6 +120,7 @@ class SongDetailFragment : BaseSongDetailFragment(), ItemMovedListener {
 
                 if (currentId != selectedSong.id) mainViewModel.mediaItemClicked(selectedSong.toMediaItem())
             }
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
             setSlideOnFling(false)
             setItemTransitionTimeMillis(150)
             setSlideOnFlingThreshold(5100)

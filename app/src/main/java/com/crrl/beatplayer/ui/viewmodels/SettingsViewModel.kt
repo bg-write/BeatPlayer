@@ -48,4 +48,16 @@ class SettingsViewModel(
             }
             return isExtraActionsLiveData
         }
+
+    private val forwardRewindTimeData = MutableLiveData<Int>()
+    val forwardRewindTime: LiveData<Int>
+        get() {
+            launch {
+                val time = withContext(IO) {
+                    settingsUtility.forwardRewindTime
+                }
+                forwardRewindTimeData.postValue(time)
+            }
+            return forwardRewindTimeData
+        }
 }

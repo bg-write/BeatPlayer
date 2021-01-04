@@ -26,6 +26,7 @@ import com.crrl.beatplayer.alertdialog.stylers.AlertItemStyle
 import com.crrl.beatplayer.databinding.ActivitySettingsBinding
 import com.crrl.beatplayer.extensions.getColorByTheme
 import com.crrl.beatplayer.ui.activities.base.BaseActivity
+import com.crrl.beatplayer.ui.viewmodels.SettingsViewModel
 import com.crrl.beatplayer.utils.BeatConstants
 import com.crrl.beatplayer.utils.SettingsUtility
 import org.koin.android.ext.android.inject
@@ -35,6 +36,7 @@ class SettingsActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private val settingsUtility by inject<SettingsUtility>()
+    private val settingsViewModel by inject<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,7 @@ class SettingsActivity : BaseActivity() {
 
         binding.let {
             it.settings = settingsUtility
+            it.viewModel = settingsViewModel
 
             it.executePendingBindings()
             it.lifecycleOwner = this
@@ -174,13 +177,74 @@ class SettingsActivity : BaseActivity() {
         }
     }
 
+    fun showForwardRewindTimes(view: View) {
+        try {
+            val options = listOf(
+                AlertItemAction(
+                    "5",
+                    settingsUtility.forwardRewindTime == 5 * 1000,
+                    AlertItemTheme.DEFAULT
+                ) {
+                    it.selected = true
+                    settingsUtility.forwardRewindTime = 5 * 1000
+                },
+                AlertItemAction(
+                    "10",
+                    settingsUtility.forwardRewindTime == 10 * 1000,
+                    AlertItemTheme.DEFAULT
+                ) {
+                    it.selected = true
+                    settingsUtility.forwardRewindTime = 10 * 1000
+                },
+                AlertItemAction(
+                    "15",
+                    settingsUtility.forwardRewindTime == 15 * 1000,
+                    AlertItemTheme.DEFAULT
+                ) {
+                    it.selected = true
+                    settingsUtility.forwardRewindTime = 15 * 1000
+                },
+                AlertItemAction(
+                    "20",
+                    settingsUtility.forwardRewindTime == 20 * 1000,
+                    AlertItemTheme.DEFAULT
+                ) {
+                    it.selected = true
+                    settingsUtility.forwardRewindTime = 20 * 1000
+                },
+                AlertItemAction(
+                    "30",
+                    settingsUtility.forwardRewindTime == 30 * 1000,
+                    AlertItemTheme.DEFAULT
+                ) {
+                    it.selected = true
+                    settingsUtility.forwardRewindTime = 30 * 1000
+                },
+                AlertItemAction(
+                    "60",
+                    settingsUtility.forwardRewindTime == 60 * 1000,
+                    AlertItemTheme.DEFAULT
+                ) {
+                    it.selected = true
+                    settingsUtility.forwardRewindTime = 60 * 1000
+                }
+            )
+
+            buildSelectionDialog(
+                R.string.forward_rewind_time,
+                R.string.forward_rewind_time_msg,
+                options
+            ).show(this)
+        } catch (ex: IllegalStateException) {
+            Timber.e(ex)
+        }
+    }
+
     private fun extraInfoChange(state: Boolean) {
         settingsUtility.isExtraInfo = state
-        // binding.showExtraInfoContainer.visibility = if (state) View.VISIBLE else View.GONE
     }
 
     private fun extraActionsChange(state: Boolean) {
         settingsUtility.isExtraAction = state
-        // binding.showExtraActionContainer.visibility = if (state) View.VISIBLE else View.GONE
     }
 }

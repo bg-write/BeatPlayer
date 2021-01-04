@@ -53,6 +53,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
+import java.util.*
 
 
 object GeneralUtils {
@@ -235,11 +236,17 @@ object GeneralUtils {
     }
 
     fun getTransformerFromString(transformerString: String): BaseTransformer {
-        return when(transformerString){
+        return when (transformerString) {
             CUBE_TRANSFORMER -> CubeOutTransformer()
             DEPTH_PAGE_TRANSFORMER -> DepthPageTransformer()
             else -> NormalTransformer()
         }
+    }
+
+    fun addColorOpacity(color: Int, opacity: Float): Int {
+        val colorHex = Integer.toHexString(color).toLowerCase(Locale.ROOT)
+        val opacityHex = Integer.toHexString((255 * opacity).toInt()).toLowerCase(Locale.ROOT)
+        return Color.parseColor("#${colorHex.replace("ff", opacityHex)}")
     }
 
     fun isOreo() = SDK_INT >= O

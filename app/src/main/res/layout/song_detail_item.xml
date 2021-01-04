@@ -37,20 +37,41 @@
             android:layout_marginTop="@dimen/btn_size"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/now_playing_cover"
+            <RelativeLayout
                 android:layout_width="280dp"
                 android:layout_height="280dp"
                 android:background="@drawable/song_detail_cover_frame"
-                android:clickable="false"
-                android:contentDescription="@string/cover"
-                android:focusable="false"
-                android:src="@drawable/ic_empty_cover"
-                android:transitionName="now_cover"
-                app:albumId="@{song.albumId}"
+                app:clipToOutline="@{true}"
                 app:height="@{GeneralUtils.INSTANCE.screenWidth - 35}"
-                app:recycled="@{true}"
-                app:width="@{GeneralUtils.INSTANCE.screenWidth - 35}" />
+                app:width="@{GeneralUtils.INSTANCE.screenWidth - 35}">
+
+                <ImageView
+                    android:id="@+id/now_playing_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:contentDescription="@string/cover"
+                    android:focusable="false"
+                    android:src="@drawable/ic_empty_cover"
+                    android:transitionName="now_cover"
+                    app:albumId="@{song.albumId}"
+                    app:recycled="@{true}"
+                    app:height="@{GeneralUtils.INSTANCE.screenWidth - 35}"
+                    app:width="@{GeneralUtils.INSTANCE.screenWidth - 35}"/>
+
+                <com.crrl.beatplayer.ui.widgets.doubletap.DoubleTapView
+                    android:id="@+id/double_tap_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:backgroundCircleColor="?colorPrimarySecondary2"
+                    app:colorOpacity="0.5"
+                    app:doubleTapDelay="850"
+                    app:iconColor="?titleTextColor"
+                    app:tapCircleColor="?colorPrimarySecondary2" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/info_container"

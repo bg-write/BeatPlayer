@@ -53,7 +53,7 @@
     <string name="no_folders">Sin Carpetas</string>
     <string name="remove">Quitar</string>
     <string name="theme_title">Temas</string>
-    <string name="default_theme">Automático</string>
+    <string name="default_theme">Tema del dispositivo</string>
     <string name="light_theme">Claro</string>
     <string name="dark_theme">Obscuro</string>
     <string name="black_theme">Negro</string>
@@ -125,6 +125,14 @@
     <string name="extra_info_description">Mostrará tasa de bits, tipo de archivo y frecuencia de muestreo.</string>
     <string name="extra_actions">Controles Adicionales</string>
     <string name="extra_actions_description">Agrega controlles adicionales al mini reproductor.</string>
+    <string name="forward_rewind_time">Tiempo de Avance y Retroceso</string>
+    <string name="forward_rewind_time_msg">Cantidad de segundos que se avanzarán o retocederán cuando se precione 2 veces en el lado izquierdo o derecho de la portada de la canción</string>
+
+    <plurals name="number_of_seconds" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%d Segundos</item>
+        <item quantity="one">%d Segundo</item>
+        <item quantity="other">%d Segundos</item>
+    </plurals>
 
     <plurals name="number_of_songs" tools:ignore="UnusedQuantity">
         <item quantity="zero">%d Pistas</item>

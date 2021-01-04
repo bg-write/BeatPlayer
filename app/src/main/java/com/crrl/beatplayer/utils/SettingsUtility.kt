@@ -110,6 +110,12 @@ class SettingsUtility(context: Context) {
             setPreference(EXTRA_INFO_KEY, value)
         }
 
+    var forwardRewindTime: Int
+    get() = sPreferences.getInt(FORWARD_REWIND_TIME_KEY, 10 * 1000)
+    set(value) {
+        setPreference(FORWARD_REWIND_TIME_KEY, value)
+    }
+
     private fun setPreference(key: String, value: String) {
         val editor = sPreferences.edit()
         editor.putString(key, value)
@@ -142,6 +148,7 @@ class SettingsUtility(context: Context) {
         private const val CURRENT_TRANSFORMER_KEY = "current_transformer_key"
         private const val EXTRA_INFO_KEY = "extra_info_key"
         private const val EXTRA_ACTION_KEY = "extra_action_key"
+        private const val FORWARD_REWIND_TIME_KEY = "forward_rewind_time_key"
 
         const val QUEUE_INFO_KEY = "queue_info_key"
         const val QUEUE_LIST_KEY = "queue_list_key"
