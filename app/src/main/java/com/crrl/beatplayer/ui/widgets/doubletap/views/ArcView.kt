@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.crrl.beatplayer.R
+import com.crrl.beatplayer.utils.GeneralUtils.screenWidth
 
 class ArcView(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
@@ -32,7 +33,7 @@ class ArcView(context: Context, attrs: AttributeSet? = null) : View(context, att
     private var maxRadius: Int = 0
 
     private var valueAnimator: ValueAnimator? = null
-    private var forceReset = false
+    private var forceReset = true
 
     init {
 
@@ -87,13 +88,12 @@ class ArcView(context: Context, attrs: AttributeSet? = null) : View(context, att
             getCircleAnimator().duration = value
         }
 
-    fun updatePosition(x: Float, y: Float) {
+    fun updatePosition(x: Float, y: Float, left: Boolean) {
         cX = x
         cY = y
 
-        val newIsLeft = x <= resources.displayMetrics.widthPixels / 2
-        if (isLeft != newIsLeft) {
-            isLeft = newIsLeft
+        if (isLeft != left) {
+            isLeft = left
             updatePathShape()
         }
     }

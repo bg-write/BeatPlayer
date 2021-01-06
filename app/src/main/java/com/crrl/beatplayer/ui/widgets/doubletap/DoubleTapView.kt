@@ -182,7 +182,7 @@ class DoubleTapView(context: Context, private val attrs: AttributeSet?) :
                 }
 
                 arc_view.resetAnimation {
-                    arc_view.updatePosition(posX, posY)
+                    arc_view.updatePosition(posX, posY, true)
                 }
                 rewinding()
             }
@@ -195,7 +195,7 @@ class DoubleTapView(context: Context, private val attrs: AttributeSet?) :
                     }
                 }
                 arc_view.resetAnimation {
-                    arc_view.updatePosition(posX, posY)
+                    arc_view.updatePosition(posX, posY, false)
                 }
                 forwarding()
             }
